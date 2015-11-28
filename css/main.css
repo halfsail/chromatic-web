@@ -13,6 +13,67 @@ body {
   font-weight: 500;
 }
 
+/* topbar colors
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+#top-bar {
+  height:.5rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+
+}
+
+.black_overlay{
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
+}
+.white_content {
+    display: none;
+    background-color: #fcfcfc;
+    position: absolute;
+    border-radius:20px;
+    top: 10%;
+    left: 25%;
+    width: 50%;
+    height: 80%;
+    padding: 16px;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+.white_content .palette {
+  height: 80%;
+}
+
+#color1, #color2, #color3, #color4{
+  height: .5rem;
+  margin-top:0;
+  padding-top: 0;
+}
+#color1{
+  background-color: #3fb8af;
+}
+#color2{
+  background-color: #dad8a7;
+}
+#color3{
+  background-color: #ff9e9d;
+}
+#color4{
+  background-color: #ff3d7f;
+}
+
 /* cards
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .card {
@@ -30,34 +91,35 @@ body {
   text-align: center;
 }
 .card .palette {
-
+  height:80%;
 }
 
 .palette ul {
   margin: auto auto;
   width:85%;
+  height:100%;
   padding-bottom: 1rem;
 }
 
 .palette ul li:nth-child(1) {
   display:block;
   background-color:#F38181;
-  height:6rem;
+  height:30%;
 }
 .palette ul li:nth-child(2) {
   display:block;
   background-color:#FCE38A;
-  height: 4rem;
+  height: 20%;
 }
 .palette ul li:nth-child(3) {
   display:block;
   background:#EAFFD0;
-  height: 3rem;
+  height: 15%;
 }
 .palette ul li:nth-child(4) {
   display:block;
   background-color:#95E1D3;
-  height: 3rem;
+  height: 15%;
 }
 
  .palette ul li button {
