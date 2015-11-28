@@ -23,10 +23,11 @@
       <div id="color4"></div>
     </div>
 		<nav>
-      <a href="{{ site.baseurl }}/" title="Home"><img src="images/weblogo.png" alt="logo"></a>
+      <a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
       <a href="https://github.com/halfsail" title="Projects">Create</a>
       <a href="https://github.com/halfsail" title="Projects">Popular</a>
-      <a href="https://github.com/halfsail" title="Projects">login</a>
+      <a href="login.php" title="Projects">login</a>
+      <a href="signup.php" title="Projects">Sign Up</a>
     </nav>
 		<div class="flex_con">
       <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
@@ -35,7 +36,7 @@
         <h4>level title</h4>
         <div class="palette">
           <ul>
-            <li></li>
+            <li onmouseover="showColor(red)"><p>hi </p></li>
             <li></li>
             <li></li>
             <li></li>
@@ -94,6 +95,9 @@
 			</div>
 		</div>
     <script>
+    function showColor(color){
+      return "hello world";
+    }
     function closeExpand(){
       document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
     }

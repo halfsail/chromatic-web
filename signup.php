@@ -12,10 +12,10 @@
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
-    <nav>
-      <a href="rockpaperscissors2.php" title="Game">Game</a>
-      <a href="leaderboard.php" title="Game">leaderboard</a>
-    </nav>
+	<a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
+	<a href="https://github.com/halfsail" title="Projects">Create</a>
+	<a href="https://github.com/halfsail" title="Projects">Popular</a>
+	<a href="login.php" title="Projects">login</a>
 
 <div class=flex_con>
 <div class=mini>
