@@ -564,3 +564,16 @@ var colors = {
     "#472d30"
   ]
 };
+
+
+function showColor(color) {
+    return "hello world";
+}
+
+function closeExpand() {
+    document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
+}
+
+function expand() {
+    document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
+}

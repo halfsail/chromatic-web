@@ -1,110 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
-  <title>Hi there</title>
-  <meta name="viewport" content="width=device-width">
+    <head>
+        <!-- General -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/main.css">
+        <!-- JS -->
+        <script src="chromatic.js"></script>
 
-  <!-- Fonts -->
-  <link href='http://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-</head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <!-- Fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+        <title>Hi there</title>
+    </head>
+
 	<body>
-    <div id="top-bar">
-      <div id="color1"></div>
-      <div id="color2"></div>
-      <div id="color3"></div>
-      <div id="color4"></div>
-    </div>
-		<nav>
-      <a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
-      <a href="https://github.com/halfsail" title="Projects">Create</a>
-      <a href="https://github.com/halfsail" title="Projects">Popular</a>
-      <a href="login.php" title="Projects">login</a>
-      <a href="signup.php" title="Projects">Sign Up</a>
-    </nav>
-		<div class="flex_con">
-      <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
-
-      <div id="light" class="white_content">
-        <h4>level title</h4>
-        <div class="palette">
-          <ul>
-            <li onmouseover="showColor(red)"><p>hi </p></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li><button>12 Likes</button></li>
-          </ul>
+        <div id="top-bar">
+            <div id="color1"></div>
+            <div id="color2"></div>
+            <div id="color3"></div>
+            <div id="color4"></div>
         </div>
-      </div>
 
-			<div class="card" onclick="expand()">
-				<h4>level title</h4>
-				<div class="palette">
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li><button>12 Likes</button></li>
-          </ul>
-				</div>
-			</div>
-    </a>
-      <div class="card">
-				<h4>level title</h4>
-				<div class="palette">
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li>Like</li>
-          </ul>
-				</div>
-			</div>
-      <div class="card">
-				<h4>level title</h4>
-				<div class="palette">
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li>Like</li>
-          </ul>
-				</div>
-			</div>
-      <div class="card">
-				<h4>level title</h4>
-				<div class="palette">
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-				</div>
-			</div>
-		</div>
-    <script>
-    function showColor(color){
-      return "hello world";
-    }
-    function closeExpand(){
-      document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
-    }
-    function expand()
-{
-    document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
-}
-    </script>
+    	<nav>
+            <a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
+            <a href="#" title="Create">Create</a>
+            <a href="#" title="Popular">Popular</a>
+            <a href="login.php" title="Login">Login</a>
+            <a href="signup.php" title="Signup">Sign Up</a>
+        </nav>
+
+        <div class="flex_con">
+            <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
+
+            <div id="light" class="white_content">
+                <h4>Title (EXPANDED)</h4>
+                <div class="palette">
+                  <ul>
+                      <li></li>
+                      <li></li>
+                      <li></li>
+                      <li></li>
+                      <li><button># Favs</button></li>
+                  </ul>
+                </div>
+            </div>
+
+        	<div class="card" onclick="expand()">
+                <h4>Title</h4>
+        		<div class="palette">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li><button># Favs</button></li>
+                    </ul>
+        		</div>
+        	</div>
+
+    	</div>
+
 	</body>
 </html>
