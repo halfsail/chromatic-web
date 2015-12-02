@@ -50,8 +50,8 @@ if(!$conn){
   <meta name="viewport" content="width=device-width">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/main.css">
 
   <!-- Fonts -->
   <link href='http://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
