@@ -19,12 +19,22 @@
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
-	<a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
-	<a href="https://github.com/halfsail" title="Projects">Create</a>
-	<a href="https://github.com/halfsail" title="Projects">Popular</a>
+	<div id="top-bar">
+			<div id="color1"></div>
+			<div id="color2"></div>
+			<div id="color3"></div>
+			<div id="color4"></div>
+	</div>
+
+<nav>
+			<a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
+			<a href="#" title="Popular">Popular</a>
+			<a href="login.php" title="Login">Login</a>
+			<a href="signup.php" title="Signup">Sign Up</a>
+	</nav>
 
 <div class=flex_con>
-<div class=mini>
+<div class=card>
 
 		<h4> Log Out Page</h4>
 	<?php
