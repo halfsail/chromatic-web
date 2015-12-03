@@ -566,14 +566,79 @@ var colors = {
 };
 
 
-function showColor(color) {
-    return "hello world";
+function displayPalettes() {
+    //Go through each color palette defined above
+    for(var palette in colors) {
+        //Pull spaces and other chars from name (Will cause problems with jQuery CSS modifcations)
+        var palette_name = palette.replace(/\s+/g, '');
+        palette_name =  palette_name.replace(/[#'"]+/g, '');
+
+        //Define div IDs (with no spaces)
+        var light = palette_name + "-light";
+        var fade = palette_name + "-fade";
+
+        //Output Palette
+        document.write('    <div id="' + fade + '" class="black_overlay" onclick ="closeExpand(\'' + palette_name + '\')"></div>');
+        document.write('    <div id="' + light + '" class="white_content">');
+        document.write('        <h4>' + palette + '</h4>');
+        document.write('        <div class="palette-' + palette_name + '">');
+        document.write('          <ul>');
+        document.write('              <li></li>');
+        document.write('              <li></li>');
+        document.write('              <li></li>');
+        document.write('              <li></li>');
+        document.write('              <li><button># Favs</button></li>');
+        document.write('          </ul>');
+        document.write('        </div>');
+        document.write('    </div>');
+        document.write('    <div class="card" onclick="expand(\'' + palette_name + '\')"">');
+        document.write('        <h4>' + palette + '</h4>');
+        document.write('        <div class="palette-' + palette_name + '">');
+        document.write('            <ul>');
+        document.write('                <li></li>');
+        document.write('                <li></li>');
+        document.write('                <li></li>');
+        document.write('                <li></li>');
+        document.write('                <li><button># Favs</button></li>');
+        document.write('            </ul>');
+        document.write('        </div>');
+        document.write('    </div>');
+
+        //CSS for Palette
+        $(".card .palette-" + palette_name).css("height", "80%");
+
+        $(".palette-" + palette_name + " ul").css("margin", "auto auto");
+        $(".palette-" + palette_name + " ul").css("width", "85%");
+        $(".palette-" + palette_name + " ul").css("height", "100%");
+        $(".palette-" + palette_name + " ul").css("padding-bottom", "1rem");
+
+        $(".palette-" + palette_name + " ul li:nth-child(1)").css("display", "block");
+        $(".palette-" + palette_name + " ul li:nth-child(1)").css("background-color", colors[palette][0]);
+        $(".palette-" + palette_name + " ul li:nth-child(1)").css("height", "30%");
+
+        $(".palette-" + palette_name + " ul li:nth-child(2)").css("display", "block");
+        $(".palette-" + palette_name + " ul li:nth-child(2)").css("background-color", colors[palette][1]);
+        $(".palette-" + palette_name + " ul li:nth-child(2)").css("height", "20%");
+
+        $(".palette-" + palette_name + " ul li:nth-child(3)").css("display", "block");
+        $(".palette-" + palette_name + " ul li:nth-child(3)").css("background-color", colors[palette][2]);
+        $(".palette-" + palette_name + " ul li:nth-child(3)").css("height", "15%");
+
+        $(".palette-" + palette_name + " ul li:nth-child(4)").css("display", "block");
+        $(".palette-" + palette_name + " ul li:nth-child(4)").css("background-color", colors[palette][3]);
+        $(".palette-" + palette_name + " ul li:nth-child(4)").css("height", "15%");
+
+        $(".palette-" + palette_name + " ul li button").css("padding", ".3rem");
+        $(".palette-" + palette_name + " ul li button").css("margin", "1rem 0");
+    }
 }
 
-function closeExpand() {
-    document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
+function closeExpand(palette_name) {
+    document.getElementById(palette_name + '-light').style.display='none';
+    document.getElementById(palette_name + '-fade').style.display='none';
 }
 
-function expand() {
-    document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
+function expand(palette_name) {
+    document.getElementById(palette_name + '-light').style.display='block';
+    document.getElementById(palette_name + '-fade').style.display='block';
 }
