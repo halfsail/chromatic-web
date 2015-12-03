@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="chromatic.js"></script>
 
         <!-- CSS -->
@@ -39,31 +40,7 @@
         <div class="flex_con">
             <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
 
-            <div id="light" class="white_content">
-                <h4>Title (EXPANDED)</h4>
-                <div class="palette">
-                  <ul>
-                      <li></li>
-                      <li></li>
-                      <li></li>
-                      <li></li>
-                      <li><button># Favs</button></li>
-                  </ul>
-                </div>
-            </div>
-
-        	<div class="card" onclick="expand()">
-                <h4>Title</h4>
-        		<div class="palette">
-                    <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li><button># Favs</button></li>
-                    </ul>
-        		</div>
-        	</div>
+            <script>displayPalettes();</script>
 
     	</div>
 
