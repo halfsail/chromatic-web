@@ -682,9 +682,11 @@ function displayPalettes() {
 function closeExpand(palette_name) {
     document.getElementById(palette_name + '-light').style.display='none';
     document.getElementById(palette_name + '-fade').style.display='none';
+    $('body').removeClass('noscroll');
 }
 
 function expand(palette_name) {
     document.getElementById(palette_name + '-light').style.display='block';
     document.getElementById(palette_name + '-fade').style.display='block';
+    $('body').addClass('noscroll');
 }
