@@ -583,10 +583,10 @@ function displayPalettes() {
         document.write('        <h4>' + palette + '</h4>');
         document.write('        <div class="palette-' + palette_name + '">');
         document.write('          <ul>');
-        document.write('              <li></li>');
-        document.write('              <li></li>');
-        document.write('              <li></li>');
-        document.write('              <li></li>');
+        document.write('              <li><p></p></li>');
+        document.write('              <li><p></p></li>');
+        document.write('              <li><p></p></li>');
+        document.write('              <li><p></p></li>');
         document.write('              <li><button># Favs</button></li>');
         document.write('          </ul>');
         document.write('        </div>');
@@ -595,10 +595,10 @@ function displayPalettes() {
         document.write('        <h4>' + palette + '</h4>');
         document.write('        <div class="palette-' + palette_name + '">');
         document.write('            <ul>');
-        document.write('                <li></li>');
-        document.write('                <li></li>');
-        document.write('                <li></li>');
-        document.write('                <li></li>');
+        document.write('                <li><p></p></li>');
+        document.write('                <li><p></p></li>');
+        document.write('                <li><p></p></li>');
+        document.write('                <li><p></p></li>');
         document.write('                <li><button># Favs</button></li>');
         document.write('            </ul>');
         document.write('        </div>');
@@ -615,16 +615,18 @@ function displayPalettes() {
         $(".palette-" + palette_name + " ul").css("padding-bottom", "1rem");
         $(".palette-" + palette_name + " ul").css("text-align", "center");
 
-
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("display", "block");
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("background-color", colors[palette][0]);
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("height", "30%");
 
         //onHover text appear
         $(".palette-" + palette_name + " ul li:nth-child(1)").hover(function() {
-            $(this).html(colors[palette][0]);
+            $(this).html("<p>" + colors[palette][0] + "</p>");
+            $("p").css("display", "block");
+            $("p").css("color", "white");
+            $("p").css("background-color", "rgba(33, 33, 33, .5)");
         }, function() {
-            $(this).html(" ");
+            $(this).html("<p></p>");
         });
 
         $(".palette-" + palette_name + " ul li:nth-child(2)").css("display", "block");
@@ -633,9 +635,12 @@ function displayPalettes() {
 
         //onHover text appear
         $(".palette-" + palette_name + " ul li:nth-child(2)").hover(function() {
-            $(this).html(colors[palette][1]);
+            $(this).html("<p>" + colors[palette][1] + "</p>");
+            $("p").css("display", "block");
+            $("p").css("color", "white");
+            $("p").css("background-color", "rgba(33, 33, 33, .5)");
         }, function() {
-            $(this).html(" ");
+            $(this).html("<p></p>");
         });
 
         $(".palette-" + palette_name + " ul li:nth-child(3)").css("display", "block");
@@ -644,9 +649,12 @@ function displayPalettes() {
 
         //onHover text appear
         $(".palette-" + palette_name + " ul li:nth-child(3)").hover(function() {
-            $(this).html(colors[palette][2]);
+            $(this).html("<p>" + colors[palette][2] + "</p>");
+            $("p").css("display", "block");
+            $("p").css("color", "white");
+            $("p").css("background-color", "rgba(33, 33, 33, .5)");
         }, function() {
-            $(this).html(" ");
+            $(this).html("<p></p>");
         });
 
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("display", "block");
@@ -655,14 +663,19 @@ function displayPalettes() {
 
         //onhover text appear
         $(".palette-" + palette_name + " ul li:nth-child(4)").hover(function(){
-          $(this).html(colors[palette][3]);
+            $(this).html("<p>" + colors[palette][3] + "</p>");
+            $("p").css("display", "block");
+            $("p").css("color", "white");
+            $("p").css("background-color", "rgba(33, 33, 33, .5)");
         }, function() {
-          $(this).html(" ");
+            $(this).html("<p></p>");
         });
 
         $(".palette-" + palette_name + " ul li button").css("padding", ".3rem");
         $(".palette-" + palette_name + " ul li button").css("margin", "1rem 0");
         $(".palette-" + palette_name + " ul li button").css("text-align", "left");
+
+
     }
 }
 
