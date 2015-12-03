@@ -59,11 +59,19 @@ if(!$conn){
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
-    <nav>
-      <a href="rockpaperscissors2.php" title="Game">Game</a>
-      <a href="leaderboard.php" title="Game">leaderboard</a>
-      <a href="signup.php" title="Create">Create Account</a>
-    </nav>
+	<div id="top-bar">
+			<div id="color1"></div>
+			<div id="color2"></div>
+			<div id="color3"></div>
+			<div id="color4"></div>
+	</div>
+
+<nav>
+			<a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
+			<a href="#" title="Popular">Popular</a>
+			<a href="login.php" title="Login">Login</a>
+			<a href="signup.php" title="Signup">Sign Up</a>
+	</nav>
 
 	<div class=flex_con>
 
