@@ -609,27 +609,58 @@ function displayPalettes() {
 
         $(".palette-" + palette_name + " ul").css("margin", "auto auto");
         $(".palette-" + palette_name + " ul").css("width", "85%");
-        $(".palette-" + palette_name + " ul").css("height", "100%");
+        $(".palette-" + palette_name + " ul").css("height", "100%");//needs to be in rem or em 100% of 0 is 0
         $(".palette-" + palette_name + " ul").css("padding-bottom", "1rem");
+        $(".palette-" + palette_name + " ul").css("text-align", "center");
+
 
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("display", "block");
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("background-color", colors[palette][0]);
         $(".palette-" + palette_name + " ul li:nth-child(1)").css("height", "30%");
 
+//onhover text appear
+        $(".palette-" + palette_name + " ul li:nth-child(1)").hover(function(){
+          $(this).html(colors[palette][0]);
+        }, function() {
+          $(this).html(" ");
+        });
+
         $(".palette-" + palette_name + " ul li:nth-child(2)").css("display", "block");
         $(".palette-" + palette_name + " ul li:nth-child(2)").css("background-color", colors[palette][1]);
         $(".palette-" + palette_name + " ul li:nth-child(2)").css("height", "20%");
+
+        //onhover text appear
+        $(".palette-" + palette_name + " ul li:nth-child(2)").hover(function(){
+          $(this).html(colors[palette][1]);
+        }, function() {
+          $(this).html(" ");
+        });
 
         $(".palette-" + palette_name + " ul li:nth-child(3)").css("display", "block");
         $(".palette-" + palette_name + " ul li:nth-child(3)").css("background-color", colors[palette][2]);
         $(".palette-" + palette_name + " ul li:nth-child(3)").css("height", "15%");
 
+        //onhover text appear
+        $(".palette-" + palette_name + " ul li:nth-child(3)").hover(function(){
+          $(this).html(colors[palette][2]);
+        }, function() {
+          $(this).html(" ");
+        });
+
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("display", "block");
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("background-color", colors[palette][3]);
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("height", "15%");
 
+        //onhover text appear
+        $(".palette-" + palette_name + " ul li:nth-child(4)").hover(function(){
+          $(this).html(colors[palette][3]);
+        }, function() {
+          $(this).html(" ");
+        });
+
         $(".palette-" + palette_name + " ul li button").css("padding", ".3rem");
         $(".palette-" + palette_name + " ul li button").css("margin", "1rem 0");
+        $(".palette-" + palette_name + " ul li button").css("text-align", "left");
     }
 }
 

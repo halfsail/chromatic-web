@@ -13,10 +13,17 @@ body {
   font-weight: 500;
 }
 
+body.noscroll
+{
+    position: fixed;
+    overflow-y: scroll;
+    width: 100%;
+}
+
 /* topbar colors
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 #top-bar {
-  height:.5rem;
+  height:.2rem;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -31,7 +38,7 @@ body {
     top: 0%;
     left: 0%;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background-color: black;
     z-index:1001;
     -moz-opacity: 0.8;
@@ -57,7 +64,8 @@ body {
 }
 
 #color1, #color2, #color3, #color4{
-  height: .5rem;
+  height: 100%;
+  width: 25%;
   margin-top:0;
   padding-top: 0;
 }
@@ -90,8 +98,11 @@ body {
 .card h4 {
   text-align: center;
 }
+.palette {
+  height: 25rem;
+}
 .card .palette {
-  height:80%;
+  height:25rem;
 }
 
 .palette ul {
