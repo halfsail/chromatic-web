@@ -13,6 +13,13 @@ body {
   font-weight: 500;
 }
 
+body.noscroll
+{
+    position: fixed;
+    overflow-y: scroll;
+    width: 100%;
+}
+
 /* topbar colors
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 #top-bar {
