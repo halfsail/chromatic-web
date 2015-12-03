@@ -1,111 +1,110 @@
 <?php
-
+	//Start session
 	session_start();
-//sql commad for leaderboard
-//SELECT * FROM `Users` ORDER BY wins DESC;
-	$dbhost = 'oniddb.cws.oregonstate.edu';
-	$dbname = 'feyderk-db';
-	$dbuser = 'feyderk-db';
-	$dbpass = 'mziERchisw1WVmMi';
-	$dbtable = 'Users';
 
-	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-if(!$conn){
-    		die("connection failed".mysqli_connect_error());
+	//Holds our error message incase shit gets real
+	$error='';
+
+	//Has the login form been submitted?
+	if (isset($_POST['submit'])) {
+		//Did the user actually input a username and password?
+		if (empty($_POST['username']) || empty($_POST['password'])) {
+			$error = "Bro, did you even type anything?";
 		}
-
-
-	if ((isset($_POST['userName'])) && (isset($_POST['password'])) ){
-		$userName = $_POST['userName'];
-		$password = $_POST['password'];
-
-		$dbc = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-		if (!$dbc) {
-			die('Could not connect: ');
-		}
-
-		$query = "SELECT * FROM Users WHERE userName='$userName' and password='$password'";
-		$result = mysqli_query($dbc, $query);
-
-		if (mysqli_num_rows($result) == 1) {
-
-			// The log-in is OK so set the user ID and username session vars (and cookies), and redirect to the home page
-			  $row = mysqli_fetch_array($result);
-			  $_SESSION['firstName'] = $row['firstName'];
-			  $_SESSION['valid_user'] = $row['userName'];
-			}
 		else {
-          // The username/password are incorrect so set an error message
-			echo "Sorry, you must enter a valid username and password to log in.";
+			//Get the username and password provided
+			$username = $_POST['username'];
+			$password = $_POST['password'];
+
+			//Connect to our SQL server
+			$connection = mysql_connect("oniddb.cws.oregonstate.edu", "rogersza-db", "REMOVED");
+
+			//So there is this thing called SQL injection... huekappahue
+			$username = stripslashes($username);
+			$password = stripslashes($password);
+			$username = mysql_real_escape_string($username);
+			$password = mysql_real_escape_string($password);
+
+			//Get password hash
+			$phash = md5($password); //Better than plain text, not secure though (MD5 Collision vectors, etc)
+
+			//GET DA DATABASE FAM
+			$db = mysql_select_db("rogersza-db", $connection);
+
+			//Query to see if this login record exists
+			$query = mysql_query("select * from login where password='$phash' AND username='$username'", $connection);
+			$rows = mysql_num_rows($query);
+
+			//If we get data, success!
+			if ($rows == 1) {
+				//Indicate that the login was successful
+				$_SESSION['login_user'] = $username;
+
+				//Redirect!
+				header("Location: index.php");
+			}
+			else {
+				$error = "Username/password is not valid!";
+			}
+
+			//Close SQL server connection
+			mysql_close($connection);
 		}
-		mysqli_free_result($result);
-		mysqli_close($dbc);
+	}
+
+	//Redirect if already logged in
+	if(isset($_SESSION['login_user'])) {
+	    header("Location: index.php");
 	}
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
-  <title>Hi there</title>
-  <meta name="viewport" content="width=device-width">
+	<head>
+		<!-- General -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/css/main.css">
+		<!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-  <!-- Fonts -->
-  <link href='http://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-</head>
-<body>
-	<div id="top-bar">
-			<div id="color1"></div>
-			<div id="color2"></div>
-			<div id="color3"></div>
-			<div id="color4"></div>
-	</div>
+		<!-- CSS -->
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/main.css">
 
-<nav>
-			<a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
-			<a href="#" title="Popular">Popular</a>
-			<a href="login.php" title="Login">Login</a>
-			<a href="signup.php" title="Signup">Sign Up</a>
-	</nav>
+		<!-- Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-	<div class=flex_con>
+		<title>Login</title>
+	</head>
+	<body>
+		<div id="top-bar">
+				<div id="color1"></div>
+				<div id="color2"></div>
+				<div id="color3"></div>
+				<div id="color4"></div>
+		</div>
 
-	<div class=card>
-
-          <h3> Login</h3>
 		<?php
+			include('nav.php');
+		?>
 
-          	if (isset($_SESSION['valid_user'])) {
-          		echo " <h5> You are logged in as </h5><p> User: ".$_SESSION['valid_user'];
-          		echo "<p> <a href='logout.php'>Log out </a><br />";
-          	}
-          	else {
-          		if (isset($userName)) {
-          			// user tried but can't log in
-          			echo "<h6> Could not log you in </h6>";
-          		} else {
-          			// user has not tried
-          			echo " <h6> You need to log in </h6> ";
-          		}
-          		// Log in form
+		<div class="flex_con">
+			<div class="card">
+				<h3> Login </h3>
 
-          		echo " <form method='post' action='rockpaperscissors2.php' > ";
-          		echo " <input type='text' name='userName' placeholder='User Name'> <br /> ";
-          		echo " <input type='password' name='password' placeholder='Password' /> <br />";
-          		echo ' <input type="submit" value="Log In" name="submit" />';
-          		echo "</form>";
-			//echo " <a href='signup.php'>Sign Up Section </a> "
-          	}
-          ?>
-          <a href='signup.php'>Don't have an account? Create one here </a>
-</div>
+				<form action="" method="post">
+		            <input id="name" name="username" placeholder="Username" type="text">
+		            <input id="password" name="password" placeholder="*****" type="password">
+		            <input name="submit" type="submit" value=" Login ">
+		            <span style="color:red;"><?php echo $error; ?></span>
+		        </form>
 
-	</div>
-	<script src="logic.js" type="text/javascript"></script>
-</body>
+				<br><br>
+				<a href="signup.php">Don't have an account? Create one here!</a>
+
+			  </div>
+		  </div>
+	</body>
 </html>

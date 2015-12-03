@@ -661,7 +661,7 @@ function displayPalettes() {
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("background-color", colors[palette][3]);
         $(".palette-" + palette_name + " ul li:nth-child(4)").css("height", "15%");
 
-        //onhover text appear
+        //onHover text appear
         $(".palette-" + palette_name + " ul li:nth-child(4)").hover(function(){
             $(this).html("<p>" + colors[palette][3] + "</p>");
             $("p").css("display", "block");
@@ -674,8 +674,6 @@ function displayPalettes() {
         $(".palette-" + palette_name + " ul li button").css("padding", ".3rem");
         $(".palette-" + palette_name + " ul li button").css("margin", "1rem 0");
         $(".palette-" + palette_name + " ul li button").css("text-align", "left");
-
-
     }
 }
 

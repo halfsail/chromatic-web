@@ -103,7 +103,7 @@ body.noscroll {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  /*align-items: center; Leaving this out looks better imo, thoughts?*/
   flex-wrap: wrap;
 }
 

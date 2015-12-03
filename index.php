@@ -29,12 +29,9 @@
             <div id="color4"></div>
         </div>
 
-    	<nav>
-            <a href="index.html" title="Home"><img src="images/weblogo.png" alt="logo"></a>
-            <a href="#" title="Popular">Popular</a>
-            <a href="login.php" title="Login">Login</a>
-            <a href="signup.php" title="Signup">Sign Up</a>
-        </nav>
+        <?php
+			include('nav.php');
+		?>
 
         <div class="flex_con">
             <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
