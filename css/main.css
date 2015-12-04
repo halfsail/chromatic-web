@@ -107,6 +107,12 @@ body.noscroll {
   flex-wrap: wrap;
 }
 
+.flex_it {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* navigation
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 nav {
