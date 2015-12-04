@@ -113,6 +113,11 @@ body.noscroll {
   align-items: center;
 }
 
+.con {
+  width:75%;
+  height:80%;
+}
+
 /* navigation
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 nav {
