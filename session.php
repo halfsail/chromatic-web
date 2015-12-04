@@ -3,7 +3,7 @@
     session_start();
 
     //Connect to our SQL server
-    $connection = mysql_connect("oniddb.cws.oregonstate.edu", "rogersza-db", "REMOVE");
+    $connection = mysql_connect("oniddb.cws.oregonstate.edu", "rogersza-db", "REMOVED");
 
     //Select the correct database
     $db = mysql_select_db("rogersza-db", $connection);
