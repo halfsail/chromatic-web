@@ -1,3 +1,10 @@
+<?php
+    include('session.php');
+
+    if (!isset($login_session)) {
+        header("Location: signup.php");
+    }
+ ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,7 +25,7 @@
         <link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-        <title>Hi there</title>
+        <title><?php echo $login_session ?>'s Favs</title>
     </head>
 
 	<body>
@@ -36,11 +43,7 @@
         <div class="flex_con">
             <div id="fade" class="black_overlay" onclick ="closeExpand()"></div>
 
-            <script>displayPalettes();</script>
-
             <?php
-                //Go through and set number of favorites for all palettes//
-
                 //Start session
                 session_start();
 
@@ -50,14 +53,15 @@
                 //Select the correct database
                 $db = mysql_select_db("rogersza-db", $connection);
 
-                //Query to pull list popular enteries
-                $info_sql = mysql_query("select * from popular", $connection);
+                //Query to pull list of favs
+                $info_sql = mysql_query("select * from favs where user = '$user_check'", $connection);
+
 
                 //Did we get anything?
                 if(mysql_num_rows($info_sql) > 0) {
                     //Go through all enteries
                     while ($row = mysql_fetch_assoc($info_sql)) {
-                        echo "<script>defineFavs(\"" . $row["name"]  . "\", \"" . $row["favs"] . "\", \"false\");</script>";
+                        echo "<script>displayPalette(\"" . $row["palette"]  . "\");</script>";
                     }
                 }
 

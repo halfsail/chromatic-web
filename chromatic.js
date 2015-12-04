@@ -587,7 +587,7 @@ function displayPalettes() {
         document.write('              <li><p></p></li>');
         document.write('              <li><p></p></li>');
         document.write('              <li><p></p></li>');
-        document.write('              <li><button># Favs</button></li>');
+        document.write('              <li><span style="color:#35af44;"></span></li>');
         document.write('          </ul>');
         document.write('        </div>');
         document.write('    </div>');
@@ -599,7 +599,7 @@ function displayPalettes() {
         document.write('                <li><p></p></li>');
         document.write('                <li><p></p></li>');
         document.write('                <li><p></p></li>');
-        document.write('                <li><button># Favs</button></li>');
+        document.write('                <li><button onclick="fav_btn(this)" value="' + palette_name + '">0 Favs</button></li>');
         document.write('            </ul>');
         document.write('        </div>');
         document.write('    </div>');
@@ -677,14 +677,157 @@ function displayPalettes() {
     }
 }
 
+function displayPalette(palette_target) {
+    //Go through each color palette defined above
+    for(var palette in colors) {
+        //Pull spaces and other chars from name (Will cause problems with jQuery CSS modifcations)
+        var palette_name = palette.replace(/\s+/g, '');
+        palette_name =  palette_name.replace(/[#'"]+/g, '');
+
+        //Only render the palette given
+        if(palette_name == palette_target) {
+            //Define div IDs (with no spaces)
+            var light = palette_name + "-light";
+            var fade = palette_name + "-fade";
+
+            //Output Palette
+            document.write('    <div id="' + fade + '" class="black_overlay" onclick ="closeExpand(\'' + palette_name + '\')"></div>');
+            document.write('    <div id="' + light + '" class="white_content">');
+            document.write('        <h4>' + palette + '</h4>');
+            document.write('        <div class="palette-' + palette_name + '">');
+            document.write('          <ul>');
+            document.write('              <li><p></p></li>');
+            document.write('              <li><p></p></li>');
+            document.write('              <li><p></p></li>');
+            document.write('              <li><p></p></li>');
+            document.write('              <li></li>');
+            document.write('          </ul>');
+            document.write('        </div>');
+            document.write('    </div>');
+            document.write('    <div class="card" onclick="expand(\'' + palette_name + '\')"">');
+            document.write('        <h4>' + palette + '</h4>');
+            document.write('        <div class="palette-' + palette_name + '">');
+            document.write('            <ul>');
+            document.write('                <li><p></p></li>');
+            document.write('                <li><p></p></li>');
+            document.write('                <li><p></p></li>');
+            document.write('                <li><p></p></li>');
+            document.write('                <li></li>');
+            document.write('            </ul>');
+            document.write('        </div>');
+            document.write('    </div>');
+
+            //CSS for Palette
+            $(".card .palette-" + palette_name).css("height", "80%");
+
+            $(".palette-" + palette_name).css("height", "80%");
+
+            $(".palette-" + palette_name + " ul").css("margin", "auto auto");
+            $(".palette-" + palette_name + " ul").css("width", "85%");
+            $(".palette-" + palette_name + " ul").css("height", "100%");
+            $(".palette-" + palette_name + " ul").css("padding-bottom", "1rem");
+            $(".palette-" + palette_name + " ul").css("text-align", "center");
+
+            $(".palette-" + palette_name + " ul li:nth-child(1)").css("display", "block");
+            $(".palette-" + palette_name + " ul li:nth-child(1)").css("background-color", colors[palette][0]);
+            $(".palette-" + palette_name + " ul li:nth-child(1)").css("height", "30%");
+
+            //onHover text appear
+            $(".palette-" + palette_name + " ul li:nth-child(1)").hover(function() {
+                $(this).html("<p>" + colors[palette][0] + "</p>");
+                $("p").css("display", "block");
+                $("p").css("color", "white");
+                $("p").css("background-color", "rgba(33, 33, 33, .5)");
+            }, function() {
+                $(this).html("<p></p>");
+            });
+
+            $(".palette-" + palette_name + " ul li:nth-child(2)").css("display", "block");
+            $(".palette-" + palette_name + " ul li:nth-child(2)").css("background-color", colors[palette][1]);
+            $(".palette-" + palette_name + " ul li:nth-child(2)").css("height", "20%");
+
+            //onHover text appear
+            $(".palette-" + palette_name + " ul li:nth-child(2)").hover(function() {
+                $(this).html("<p>" + colors[palette][1] + "</p>");
+                $("p").css("display", "block");
+                $("p").css("color", "white");
+                $("p").css("background-color", "rgba(33, 33, 33, .5)");
+            }, function() {
+                $(this).html("<p></p>");
+            });
+
+            $(".palette-" + palette_name + " ul li:nth-child(3)").css("display", "block");
+            $(".palette-" + palette_name + " ul li:nth-child(3)").css("background-color", colors[palette][2]);
+            $(".palette-" + palette_name + " ul li:nth-child(3)").css("height", "15%");
+
+            //onHover text appear
+            $(".palette-" + palette_name + " ul li:nth-child(3)").hover(function() {
+                $(this).html("<p>" + colors[palette][2] + "</p>");
+                $("p").css("display", "block");
+                $("p").css("color", "white");
+                $("p").css("background-color", "rgba(33, 33, 33, .5)");
+            }, function() {
+                $(this).html("<p></p>");
+            });
+
+            $(".palette-" + palette_name + " ul li:nth-child(4)").css("display", "block");
+            $(".palette-" + palette_name + " ul li:nth-child(4)").css("background-color", colors[palette][3]);
+            $(".palette-" + palette_name + " ul li:nth-child(4)").css("height", "15%");
+
+            //onHover text appear
+            $(".palette-" + palette_name + " ul li:nth-child(4)").hover(function(){
+                $(this).html("<p>" + colors[palette][3] + "</p>");
+                $("p").css("display", "block");
+                $("p").css("color", "white");
+                $("p").css("background-color", "rgba(33, 33, 33, .5)");
+            }, function() {
+                $(this).html("<p></p>");
+            });
+        }
+    }
+}
+
+function defineFavs(palette_name, num, popular) {
+    //Is this for our popular page?
+    if(popular == "false") {
+        //Adjust button HTML
+        $(".card .palette-" + palette_name + " ul li:nth-child(5)").html("<button onclick=\"fav_btn(this)\" value=\"" + palette_name + "\">" + num + " Favs</button>");
+
+        //Reapply CSS
+        $(".card .palette-" + palette_name + " ul li button").css("padding", ".3rem");
+        $(".card .palette-" + palette_name + " ul li button").css("margin", "1rem 0");
+        $(".card .palette-" + palette_name + " ul li button").css("text-align", "left");
+    }
+    else {
+        //Adjust button HTML
+        $(".card .palette-" + palette_name + " ul li:nth-child(5)").html("<span style=\"color:#35af44;\">" + num + " Favs</span>");
+    }
+
+}
+
 function closeExpand(palette_name) {
     document.getElementById(palette_name + '-light').style.display='none';
     document.getElementById(palette_name + '-fade').style.display='none';
     $('body').removeClass('noscroll');
+    $(".palette-" + palette_name + " ul li span").html("<span style=\"color:#35af44;\"></span>");
 }
 
 function expand(palette_name) {
     document.getElementById(palette_name + '-light').style.display='block';
     document.getElementById(palette_name + '-fade').style.display='block';
     $('body').addClass('noscroll');
+}
+
+function fav_btn(btn) {
+    //Get button object value
+    var clickBtnValue = btn.value;
+
+    //Ajax to process favorite action
+    var ajaxurl = 'ajax.php',
+    data =  {'fav': clickBtnValue};
+    $.post(ajaxurl, data, function (response) {
+        //Let the user know what happened
+        //alert("Processed favorite!");
+        $(".palette-" + clickBtnValue + " ul li span").html("<span style=\"color:#35af44;\">Added to your favorites!</span>");
+    });
 }
