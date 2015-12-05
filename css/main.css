@@ -107,6 +107,17 @@ body.noscroll {
   flex-wrap: wrap;
 }
 
+.flex_it {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.con {
+  width:75%;
+  height:80%;
+}
+
 /* navigation
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 nav {
