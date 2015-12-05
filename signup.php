@@ -79,10 +79,10 @@
 		?>
 
 		<div class="flex_con">
-			<div class="card flex_it">
+			<div class="card">
 				<h3> Sign up! </h3>
 
-				<form method="post" class="flex_it" action="">
+				<form method="post" action="">
 					<input type="text" id="userName" name="userName" placeholder="Username" value="<?php if (!empty($userName)) echo $userName; ?>" />
 					<input type="password" id="password1" name="password1" placeholder="******"/>
 					<input type="text" id="firstName" name="firstName" placeholder="First Name"/>

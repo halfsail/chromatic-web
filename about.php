@@ -18,7 +18,7 @@
         <link href='https://fonts.googleapis.com/css?family=Halant:400,500' rel='stylesheet' type='text/css'>
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-        <title>Hi there</title>
+        <title>About</title>
     </head>
 
 	<body>
@@ -29,9 +29,9 @@
             <div id="color4"></div>
         </div>
 
-        <!-- <?php
+        <?php
 			include('nav.php');
-		?> -->
+		?>
 
         <div class="flex_it">
           <div class="con flex_it">
@@ -39,25 +39,9 @@
           <p>
             We here at chromatic love colors. We have handcrafted many different color palettes for levels in our color puzzle game.
              But now we want to share those palettes to you the user. Feel free to use our colors for what ever you want design and create.
+             Create an account, and favorite the color palettes that you love the most!
           </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
+          <br>
           <h2>Help us make things better</h2>
           <p>
             We would also like your feedback for what palettes are the best lookings or made for the most challenging puzzles. Feel free

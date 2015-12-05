@@ -13,6 +13,7 @@
 			echo '<a href="popular.php" title="Popular">Popular</a>';
 			echo '<a href="fav.php" title="Favorites">Favorites</a>';
 		    echo '<a href="logout.php" title="Logout">Logout</a>';
+			echo '<a href="about.php" title="Logout">About</a>';
 		}
 
 		//If user is not logged in
@@ -20,6 +21,7 @@
 			echo '<a href="popular.php" title="Popular">Popular</a>';
 		    echo '<a href="login.php" title="Login">Login</a>';
 		    echo '<a href="signup.php" title="Signup">Sign Up</a>';
+			echo '<a href="about.php" title="Logout">About</a>';
 		}
 	?>
 </nav>

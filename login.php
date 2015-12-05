@@ -91,10 +91,10 @@
 		?>
 
 		<div class="flex_con">
-			<div class="card flex_it">
+			<div class="card">
 				<h3> Login </h3>
 
-				<form action="" class="flex_it" method="post">
+				<form action="" method="post">
 		            <input id="name" name="username" placeholder="Username" type="text">
 		            <input id="password" name="password" placeholder="*****" type="password">
 		            <input name="submit" type="submit" value=" Login ">
