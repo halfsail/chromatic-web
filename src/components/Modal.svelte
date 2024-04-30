@@ -73,6 +73,7 @@
         border-radius: 50%;
         height: 48px;
         width: 48px;
+		cursor: pointer;
 
     }
 	@keyframes zoom {

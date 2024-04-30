@@ -63,7 +63,7 @@
         transform: scale(1.15);
         border-radius: var(--cornerRadius);
                 /* elevation / theme_dark / e6 */
-        box-shadow: 0px 24px 28px -12px rgba(0, 0, 0, 0.32);
+        box-shadow:0px 24px 28px -12px rgba(0, 0, 0, 0.32);
 
     }
     .hoverDot {

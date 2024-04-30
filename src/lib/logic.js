@@ -1,4 +1,40 @@
 import chroma from "chroma-js";
+import { hues } from "./hues";
+
+
+export function getLevel(currentLevelIndex, Difficultity) {
+
+  // check to see if there levelIndex or tutorial level
+  
+  // filter out current level from hues arrays
+  let pickableHues = Array.from(Array(hues.length).keys())
+  pickableHues.splice(currentLevelIndex, 1)
+  // random pick one of those arrays
+  const hueIndex = pickableHues[Math.floor(Math.random()*pickableHues.length)]
+  // save array as temp var
+  const paletteObject = hues[hueIndex]
+  console.log(paletteObject)
+
+  // check if user has difficultity
+  // return list of levels with only that difficultity
+  // pick one of those arrays
+  // save object as temp var
+
+
+  // const levelObject = {
+  //   colors = hues[]
+  // }
+  // return an object with following
+  // let columns = 3
+  // let rows = 5
+  // let colors = ['#6ACBBA', '#646AB3', '#DBE843', '#EC8282']
+  // let order = getColors(colors, columns, rows)
+  // let palette = []
+  // let locks = [2, 12, 14]
+  // let containerBg = getBackground(colors)
+
+
+}
 
 
 

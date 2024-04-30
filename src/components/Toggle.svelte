@@ -43,7 +43,8 @@
         align-items: center;
         height: 30px;
         width: 30px;
-        border: 4px solid black;
+        border: 2px solid black;
+        box-shadow: inset 0 0 0 2px black;
         border-radius: 50%;
         cursor: pointer;
 
@@ -58,10 +59,10 @@
         overflow: hidden;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
-        height: 40px;
-        min-width: 80px;
+        height: 30px;
+        min-width: 60px;
         transition: all 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin-left: -5px;
+        
     }
     .emptyDot {
         display: flex;
@@ -69,7 +70,7 @@
         justify-content: center;
     }
     .check .twoDots {
-        transform: translateX(-40.5px);
+        transform: translateX(-30px);
     }
     .check .noToggle {
         transform: scale(.8);

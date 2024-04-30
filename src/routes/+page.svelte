@@ -4,7 +4,7 @@
 	import { quintOut } from 'svelte/easing';
 
     import { hues } from '../lib/hues'
-    import { clickOutside, randomNumber, getBackground, getColors, shuffleLevel, didWin } from '../lib/logic'
+    import { clickOutside, randomNumber, getBackground, getColors, shuffleLevel, didWin, getLevel } from '../lib/logic'
     import Swatch from '../components/Swatch.svelte';
     import RoundBtn from '../components/RoundBtn.svelte';
     import Modal from '../components/Modal.svelte';
@@ -47,7 +47,7 @@
     let hasMotion = true
 
 
-
+    getLevel(0, 'easy')
     palette = shuffleLevel(order, locks, columns, rows)
 
     // sound functions
@@ -71,11 +71,6 @@
             winSound.play()
         }
     }
-
-    function getLevel() {
-
-    }
-
     // function makeAbsolute(e) {
     //     e.target.style.position = "absolute"
     // }
@@ -234,7 +229,7 @@
         </div>
         <div class="controls">
             <RoundBtn type="hint" on:click={hint} />
-            <RoundBtn type="settings" />
+            <RoundBtn type="settings" on:click={toggleSettings}/>
             <div class="resetGroup">
                 <RoundBtn type="restart" />
                 <div>
