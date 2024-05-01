@@ -16,6 +16,11 @@ export function getLevel(currentLevelIndex, Difficultity) {
   console.log(paletteObject)
 
   // check if user has difficultity
+  if (Difficultity === 'any') {
+    // randomly pick from whole list of levels
+  } else {
+    
+  }
   // return list of levels with only that difficultity
   // pick one of those arrays
   // save object as temp var

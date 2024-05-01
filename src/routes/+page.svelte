@@ -237,10 +237,10 @@
                     <div>
                         <span>Difficultity</span>
                         <select name="" id="">
-                            <option value="">any</option>
-                            <option value="">easy</option>
-                            <option value="">medium</option>
-                            <option value="">hard</option>
+                            <option value="5">any</option>
+                            <option value="1">easy</option>
+                            <option value="2">medium</option>
+                            <option value="3">hard</option>
                         </select>
                     </div>
                 </div>
