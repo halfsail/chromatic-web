@@ -22,14 +22,15 @@
     const clickUpOn = new Sound(pop_up_on)
     const winSound = new Sound(kirakira)
 
+    let game = getLevel(0, 'any')
 
-    let columns = 3
-    let rows = 5
-    let colors = ['#6ACBBA', '#646AB3', '#DBE843', '#EC8282']
-    let order = getColors(colors, columns, rows)
-    let palette = []
-    let locks = [2, 12, 14]
-    let containerBg = getBackground(colors)
+    // let columns = 3
+    // let rows = 5
+    // let colors = ['#6ACBBA', '#646AB3', '#DBE843', '#EC8282']
+    // let order = getColors(colors, columns, rows)
+    // let palette = []
+    // let locks = [2, 12, 14]
+    // let containerBg = getBackground(colors)
 
 
     let aboutModal = false
@@ -47,8 +48,8 @@
     let hasMotion = true
 
 
-    getLevel(0, 'easy')
-    palette = shuffleLevel(order, locks, columns, rows)
+    
+    // palette = shuffleLevel(order, locks, columns, rows)
 
     // sound functions
     function playClickDown() {
@@ -78,7 +79,7 @@
 
 
     function winCheck() {
-        if (didWin(order, palette, colors, rows, columns) === true) {
+        if (didWin(game.order, game.palette, game.colors, game.rows, game.columns) === true) {
                 win = true;
                 playWinChime()
             } else {
@@ -87,7 +88,7 @@
     }
 
     function selectSwatch(index) {
-        if(locks.includes(index) ||  selectedIndex === index) {
+        if(game.locks.includes(index) ||  selectedIndex === index) {
             return selectedIndex = null
         }
         if (selectedIndex === null) {
@@ -105,7 +106,7 @@
 
     function swapSwatch(item1, item2) {
         // pass in all colors and clone
-        let tempPalette = palette
+        let tempPalette = game.palette
         // swap the two items
         // [temp[item1], temp[item2]] = [temp[item2], temp[item1]];
         const temp = tempPalette[item1]
@@ -113,7 +114,7 @@
         tempPalette[item2] = temp
 
         // update colors
-        palette = tempPalette
+        game.palette = tempPalette
         // reset selected
         selectedIndex = null
         playerMoves = playerMoves+1
@@ -121,17 +122,17 @@
     }
 
     function hint() {
-        const nonInteractive = [...locks]
-        const indexOrder = [...Array(columns* rows).keys()]
+        const nonInteractive = [...game.locks]
+        const indexOrder = [...Array(game.columns* game.rows).keys()]
         // remove these from correct array
         let hintCells = nonInteractive.reduce((b, a)=>(b.includes(a) && b.splice(b.indexOf(a),1), b), [...indexOrder])
         // pick random color and its index
         const hintIndex = hintCells[Math.floor(Math.random() * hintCells.length)]
-        const randomColor = order[hintIndex]
+        const randomColor = game.order[hintIndex]
         // push new locked cell to lock array
-        locks.push(hintIndex)
+        game.locks.push(hintIndex)
         // swap location of colors
-        const oldIndex = palette.indexOf(randomColor)
+        const oldIndex = game.palette.indexOf(randomColor)
 
         swapSwatch(oldIndex, hintIndex)
         playerHint = playerHints++
@@ -158,20 +159,20 @@
 
     // swatch related function
     function isLock(index) {
-        return locks.includes(index)
+        return game.locks.includes(index)
     }
     function isCorner(cellIndex) {
         // first and last corner handle throught css in swatch
         if (cellIndex === 0) {
             return 'tl_corner'
         }
-        if (cellIndex === (columns - 1)) {
+        if (cellIndex === (game.columns - 1)) {
             return 'tr_corner'
         }
-        if (cellIndex === (palette.length - columns)) {
+        if (cellIndex === (game.palette.length - game.columns)) {
             return 'bl_corner'
         }
-        if (cellIndex === (palette.length - 1)) {
+        if (cellIndex === (game.palette.length - 1)) {
             return 'br_corner'
         }
     }
@@ -194,12 +195,13 @@
     <button on:click={toggleSettings}>toggle settings</button> <p>{settingModal}</p>
 </header>
 
-<div class="game" style="--color0: {colors[0]}; --color1: {colors[1]}; --color2: {colors[2]}; --color3: {colors[3]};">
-    {#key colors}
-    <div class="board_container" style="--containerBg: {containerBg}" use:clickOutside on:click_outside={handleClickOutside}
-    out:fly={{ duration: 1000, x: '-90vw', opacity: 0, easing: quintOut }} in:fly={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}>
-        <div class="game_board" style="--colSize: {columns}; --rowSize: {rows} " >
-            {#each palette as color, i (color)}
+<div class="game" style="--color0: {game.colors[0]}; --color1: {game.colors[1]}; --color2: {game.colors[2]}; --color3: {game.colors[3]};">
+    {#key game}
+    <div class="board_container" style="--containerBg: {game.containerBg}" use:clickOutside on:click_outside={handleClickOutside}
+        out:fly={{ duration: 1000, x: '-90vw', opacity: 0, easing: quintOut }} 
+        in:fly={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}>
+        <div class="game_board" style="--colSize: {game.columns}; --rowSize: {game.rows} " >
+            {#each game.palette as color, i (color)}
             <div class="swatch_container" animate:flip={{ duration: 350, easing: quintOut }}>
                 <Swatch hue={color} index={i} {selectedIndex} corner={isCorner(i)} lock={isLock(i)} on:click={selectSwatch(i)}/>
             </div>

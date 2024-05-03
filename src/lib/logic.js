@@ -1,5 +1,6 @@
 import chroma from "chroma-js";
 import { hues } from "./hues";
+import { levels } from "./levels"
 
 
 export function getLevel(currentLevelIndex, Difficultity) {
@@ -15,9 +16,13 @@ export function getLevel(currentLevelIndex, Difficultity) {
   const paletteObject = hues[hueIndex]
   console.log(paletteObject)
 
+  let levelLayout;
+
   // check if user has difficultity
   if (Difficultity === 'any') {
     // randomly pick from whole list of levels
+    levelLayout = levels[Math.floor( Math.random()*levels.length )]
+    console.log(levelLayout)
   } else {
     
   }
@@ -25,20 +30,20 @@ export function getLevel(currentLevelIndex, Difficultity) {
   // pick one of those arrays
   // save object as temp var
 
+  const paletteOrder = getColors(paletteObject, levelLayout.columns, levelLayout.rows )
 
-  // const levelObject = {
-  //   colors = hues[]
-  // }
-  // return an object with following
-  // let columns = 3
-  // let rows = 5
-  // let colors = ['#6ACBBA', '#646AB3', '#DBE843', '#EC8282']
-  // let order = getColors(colors, columns, rows)
-  // let palette = []
-  // let locks = [2, 12, 14]
-  // let containerBg = getBackground(colors)
+  const levelObject = {
+    colors: paletteObject,
+    order: paletteOrder,
+    palette: shuffleLevel(paletteOrder, levelLayout.locks, levelLayout.columns, levelLayout.rows),
+    containerBg: getBackground(paletteObject),
 
-
+    columns: levelLayout.columns,
+    rows: levelLayout.rows,
+    locks: levelLayout.locks,
+  }
+  console.log(levelObject)
+  return levelObject
 }
 
 
