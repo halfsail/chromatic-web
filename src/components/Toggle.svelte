@@ -27,6 +27,7 @@
 <style>
     p {
         margin: 0;
+        user-select: none;
     }
     .inputRow  {
         display: flex;

@@ -9,29 +9,20 @@
     import RoundBtn from '../components/RoundBtn.svelte';
     import Modal from '../components/Modal.svelte';
     import Toggle from '../components/Toggle.svelte';
+    import Linkrow from '../components/Linkrow.svelte';
 
     // import sounds
     import { Sound } from 'svelte-sound';
-    import pop_down from "../assets/sounds/pop_down.mp3"
-    import pop_up_off from "../assets/sounds/pop_up_off.mp3"
-    import pop_up_on from "../assets/sounds/pop_up_on.mp3"
+    import pop_select from "../assets/sounds/pop_select.mp3"
+    import pop_swap from "../assets/sounds/pop_up_off.mp3"
     import kirakira from "../assets/sounds/kirakira.mp3"
+    
 
-    const clickDown = new Sound(pop_down)
-    const clickUpOff = new Sound(pop_up_off)
-    const clickUpOn = new Sound(pop_up_on)
+    const clickSwap = new Sound(pop_swap)
+    const clickSound = new Sound(pop_select)
     const winSound = new Sound(kirakira)
 
     let game = getLevel(0, 'any')
-
-    // let columns = 3
-    // let rows = 5
-    // let colors = ['#6ACBBA', '#646AB3', '#DBE843', '#EC8282']
-    // let order = getColors(colors, columns, rows)
-    // let palette = []
-    // let locks = [2, 12, 14]
-    // let containerBg = getBackground(colors)
-
 
     let aboutModal = false
     let settingModal = false
@@ -46,42 +37,34 @@
     let hasSound = true
     let hasHaptics = true
     let hasMotion = true
+    let setDiffultity = 'any'
 
 
     
     // palette = shuffleLevel(order, locks, columns, rows)
 
-    // sound functions
-    function playClickDown() {
+    function playSound(type) {
         if (hasSound === true) {
-            clickDown.play()
+            switch (type) {
+                case 'click':
+                    clickSound.play()
+                    break;
+                case 'swap':
+                    clickSwap.play()
+                    break;
+                case 'win':
+                    winSound.play()
+                    break;
+                default:
+                    break;
+            }
         }
     }
-    function playClickUp() {
-        if (hasSound === true) {
-            clickUpOn.play()
-        }
-    }
-    function playSwap() {
-        if (hasSound === true) {
-            clickUpOff.play()
-        }
-    }
-    function playWinChime() {
-        if (hasSound === true) {
-            winSound.play()
-        }
-    }
-    // function makeAbsolute(e) {
-    //     e.target.style.position = "absolute"
-    // }
-
-
 
     function winCheck() {
         if (didWin(game.order, game.palette, game.colors, game.rows, game.columns) === true) {
                 win = true;
-                playWinChime()
+                playSound('win')
             } else {
                 console.log("You didn't win")
             }
@@ -94,8 +77,7 @@
         if (selectedIndex === null) {
             // selecting a cell
             selectedIndex = index
-            playClickDown()
-            playClickUp()
+            playSound('click')
         } else {
             // already selected a cell will swap them
             swapSwatch(selectedIndex, index)
@@ -118,10 +100,11 @@
         // reset selected
         selectedIndex = null
         playerMoves = playerMoves+1
-        playSwap()
+        playSound('swap')
     }
 
     function hint() {
+        playSound('click')
         const nonInteractive = [...game.locks]
         const indexOrder = [...Array(game.columns* game.rows).keys()]
         // remove these from correct array
@@ -143,13 +126,11 @@
 
 
     function nextLevel() {
-        console.log(hues[1])
-        // generate new colors
-        colors = hues[randomNumber(0, hues.length)]
-        order = getColors(colors, columns, rows)
-        palette = shuffleLevel(order, locks, columns, rows)
-        // reset gamestates
+        playSound('click')
+        game = getLevel(game.levelIndex, setDiffultity)
+        // reset player movement
         selectedIndex = null
+        // reset stats
         win = false
         playerHints = 0
         playerMoves = 0
@@ -184,81 +165,104 @@
 
     // modal functions
     function toggleSettings() {
+        playSound('click')
         settingModal = !settingModal
+    }
+    function toggleWin() {
+        win = !win
     }
  
 </script>
 
 <main class:win={win}>
-<header>
-    <button on:click={nextLevel}>next</button>
-    <button on:click={toggleSettings}>toggle settings</button> <p>{settingModal}</p>
-</header>
-
 <div class="game" style="--color0: {game.colors[0]}; --color1: {game.colors[1]}; --color2: {game.colors[2]}; --color3: {game.colors[3]};">
-    {#key game}
-    <div class="board_container" style="--containerBg: {game.containerBg}" use:clickOutside on:click_outside={handleClickOutside}
-        out:fly={{ duration: 1000, x: '-90vw', opacity: 0, easing: quintOut }} 
-        in:fly={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}>
-        <div class="game_board" style="--colSize: {game.columns}; --rowSize: {game.rows} " >
-            {#each game.palette as color, i (color)}
-            <div class="swatch_container" animate:flip={{ duration: 350, easing: quintOut }}>
-                <Swatch hue={color} index={i} {selectedIndex} corner={isCorner(i)} lock={isLock(i)} on:click={selectSwatch(i)}/>
-            </div>
-            {/each}
-        </div>
-    </div>
+    
+        
+        <div class="board_container" 
+        use:clickOutside 
+        on:click_outside={handleClickOutside}
+        >
 
-    {/key}
+        {#key game.levelIndex}
 
-    <div class="sidebar_group">
-        <div class="results">
-            {#if playerHints != 0}
-            <div>
-                <p class="result_title">{playerHints}</p>
-                <p class="result_label">Hints</p>
+            <div class="game_board" style="--colSize: {game.columns}; --rowSize: {game.rows} " 
+                out:fly|local={{ duration: 1000, x: '-90vw', opacity: 0, easing: quintOut }} 
+                in:fly|local={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}
+            >
+                {#each game.palette as color, i (color)}
+                <div class="swatch_container" animate:flip={{ duration: 350, easing: quintOut }}>
+                    <Swatch hue={color} index={i} {selectedIndex} corner={isCorner(i)} lock={isLock(i)} on:click={selectSwatch(i)}/>
+                </div>
+
+                {/each}
             </div>
-            {/if}
-            <div>
-                <p class="result_title">{playerMoves}</p>
-                <p class="result_label">Moves</p>
-            </div>
-            <div>
-                <p class="result_title">{playerTime}</p>
-                <p class="result_label">Time</p>
-            </div>
-            <button class="win_button" on:click={nextLevel}>Next Level</button>
+
+        {/key}
+
         </div>
-        <div class="controls">
-            <RoundBtn type="hint" on:click={hint} />
-            <RoundBtn type="settings" on:click={toggleSettings}/>
-            <div class="resetGroup">
-                <RoundBtn type="restart" />
+        
+
+        <div class="control_group">
+            <div class="results">
+                {#if playerHints != 0}
                 <div>
-                    <p>New Level</p>
+                    <p class="result_title">{playerHints}</p>
+                    <p class="result_label">Hints</p>
+                </div>
+                {/if}
+                <div>
+                    <p class="result_title">{playerMoves}</p>
+                    <p class="result_label">Moves</p>
+                </div>
+                <div>
+                    <p class="result_title">{playerTime}</p>
+                    <p class="result_label">Time</p>
+                </div>
+                <button class="win_button" on:click={nextLevel}>Next Level</button>
+            </div>
+            <div class="controls">
+                <RoundBtn type="hint" on:click={hint} />
+                <!-- <RoundBtn type="restart" on:click={nextLevel}/> -->
+                <RoundBtn type="restart" on:click={toggleWin}/>
+                <div class="menuGroup">
+                    <RoundBtn type="settings" on:click={toggleSettings}/>
                     <div>
-                        <span>Difficultity</span>
-                        <select name="" id="">
-                            <option value="5">any</option>
-                            <option value="1">easy</option>
-                            <option value="2">medium</option>
-                            <option value="3">hard</option>
-                        </select>
+                        <p>CrossChroma</p>
+                        <div>
+                            <span>Difficultity</span>
+                            <select name="" id="" bind:value={setDiffultity}>
+                                <option value="any">any</option>
+                                <option value="easy">easy</option>
+                                <option value="medium">medium</option>
+                                <option value="hard">hard</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
+    
+
+    
+
+
 
 <Modal showModal={settingModal}>
-    <h2 slot="header">Settings</h2>
+    <h2 class="modalTitle">Settings</h2>
+    <div class="modalContainer">
     <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" />
     <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" />
     <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" />
+    </div>
+    <h2 class="modalTitle">Links</h2>
+    <div class="modalContainer">
+        <Linkrow url={"google.com"} linkLabel={"How to Play"}/>
+        <Linkrow url={"google.com"} linkLabel={"About"}/>
+        <Linkrow url={"google.com"} linkLabel={"Changelog"}/>
+    </div>
 </Modal>
-
-<footer>footer</footer>
 
 </main>
 
@@ -268,7 +272,7 @@
 
 <style>
     :root {
-        --cornerRadius: 16px;
+        --cornerRadius: 25px;
         /* colors tokens */
         --neutral-100: #fff;
         --neutral-300: #DDE4EE;
@@ -283,40 +287,31 @@
         --textOnAccent: var(--neutral-100);
 
     }
-    main {
-        position: relative;
-        /* display: grid;
-        grid-template-columns: [l_margin] minmax(24px, 1fr) [content] minmax(250px, 350px) [r_margin] minmax(24px, 1fr);
-        grid-template-rows: [header] 1fr [content] minmax(350px, 8fr) [footer] 1fr; */
-        gap: 16px;
-        margin: 16px;
-        height: 100dvh;
-    }
     .game {
         position: relative;
-        align-self: center;
-        justify-self: center;
-        grid-area: content;
-
+        height: 100%;
+        max-height: 932px;
+        width: 100%;
+        max-width: 420px;
+        /* setup grid */
         display: grid;
-        gap: 24px;
-        grid-template-columns: [l_margin] minmax(24px, 1fr) [content] minmax(300px, 420px) [r_margin] minmax(24px, 1fr);
-        grid-template-rows: [header] 1fr [content] minmax(350px, 8fr) [footer] 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 8px;
     }
 
+    .swatch_container {
+        height: 100%;
+    }
 
     .board_container {
-        display: flex;
-        height: 100%;
-        min-width: 300px;
-        width: 100%;
-        max-height: 720px;
-        max-width: 420px;
+        position: relative;
+        display: grid;
         border-radius: var(--cornerRadius);
-        background: var(--neutral-600);
         will-change: transform;
-        grid-area: content;
-        
+        width: 100%;
+        grid-column: 1/-1;
+        grid-row: 1/9;
         /* background-color: #E5E9F2; */
     }
     .board_container:before{
@@ -331,11 +326,11 @@
     }
 
     .win .board_container {
-        background: linear-gradient(90deg, var(--color0), var(--color2));
+        background: linear-gradient(90deg, var(--color0), var(--color1));
     }
     .win .board_container:before {
         mask-image: linear-gradient(to bottom, transparent, black);
-        background: linear-gradient(90deg, var(--color1), var(--color3));
+        background: linear-gradient(90deg, var(--color2), var(--color3));
     }
 
     .game_board {
@@ -346,10 +341,14 @@
         height: 100%;
         width: 100%;
         border-radius: var(--cornerRadius);
-        border: 1px solid var(--neutral-300);
+        /* border: 1px solid var(--neutral-300); */
         transition: filter 350ms ease-out;
         transition: opacity 350ms ease-in-out;;
         /* overflow: hidden; */
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: 2;
     }
 
     .win .game_board {
@@ -359,34 +358,55 @@
         pointer-events: none;
     }
 
-    .sidebar_group {
-        grid-row: 2/3;
-        grid-column: 3/4;
+    .control_group {
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-template-columns: subgrid;
+        justify-content: space-between;
+        width: 100%;
+        grid-column: 1/-1;
+        grid-row: 2/10;
         align-self: end;
-        padding: 16px 0;
     }
 
     .results, .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
+        /* display: flex;
+        flex-direction: column; */
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: 1/10;
+        grid-column: 1/-1;
+        /* gap: 24px; */
         font-family: sans-serif;
         align-self: end;
         opacity: 0;
         transform: translateX(-64px);
         display: none;
         transition: transform 250ms ease;
-        transition: all 250ms ease
+        transition: all 250ms ease;
+        
     }
     .controls {
         display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
         opacity: 1;
         transform: translateX(0);    
+        gap: 16px;
+        margin: 24px;
     }
     .win .results {
         opacity: 1;
         transform: translateX(0);
-        display: flex;
+        display: grid;
+        align-items: center;
+        /* display: flex; */
+    }
+    .results {
+        grid-template-rows: subgrid;
+        grid-row: 5/10;
+        grid-column: 1/-1;
+        margin: 0 24px;
     }
     .win .controls {
         opacity: 0;
@@ -402,7 +422,8 @@
         background: black;
         color: var(--textOnAccent);
         height: 48px;
-        width: 172px;
+        width: 100%;
+        grid-row: 4/5;
     }
     .result_title {
         font-size: 32px;
@@ -414,15 +435,19 @@
         opacity: .7;
         margin: 0;
     }
+    .results div:last-child {
+        margin-bottom: 32px;
+    }
 
-    .resetGroup {
+    .menuGroup {
         display: flex;
         align-items: center;
         gap: 16px;
         font-size: 20px;
         font-family: sans-serif;
+        margin-right: auto;
     }
-    .resetGroup p {
+    .menuGroup p {
         margin: 0;
         font-weight: 600;
         letter-spacing: .5px;
@@ -436,5 +461,21 @@
     }
 
 
+    /* modals */
+
+    .modalTitle {
+        font-size: 18px;
+        margin: 0;
+        margin-top: 16px;
+        user-select: none;
+    }
+    .modalContainer {
+        display: flex;
+        flex-direction: column;
+		background: white;
+		border-radius: 24px;
+		padding: 24px;
+		gap: 16px;
+	}
 
 </style>

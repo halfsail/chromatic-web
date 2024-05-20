@@ -1,0 +1,23 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;  
+    overflow: hidden;
+}
+
+
+main {
+    align-items: center;
+    display: flex;
+    height: 100dvh;
+    justify-content: center;
+    overflow: hidden;
+    width: 100vw;
+}
+
+
+.control_group {
+    width: 100%;
+}
+
+

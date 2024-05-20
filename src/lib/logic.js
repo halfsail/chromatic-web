@@ -17,13 +17,17 @@ export function getLevel(currentLevelIndex, Difficultity) {
   console.log(paletteObject)
 
   let levelLayout;
+  let layoutIndex;
 
   // check if user has difficultity
   if (Difficultity === 'any') {
     // randomly pick from whole list of levels
-    levelLayout = levels[Math.floor( Math.random()*levels.length )]
-    console.log(levelLayout)
+    layoutIndex = Math.floor( Math.random()*levels.length )
+    levelLayout = levels[layoutIndex]
   } else {
+    if (Difficultity === 'easy') {
+      // const
+    }
     
   }
   // return list of levels with only that difficultity
@@ -33,6 +37,7 @@ export function getLevel(currentLevelIndex, Difficultity) {
   const paletteOrder = getColors(paletteObject, levelLayout.columns, levelLayout.rows )
 
   const levelObject = {
+    levelIndex: layoutIndex,
     colors: paletteObject,
     order: paletteOrder,
     palette: shuffleLevel(paletteOrder, levelLayout.locks, levelLayout.columns, levelLayout.rows),

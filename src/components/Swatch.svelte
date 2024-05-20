@@ -40,7 +40,7 @@
         cursor: pointer;
         /* transition: all 350ms var(--scaleIn); */
         transition: all 350ms cubic-bezier(0.02, 0.01, 0.21, 1);
-        aspect-ratio: 1/1;
+
         display: grid;
     }
 

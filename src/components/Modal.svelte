@@ -16,7 +16,6 @@
 	<div class="dialog_container" on:click|stopPropagation>
         <div class="modal">
             <slot name="header" />
-		<hr />
 		<slot />
         </div>
 		<!-- svelte-ignore a11y-autofocus -->
@@ -52,14 +51,16 @@
 		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
+	h2 {
+		font-size: 18px;
+	}
+
     .modal {
         width: 260px;
-        padding: 24px 32px;
+        padding: 0 0 24px 0;
         display: flex;
         flex-direction: column;
         gap: 24px;
-        background: white;
-        border-radius: 24px;
         font-family: sans-serif;
         font-size: 18px;
     }
