@@ -250,18 +250,22 @@
 
 
 <Modal showModal={settingModal}>
-    <h2 class="modalTitle">Settings</h2>
-    <div class="modalContainer">
-    <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" />
-    <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" />
-    <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" />
-    </div>
-    <h2 class="modalTitle">Links</h2>
-    <div class="modalContainer">
-        <Linkrow url={"google.com"} linkLabel={"How to Play"}/>
-        <Linkrow url={"google.com"} linkLabel={"About"}/>
-        <Linkrow url={"google.com"} linkLabel={"Changelog"}/>
-    </div>
+    <section>
+        <h2 class="modalTitle">Settings</h2>
+        <div class="modalContainer">
+            <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" />
+            <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" />
+            <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" />
+        </div>
+    </section>
+    <section>
+        <h2 class="modalTitle">Links</h2>
+        <div class="modalContainer">
+            <Linkrow url={"google.com"} linkLabel={"How to Play"}/>
+            <Linkrow url={"google.com"} linkLabel={"About"}/>
+            <Linkrow url={"google.com"} linkLabel={"Changelog"}/>
+        </div>
+    </section>
 </Modal>
 
 </main>
@@ -466,7 +470,7 @@
     .modalTitle {
         font-size: 18px;
         margin: 0;
-        margin-top: 16px;
+        margin: 16px 0;
         user-select: none;
     }
     .modalContainer {
@@ -477,5 +481,31 @@
 		padding: 24px;
 		gap: 16px;
 	}
+
+    @media screen and (min-width: 900px) {
+        .game {
+            max-height: 800px;
+        }
+        .board_container {
+            grid-row: 1/-1;
+        }
+    .control_group {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -100%;
+    }
+    .controls {
+        flex-direction: column;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .results {
+        width: 100%;
+        gap: 24px;
+        min-width: 140px;
+        max-width: 200px;
+    }
+    }
 
 </style>

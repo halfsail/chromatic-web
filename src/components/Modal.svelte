@@ -99,4 +99,11 @@
 	button {
 		display: block;
 	}
+
+	@media screen and (max-height: 650px) {
+		.modal {
+			flex-direction: row;
+			width: 100%;
+		}
+	}
 </style>
