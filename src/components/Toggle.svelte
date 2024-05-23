@@ -8,7 +8,7 @@
 <div class="inputRow">
     <p>{label}</p>
     <label for="{name}" class:check={checked}>
-        <input bind:checked={checked} id="{name}" class="checkbox_container" type="checkbox" />
+        <input bind:checked={checked} id="{name}" class="checkbox_container" type="checkbox" on:click/>
         <div class="twoDots">
             <div class="emptyDot">
                 <svg class="noToggle" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -43,6 +43,32 @@
     
     // palette = shuffleLevel(order, locks, columns, rows)
 
+    function playEffects(type) {
+        playVibrate(type)
+        playSound(type)
+    }
+
+    function playVibrate(type) {
+        if (hasHaptics === true) {
+            switch (type) {
+                case 'click':
+                    navigator.vibrate([40,20])
+                    break;
+                case 'swap':
+                    navigator.vibrate([50])
+                    break;
+                case 'win':
+                    navigator.vibrate([50,50,50])
+                    break;
+                case 'error':
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
     function playSound(type) {
         if (hasSound === true) {
             switch (type) {
@@ -64,7 +90,7 @@
     function winCheck() {
         if (didWin(game.order, game.palette, game.colors, game.rows, game.columns) === true) {
                 win = true;
-                playSound('win')
+                playEffects('win')
             } else {
                 console.log("You didn't win")
             }
@@ -77,7 +103,7 @@
         if (selectedIndex === null) {
             // selecting a cell
             selectedIndex = index
-            playSound('click')
+            playEffects('click')
         } else {
             // already selected a cell will swap them
             swapSwatch(selectedIndex, index)
@@ -100,11 +126,11 @@
         // reset selected
         selectedIndex = null
         playerMoves = playerMoves+1
-        playSound('swap')
+        playEffects('swap')
     }
 
     function hint() {
-        playSound('click')
+        playEffects('click')
         const nonInteractive = [...game.locks]
         const indexOrder = [...Array(game.columns* game.rows).keys()]
         // remove these from correct array
@@ -123,10 +149,14 @@
 
     }
 
+    function userTap() {
+        playEffects('click')
+    }
+
 
 
     function nextLevel() {
-        playSound('click')
+        playEffects('click')
         game = getLevel(game.levelIndex, setDiffultity)
         // reset player movement
         selectedIndex = null
@@ -165,7 +195,7 @@
 
     // modal functions
     function toggleSettings() {
-        playSound('click')
+        playEffects('click')
         settingModal = !settingModal
     }
     function toggleWin() {
@@ -222,8 +252,7 @@
             </div>
             <div class="controls">
                 <RoundBtn type="hint" on:click={hint} />
-                <!-- <RoundBtn type="restart" on:click={nextLevel}/> -->
-                <RoundBtn type="restart" on:click={toggleWin}/>
+                <RoundBtn type="restart" on:click={nextLevel}/>
                 <div class="menuGroup">
                     <RoundBtn type="settings" on:click={toggleSettings}/>
                     <div>
@@ -253,9 +282,9 @@
     <section>
         <h2 class="modalTitle">Settings</h2>
         <div class="modalContainer">
-            <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" />
-            <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" />
-            <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" />
+            <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" on:click={userTap} />
+            <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" on:click={userTap}/>
+            <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" on:click={userTap}/>
         </div>
     </section>
     <section>
