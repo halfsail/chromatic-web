@@ -27,7 +27,7 @@ export const levels = [
         diff: 'easy',
         rows: 5,
         columns: 3,
-        locks: [0, 2, 13, 14]
+        locks: [0, 2, 12, 14]
     },
     {
         diff: 'easy',

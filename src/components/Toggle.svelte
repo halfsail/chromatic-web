@@ -42,8 +42,8 @@
         display: flex;
         justify-items: center;
         align-items: center;
-        height: 30px;
-        width: 30px;
+        height: 24px;
+        width: 24px;
         border: 2px solid black;
         box-shadow: inset 0 0 0 2px black;
         border-radius: 50%;
@@ -60,8 +60,8 @@
         overflow: hidden;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
-        height: 30px;
-        min-width: 60px;
+        height: 24px;
+        min-width: 48px;
         transition: all 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
         
     }
@@ -71,7 +71,7 @@
         justify-content: center;
     }
     .check .twoDots {
-        transform: translateX(-30px);
+        transform: translateX(-24px);
     }
     .check .noToggle {
         transform: scale(.8);

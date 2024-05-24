@@ -283,7 +283,7 @@
         <h2 class="modalTitle">Settings</h2>
         <div class="modalContainer">
             <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" on:click={userTap} />
-            <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" on:click={userTap}/>
+            <!-- <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" on:click={userTap}/> -->
             <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" on:click={userTap}/>
         </div>
     </section>
@@ -291,8 +291,8 @@
         <h2 class="modalTitle">Links</h2>
         <div class="modalContainer">
             <Linkrow url={"google.com"} linkLabel={"How to Play"}/>
-            <Linkrow url={"google.com"} linkLabel={"About"}/>
-            <Linkrow url={"google.com"} linkLabel={"Changelog"}/>
+            <Linkrow url={"/about"} linkLabel={"About"}/>
+            <!-- <Linkrow url={"/changelog"} linkLabel={"Changelog"}/> -->
         </div>
     </section>
 </Modal>
