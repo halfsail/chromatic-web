@@ -2,7 +2,6 @@
     export let label
     export let checked
     export let name
-    console.log((checked))
 </script>
 
 <div class="inputRow">

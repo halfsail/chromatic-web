@@ -1,47 +1,52 @@
 <script>
+    import { browser } from '$app/environment';
     import { fly } from 'svelte/transition';
     import { flip } from 'svelte/animate'
 	import { quintOut } from 'svelte/easing';
 
-    import { hues } from '../lib/hues'
-    import { clickOutside, randomNumber, getBackground, getColors, shuffleLevel, didWin, getLevel } from '../lib/logic'
+    import { saveStorage, getStorage } from '../lib/playerSettings'
+    import { clickOutside, didWin, getLevel, getTimePlayed, setContrast } from '../lib/logic'
     import Swatch from '../components/Swatch.svelte';
     import RoundBtn from '../components/RoundBtn.svelte';
     import Modal from '../components/Modal.svelte';
     import Toggle from '../components/Toggle.svelte';
     import Linkrow from '../components/Linkrow.svelte';
 
-    // import sounds
+    // import sounds assets
     import { Sound } from 'svelte-sound';
     import pop_select from "../assets/sounds/pop_select.mp3"
     import pop_swap from "../assets/sounds/pop_up_off.mp3"
     import kirakira from "../assets/sounds/kirakira.mp3"
     
-
+    // sound assets references
     const clickSwap = new Sound(pop_swap)
     const clickSound = new Sound(pop_select)
     const winSound = new Sound(kirakira)
 
-    let game = getLevel(0, 'any')
+    // fetches new level on load
+    let game = getLevel(0, 'any', 0)
 
+    // ui states variables
+    let win = false
     let aboutModal = false
     let settingModal = false
 
-    let win = false
-    let selectedIndex = null
+    // setup inital default settings for load
+    let playerSettings = {hasSound: true, hasHaptics: true, setDiffultity: 'any', tutorialDone: false, wins: 0}
+     // trigger save function when any playerSettings change
+     $: saveStorage(playerSettings);
+    // fetch players saved settings for localstorage
+    if (browser && localStorage.getItem('crossChroma') !== null) {
+        playerSettings = getStorage()
+    }
 
+    // current Level vars. These reset of browser load
     let playerMoves = 0
     let playerHints = 0
-    let playerTime = 0
+    let playerTime = game.startTime
+    let selectedIndex = null
+    let playedLevels = []
 
-    let hasSound = true
-    let hasHaptics = true
-    let hasMotion = true
-    let setDiffultity = 'any'
-
-
-    
-    // palette = shuffleLevel(order, locks, columns, rows)
 
     function playEffects(type) {
         playVibrate(type)
@@ -49,7 +54,7 @@
     }
 
     function playVibrate(type) {
-        if (hasHaptics === true) {
+        if (playerSettings.hasHaptics === true) {
             switch (type) {
                 case 'click':
                     navigator.vibrate([40,20])
@@ -70,7 +75,7 @@
 
 
     function playSound(type) {
-        if (hasSound === true) {
+        if (playerSettings.hasSound === true) {
             switch (type) {
                 case 'click':
                     clickSound.play()
@@ -91,6 +96,8 @@
         if (didWin(game.order, game.palette, game.colors, game.rows, game.columns) === true) {
                 win = true;
                 playEffects('win')
+                playerTime = getTimePlayed(playerTime)
+                playerSettings.wins = playerSettings.wins + 1;
             } else {
                 console.log("You didn't win")
             }
@@ -144,7 +151,7 @@
         const oldIndex = game.palette.indexOf(randomColor)
 
         swapSwatch(oldIndex, hintIndex)
-        playerHint = playerHints++
+        playerHints = playerHints + 1
         winCheck()
 
     }
@@ -153,20 +160,33 @@
         playEffects('click')
     }
 
+    function updatePlayedLevels(levels, currentLevel) {
+        console.log("before: " + levels)
+        // add current game to played list
+        levels.push(currentLevel)
+        if (levels.length >= 5) {
+            levels.shift()
+        }
+        console.log(playedLevels)
+        return levels
+
+    }
 
 
     function nextLevel() {
+        updatePlayedLevels(playedLevels, game.levelIndex)
         playEffects('click')
-        game = getLevel(game.levelIndex, setDiffultity)
+        game = getLevel(playedLevels, playerSettings.setDiffultity, playerSettings.wins)
         // reset player movement
         selectedIndex = null
         // reset stats
         win = false
         playerHints = 0
         playerMoves = 0
-        playerTime = 0
-        
+        playerTime = game.startTime
     }
+
+    updatePlayedLevels(playedLevels, game.levelIndex)
 
     // swatch related function
     function isLock(index) {
@@ -205,7 +225,7 @@
 </script>
 
 <main class:win={win}>
-<div class="game" style="--color0: {game.colors[0]}; --color1: {game.colors[1]}; --color2: {game.colors[2]}; --color3: {game.colors[3]};">
+<div class="game" style="--contrastColor: {setContrast(game.colors[2])};--color0: {game.colors[0]}; --color1: {game.colors[1]}; --color2: {game.colors[2]}; --color3: {game.colors[3]};">
     
         
         <div class="board_container" 
@@ -234,7 +254,7 @@
 
         <div class="control_group">
             <div class="results">
-                {#if playerHints != 0}
+                {#if playerHints > 0}
                 <div>
                     <p class="result_title">{playerHints}</p>
                     <p class="result_label">Hints</p>
@@ -259,7 +279,7 @@
                         <p>CrossChroma</p>
                         <div>
                             <span>Difficultity</span>
-                            <select name="" id="" bind:value={setDiffultity}>
+                            <select name="" id="" bind:value={playerSettings.setDiffultity}>
                                 <option value="any">any</option>
                                 <option value="easy">easy</option>
                                 <option value="medium">medium</option>
@@ -282,9 +302,9 @@
     <section>
         <h2 class="modalTitle">Settings</h2>
         <div class="modalContainer">
-            <Toggle bind:checked={hasSound} label="Sound Effects" name="SoundCheck" on:click={userTap} />
+            <Toggle bind:checked={playerSettings.hasSound} label="Sound Effects" name="SoundCheck" on:click={userTap} />
             <!-- <Toggle bind:checked={hasMotion} label="Reduced Motion" name="MotionCheck" on:click={userTap}/> -->
-            <Toggle bind:checked={hasHaptics} label="Haptics" name="HapticCheck" on:click={userTap}/>
+            <Toggle bind:checked={playerSettings.hasHaptics} label="Haptics" name="HapticCheck" on:click={userTap}/>
         </div>
     </section>
     <section>
@@ -319,6 +339,12 @@
         --textDisabled: var(--neutral-300);
         --textOnAccent: var(--neutral-100);
 
+        /* evevation */
+        /* elevation / theme_dark / e5 */
+        --swatchThickness: inset 0 -2px 0px 0 rgba(0, 0, 0, 0.25);
+        /* Elevation/Dark/e5 */
+        --elevation-4: 0px 16px 20px -8px rgba(0, 0, 0, 0.28);
+        --elevation-5: 0px 20px 24px 0 rgba(0, 0, 0, 0.32);
     }
     .game {
         position: relative;
@@ -334,7 +360,9 @@
     }
 
     .swatch_container {
-        height: 100%;
+        height: auto;
+        min-height: auto;
+        width: 100%;
     }
 
     .board_container {
@@ -369,8 +397,8 @@
     .game_board {
         z-index: 2;
         display: grid;
-        grid-template-columns: repeat(var(--colSize), 1fr);
-        grid-template-rows: repeat(var(--rowSize, 1fr));
+        grid-template-columns: repeat(var(--colSize), minmax(0, 1fr));
+        grid-template-rows: repeat(var(--rowSize, minmax(0, 1fr)));
         height: 100%;
         width: 100%;
         border-radius: var(--cornerRadius);
@@ -468,6 +496,9 @@
         opacity: .7;
         margin: 0;
     }
+    .result_title, .result_label {
+        color: var(--contrastColor);
+    }
     .results div:last-child {
         margin-bottom: 32px;
     }
@@ -534,6 +565,9 @@
         gap: 24px;
         min-width: 140px;
         max-width: 200px;
+    }
+    .result_title, .result_label {
+        color: black;
     }
     }
 

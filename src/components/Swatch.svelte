@@ -22,7 +22,7 @@
         </g>
     </svg>
     {:else}
-    <svg class="hoverDot" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="hoverDot" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g style="mix-blend-mode:luminosity" opacity="0.8">
             <circle cx="6" cy="6" r="6" fill="{iconColor}"/>
         </g>
@@ -37,10 +37,11 @@
         all: unset;
         height: 100%;
         width: 100%;
+        min-width: 0;
+        min-height: 100%;
         cursor: pointer;
         /* transition: all 350ms var(--scaleIn); */
         transition: all 350ms cubic-bezier(0.02, 0.01, 0.21, 1);
-
         display: grid;
     }
 
@@ -60,10 +61,12 @@
         margin: auto;
     }
     .pressed {
-        transform: scale(1.15);
-        border-radius: var(--cornerRadius);
-                /* elevation / theme_dark / e6 */
-        box-shadow:0px 24px 28px -12px rgba(0, 0, 0, 0.32);
+        transform: scale(1.15) rotate(-2deg);
+        /* border-radius: var(--cornerRadius); */
+        border-radius: 12px;
+        /* elevation / theme_dark / e6 */
+        box-shadow: var(--elevation-4), var(--swatchThickness);
+        z-index: 5;
 
     }
     .hoverDot {
