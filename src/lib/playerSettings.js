@@ -2,7 +2,6 @@ import { browser } from '$app/environment';
 
 export function saveStorage(savefile){
     if (browser) {
-        console.log("save complete")
         localStorage.setItem('crossChroma', JSON.stringify(savefile));
         return 
     }

@@ -1,10 +1,14 @@
 <script></script>
 
-<h1>hello</h1>
 
 <main class="article">
     <h1>What is Chromacross?</h1>
-<p>Chromacross is a color puzzle game where the goal is to sort arrange a grid of coloured tiles in prefectly order grid based on hue and chroma</p>
+<p>Chromacross is a color puzzle game where the objective is to organize a grid of colored tiles perfectly according to their hue and chroma. </p>
+
+    <p>Originally developed for the Ubuntu Phone in 2015 under the name "Chromatic," the game was conceived as a way to pass time while waiting for the bus at college. At its peak, it amassed 22k downloads, which was quite exciting to me as a freshman computer science major. </p>
+    
+    <p>Unfortunately, the project was discontinued along with the Ubuntu Phone, and despite numerous attempts over the years, I struggled to recreate the original game. That changed when I interviewed for a mobile game company and hastily developed a prototype for the interview process.</p>
+
 
 
 
@@ -27,4 +31,20 @@
 </main>
 
 
-<style></style>
+<style>
+
+    .article {
+        display: flex;
+        align-items: start;
+        justify-content: start;
+        flex-direction: column;
+        max-width: 640px;
+        width: auto;
+        height: 100%;
+        font-family: sans-serif;
+        line-height: 1.5;
+        margin: auto auto;
+        padding: 5rem 2.5rem;
+        /* gap: 16px; */
+    }
+</style>

@@ -44,7 +44,6 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
   const hueIndex = pickableHues[Math.floor(Math.random()*pickableHues.length)]
   // save array as temp var
   const paletteObject = hues[hueIndex]
-  // console.log(paletteObject)
 
   let levelLayout;
   // let levelIndex;
@@ -57,9 +56,7 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
   switch (Difficultity) {
     case 'easy':
       // notPlayedLevels = levels.filter((i) => !played.includes(i.id));
-      // console.log(notPlayedLevels)
       filter = levels.filter(i=> i.diff === 'easy')
-      // console.log(filter)
       break;
     case 'medium':
       filter = levels.filter(i=> i.diff === 'medium')
@@ -75,6 +72,7 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
       if (wins < 13) {
         const dontShow = ['medium', 'hard'];
         filter = levels.filter(i => !dontShow.includes(i.diff));
+        console.log("flitered")
         console.log(filter)
       }
       break;
@@ -99,7 +97,6 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
     rows: levelLayout.rows,
     locks: levelLayout.locks,
   }
-  // console.log(levelObject)
   return levelObject
 }
 

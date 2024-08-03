@@ -17,6 +17,8 @@
     import pop_select from "../assets/sounds/pop_select.mp3"
     import pop_swap from "../assets/sounds/pop_up_off.mp3"
     import kirakira from "../assets/sounds/kirakira.mp3"
+    import Footer from '../components/Footer.svelte';
+    import Header from '../components/Header.svelte';
     
     // sound assets references
     const clickSwap = new Sound(pop_swap)
@@ -30,6 +32,7 @@
     let win = false
     let aboutModal = false
     let settingModal = false
+    let tutorialModal = false
 
     // setup inital default settings for load
     let playerSettings = {hasSound: true, hasHaptics: true, setDiffultity: 'any', tutorialDone: false, wins: 0}
@@ -45,6 +48,7 @@
     let playerHints = 0
     let playerTime = game.startTime
     let selectedIndex = null
+    let swapIndex = null
     let playedLevels = []
 
 
@@ -54,21 +58,25 @@
     }
 
     function playVibrate(type) {
-        if (playerSettings.hasHaptics === true) {
-            switch (type) {
-                case 'click':
-                    navigator.vibrate([40,20])
-                    break;
-                case 'swap':
-                    navigator.vibrate([50])
-                    break;
-                case 'win':
-                    navigator.vibrate([50,50,50])
-                    break;
-                case 'error':
-                    break;
-                default:
-                    break;
+        const canVibrate = window.navigator.vibrate
+        if (canVibrate) {
+
+            if (playerSettings.hasHaptics === true) {
+                switch (type) {
+                    case 'click':
+                        navigator.vibrate([40,20])
+                        break;
+                    case 'swap':
+                        navigator.vibrate([50])
+                        break;
+                    case 'win':
+                        navigator.vibrate([50,50,50])
+                        break;
+                    case 'error':
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -161,17 +169,14 @@
     }
 
     function updatePlayedLevels(levels, currentLevel) {
-        console.log("before: " + levels)
         // add current game to played list
         levels.push(currentLevel)
         if (levels.length >= 5) {
             levels.shift()
         }
-        console.log(playedLevels)
         return levels
 
     }
-
 
     function nextLevel() {
         updatePlayedLevels(playedLevels, game.levelIndex)
@@ -213,15 +218,48 @@
         selectedIndex = null
     }
 
+    // toggle modal functions
+
+    function toggleModals(modal) {
+        playEffects('click')
+        settingModal = false
+        tutorialModal = false
+
+        switch (modal) {
+            case "settingModal":
+                settingModal = true
+                console.log("tutorial " + tutorialModal)
+                break;
+            case "tutorialModal":
+                tutorialModal = true
+                console.log("setting " + settingModal)
+                break
+        
+            default:
+                console.log("no modal to open")
+                break;
+        }
+        // close all other modals
+        // open modal
+    }
+
     // modal functions
     function toggleSettings() {
         playEffects('click')
         settingModal = !settingModal
     }
+
+    // modal functions
+    function toggleTutorial() {
+        playEffects('click')
+        tutorialModal = !tutorialModal
+    }
     function toggleWin() {
         win = !win
     }
- 
+
+
+
 </script>
 
 <main class:win={win}>
@@ -240,8 +278,17 @@
                 in:fly|local={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}
             >
                 {#each game.palette as color, i (color)}
-                <div class="swatch_container" animate:flip={{ duration: 350, easing: quintOut }}>
-                    <Swatch hue={color} index={i} {selectedIndex} corner={isCorner(i)} lock={isLock(i)} on:click={selectSwatch(i)}/>
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="swatch_container" data-index={i} animate:flip={{ duration: 350, easing: quintOut }}
+                >
+                    <Swatch 
+                        hue={color} 
+                        index={i} 
+                        {selectedIndex} 
+                        corner={isCorner(i)} 
+                        lock={isLock(i)} 
+                        on:click={selectSwatch(i)}
+                    />
                 </div>
 
                 {/each}
@@ -250,8 +297,6 @@
         {/key}
 
         </div>
-        
-
         <div class="control_group">
             <div class="results">
                 {#if playerHints > 0}
@@ -271,23 +316,10 @@
                 <button class="win_button" on:click={nextLevel}>Next Level</button>
             </div>
             <div class="controls">
+                <Header bind:diffultity={playerSettings.setDiffultity} />
+                <RoundBtn type="settings" on:click={() => toggleModals("settingModal")}/>
                 <RoundBtn type="hint" on:click={hint} />
                 <RoundBtn type="restart" on:click={nextLevel}/>
-                <div class="menuGroup">
-                    <RoundBtn type="settings" on:click={toggleSettings}/>
-                    <div>
-                        <p>CrossChroma</p>
-                        <div>
-                            <span>Difficultity</span>
-                            <select name="" id="" bind:value={playerSettings.setDiffultity}>
-                                <option value="any">any</option>
-                                <option value="easy">easy</option>
-                                <option value="medium">medium</option>
-                                <option value="hard">hard</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -310,11 +342,26 @@
     <section>
         <h2 class="modalTitle">Links</h2>
         <div class="modalContainer">
-            <Linkrow url={"google.com"} linkLabel={"How to Play"}/>
+            <!-- <Linkrow url={"google.com"} linkLabel={"How to Play"}/> -->
+             <button on:click={() => toggleModals("tutorialModal")}>How to Play</button>
             <Linkrow url={"/about"} linkLabel={"About"}/>
             <!-- <Linkrow url={"/changelog"} linkLabel={"Changelog"}/> -->
         </div>
     </section>
+</Modal>
+
+<Modal showModal={tutorialModal}>
+    <h2 class="modalTitle">How to play</h2>
+    <div class="modalContainer">
+        <div>
+            <img src="/tutorialExample.png" alt="tutorial example of goal">
+            <p>Tap and move the tiles to put the colors in order.</p>
+        </div>
+        <div>
+            <img src="" alt="tutorial example of locked tiles">
+            <p>Tiles with locks are in the correct postion and can not be moved.</p>
+        </div>
+    </div>
 </Modal>
 
 </main>
@@ -325,26 +372,12 @@
 
 <style>
     :root {
-        --cornerRadius: 25px;
-        /* colors tokens */
-        --neutral-100: #fff;
-        --neutral-300: #DDE4EE;
-        --neutral-600: #778BA4;
-        --neutral-800: #333B48;
-        --neutral-900: #171E26;
-        /*  Text Colors */
-        --textPrimary: var(--neutral-900);
-        --textSecondary: var(--neutral-800);
-        --textTertiary: var(--neutral-600);
-        --textDisabled: var(--neutral-300);
-        --textOnAccent: var(--neutral-100);
-
-        /* evevation */
-        /* elevation / theme_dark / e5 */
-        --swatchThickness: inset 0 -2px 0px 0 rgba(0, 0, 0, 0.25);
-        /* Elevation/Dark/e5 */
-        --elevation-4: 0px 16px 20px -8px rgba(0, 0, 0, 0.28);
-        --elevation-5: 0px 20px 24px 0 rgba(0, 0, 0, 0.32);
+    }
+    main {
+        display: flex;
+        flex-direction: column;
+        transition: all 250ms ease-in-out;
+        margin: 0 auto;
     }
     .game {
         position: relative;
@@ -438,7 +471,7 @@
         grid-row: 1/10;
         grid-column: 1/-1;
         /* gap: 24px; */
-        font-family: sans-serif;
+        /* font-family: sans-serif; */
         align-self: end;
         opacity: 0;
         transform: translateX(-64px);
@@ -448,9 +481,11 @@
         
     }
     .controls {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
+        display: grid;
+        align-items: center;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 2fr min-content min-content min-content;
+        grid-template-rows: 1fr;
         opacity: 1;
         transform: translateX(0);    
         gap: 16px;
@@ -487,7 +522,7 @@
         grid-row: 4/5;
     }
     .result_title {
-        font-size: 32px;
+        font-size: var(--type-lg);
         font-weight: 600;
         margin: 0;
         margin-bottom: .5ch;
@@ -507,28 +542,28 @@
         display: flex;
         align-items: center;
         gap: 16px;
-        font-size: 20px;
+        font-size: var(--type-md);
         font-family: sans-serif;
         margin-right: auto;
     }
-    .menuGroup p {
+    .websiteHeader p {
         margin: 0;
         font-weight: 600;
         letter-spacing: .5px;
     }
     select {
         all: unset;
-        font-size: 16px;
+        font-size: var(--type-base);
     }
     option, span {
-        font-size: 16px;
+        font-size: var(--type-base);
     }
 
 
     /* modals */
 
-    .modalTitle {
-        font-size: 18px;
+    /* .modalTitle {
+        font-size: var(--type-md);
         margin: 0;
         margin: 16px 0;
         user-select: none;
@@ -538,11 +573,44 @@
         flex-direction: column;
 		background: white;
 		border-radius: 24px;
-		padding: 24px;
-		gap: 16px;
-	}
+		padding: 12px;
+		gap: 0px;
+	} */
 
-    @media screen and (min-width: 900px) {
+    @media screen and (min-width: 750px) {
+        main {
+            align-items: start;
+            /* margin: 0 10dvw; */
+            margin: min(16px, 5dvw)
+        }
+        .game {
+            max-height: 800px;
+
+        }
+        .board_container {
+            grid-row: 1/-1;
+        }
+        .controls {
+        margin-top: 0;
+        margin-bottom: 0;
+        display: grid;
+        grid-template-rows: 1fr min-content;
+        grid-template-columns: repeat(5, 1fr);
+    }
+    .control_group {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -100%;
+        grid-template-columns: none;
+    }
+    }
+
+    @media screen and (min-width: 1100px) {
+        main {
+            align-items: center;
+            margin: auto auto;
+        }
         .game {
             max-height: 800px;
         }
@@ -555,11 +623,15 @@
         bottom: 0;
         right: -100%;
     }
-    .controls {
-        flex-direction: column;
+    /* .controls {
         margin-top: 0;
         margin-bottom: 0;
-    }
+        display: grid;
+        gap: 24px;
+        grid-template-rows: 1fr min-content;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
+    } */
     .results {
         width: 100%;
         gap: 24px;
@@ -569,6 +641,24 @@
     .result_title, .result_label {
         color: black;
     }
+    }
+
+    
+
+    .ghostSwatch {
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        height: 100px;
+        width: 100px;
+        background-color: black;
+        /* transition: all 500ms ease; */
+    }
+    .ghostSwatch.follow {
+        opacity: 1;
+        height: 50px;
+        width: 50px;
     }
 
 </style>

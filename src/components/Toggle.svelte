@@ -33,6 +33,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
+        padding: 12px;
     }
 
     label {

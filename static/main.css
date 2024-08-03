@@ -1,8 +1,51 @@
+:root {
+
+    --cornerRadius: 25px;
+
+
+        --ghostSwatch: white;
+
+        /* evevation */
+        --swatchThickness: inset 0 -2px 0px 0 rgba(0, 0, 0, 0.25);
+        --elevation-1: 0px 2px 4px -2px rgba(0, 0, 0, 0.2);
+        
+        --elevation-4: 0px 16px 20px -8px rgba(0, 0, 0, 0.28);
+        --elevation-5: 0px 20px 24px 0 rgba(0, 0, 0, 0.32);
+
+    /* colors */
+
+        /* colors tokens */
+        --neutral-100: #fff;
+        --neutral-200: #e8eaf0;
+        --neutral-300: #DDE4EE;
+        --neutral-600: #778BA4;
+        --neutral-800: #333B48;
+        --neutral-900: #171E26;
+        /*  Text Colors */
+        --textPrimary: var(--neutral-900);
+        --textSecondary: var(--neutral-800);
+        --textTertiary: var(--neutral-600);
+        --textDisabled: var(--neutral-300);
+        --textOnAccent: var(--neutral-100);
+
+    /* fluid type */
+    --type-sm: clamp(0.8rem, 0.08vi + 0.78rem, 0.84rem);
+    --type-base: clamp(1rem, 0.23vi + 0.94rem, 1.13rem);
+    --type-md: clamp(1.25rem, 0.45vi + 1.14rem, 1.5rem);
+    --type-lg: clamp(1.56rem, 0.79vi + 1.36rem, 2rem);
+    --type-xl: clamp(1.95rem, 1.29vi + 1.63rem, 2.66rem);
+    --type-xxl: clamp(2.44rem, 2.02vi + 1.94rem, 3.55rem);
+    --type-xxxl: clamp(3.05rem, 3.06vi + 2.29rem, 4.73rem);
+}
+
+
 html, body {
     margin: 0;
     height: 100%;
     width: 100%;  
-    overflow: hidden;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    /* overflow: hidden; */
 }
 
 
@@ -13,6 +56,7 @@ main {
     justify-content: center;
     overflow: hidden;
     width: 100vw;
+    font-size: var(--type-base);
 }
 
 
@@ -20,11 +64,50 @@ main {
     width: 100%;
 }
 
+/* basic type scale */
+h1, h2, h3 {
+    font-weight: 600;
+    color: var(--textPrimary);
+}
+
+h1 {
+    font-size: var(--type-lg);
+}
+h2 {
+    font-size: var(--type-md);
+}
+
+p {
+    font-size: var(--type-base);
+    color: var(--textSecondary);
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    line-height: 1.618;
+}
+
 
 @media screen and (min-width: 900px) {
     main {
         box-sizing: border-box;
-        padding: 2rem;
+        /* padding: 2rem; */
     }
 }
 
+
+/* extra modal Styles */
+
+.modalTitle {
+    font-size: var(--type-md);
+    margin: 0;
+    margin: 16px 0;
+    user-select: none;
+}
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 24px;
+    padding: 12px;
+    gap: 0px;
+    box-shadow: var(--elevation-1);
+}

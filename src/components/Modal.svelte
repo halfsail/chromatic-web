@@ -1,8 +1,6 @@
 <script>
 	export let showModal; // boolean
-
 	let dialog; // HTMLDialogElement
-
 	$: if (dialog && showModal) dialog.showModal();
 </script>
 
@@ -37,12 +35,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-		
-        gap: 24px;
 	}
 	dialog::backdrop {
 		background: rgba(255, 255, 255, 0.3);
         backdrop-filter: blur(70px) saturate(1.5);
+		-webkit-backdrop-filter: blur(70px) saturate(1.5);
 	}
 	dialog > div {
 		padding: 1em;
@@ -54,6 +51,9 @@
 	h2 {
 		font-size: 18px;
 	}
+	img {
+		width: 100%;
+	}
 
     .modal {
         width: 260px;
@@ -61,9 +61,11 @@
         display: flex;
         flex-direction: column;
         gap: 24px;
-        font-family: sans-serif;
-        font-size: 18px;
+        /* font-family: sans-serif; */
+        /* font-size: 18px; */
     }
+
+
 
     .closeButton {
         all: unset;

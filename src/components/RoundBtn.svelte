@@ -26,8 +26,8 @@
         all: unset;
         background: var(--neutral-900);
         color: var(--textOnAccent);
-        height: 48px;
-        width: 48px;
+        height: 44px;
+        width: 44px;
         display: grid;
         border-radius: 50%;
         transition: transform 150ms var(--scaleOut);
