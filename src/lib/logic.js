@@ -72,8 +72,6 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
       if (wins < 13) {
         const dontShow = ['medium', 'hard'];
         filter = levels.filter(i => !dontShow.includes(i.diff));
-        console.log("flitered")
-        console.log(filter)
       }
       break;
   }
@@ -104,7 +102,7 @@ export function getLevel(currentLevelIndex, Difficultity, wins) {
 
 // gen background border color
 export function getBackground(keyColors) {
-    return chroma.average(keyColors, 'rgb').brighten(1.5).desaturate(3)
+    return chroma.average(keyColors, 'rgb').darken(1).alpha(.2)
 }
 
 // get constrast levels

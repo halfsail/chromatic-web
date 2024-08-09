@@ -1,6 +1,5 @@
 <script>
     export let diffultity
-    $: console.log(diffultity)
 </script>
 
 <div class="websiteHeader">
@@ -28,14 +27,11 @@
         <span>Size</span>
         <div class="selectorContainer">
         <select name="" id="" bind:value={diffultity}>
-            <option value="any">any</option>
-            <option value="easy">mini</option>
-            <option value="medium">small</option>
-            <option value="hard">medium</option>
+            <option value="any">Any</option>
+            <option value="easy">Mini</option>
+            <option value="medium">Small</option>
+            <option value="hard">Medium</option>
         </select>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 5L8 9L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
         </div>
             
     </div>
@@ -89,21 +85,35 @@
 
     .row {
         display: flex;
-        gap: 8px;
+        gap: 16px;
         align-items: center;
+        color: var(--textTertiary);
     }
 
+    /* select {
+        text-align: center;
+    text-align-last: center;
+    -moz-text-align-last: center;
+    } */
+
     .selectorContainer {
+        box-sizing: border-box;
         display: flex;
         align-items: baseline;
+        justify-content: center;
         gap: 8px;
-        padding: 4px 8px;
-        border-radius: 3px;
+        padding: 2px 12px;
+        border-radius: var(--cornerRadius);
+        border: 1.5px solid var(--neutral-300);
         width: min-content;
         margin-left: -8px;
+        /* background-color: var(--neutral-200); */
+        color: var(--textTertiary);
+        cursor: pointer;
     }
     .selectorContainer:hover {
         background-color: var(--neutral-200);
+        color: var(--textSecondary);
     }
 
     @media screen and (min-width: 750px) {

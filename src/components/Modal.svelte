@@ -1,7 +1,10 @@
 <script>
 	export let showModal; // boolean
 	let dialog; // HTMLDialogElement
+	export let large;
 	$: if (dialog && showModal) dialog.showModal();
+
+	
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
@@ -12,7 +15,7 @@
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="dialog_container" on:click|stopPropagation>
-        <div class="modal">
+        <div class="modal" class:large={large}>
             <slot name="header" />
 		<slot />
         </div>
@@ -30,14 +33,17 @@
         border: none;
 		padding: 0;
         background: transparent;
+		overflow: hidden;
+		max-height: 90dvh;
     }
 	 .dialog_container {
         display: flex;
         flex-direction: column;
         align-items: center;
+		overflow: hidden;
 	}
 	dialog::backdrop {
-		background: rgba(255, 255, 255, 0.3);
+		background: var(--skrim);
         backdrop-filter: blur(70px) saturate(1.5);
 		-webkit-backdrop-filter: blur(70px) saturate(1.5);
 	}
@@ -46,13 +52,6 @@
 	}
 	dialog[open] {
 		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-
-	h2 {
-		font-size: 18px;
-	}
-	img {
-		width: 100%;
 	}
 
     .modal {
@@ -64,6 +63,10 @@
         /* font-family: sans-serif; */
         /* font-size: 18px; */
     }
+	.modal.large {
+		width: 100%;
+		max-width: 360px;
+	}
 
 
 
@@ -102,10 +105,4 @@
 		display: block;
 	}
 
-	@media screen and (max-height: 650px) {
-		.modal {
-			flex-direction: row;
-			width: 100%;
-		}
-	}
 </style>

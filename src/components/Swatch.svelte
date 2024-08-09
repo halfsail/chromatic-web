@@ -69,16 +69,16 @@
     }
 
     .tl_corner {
-        border-top-left-radius: var(--cornerRadius);
+        border-top-left-radius: calc(var(--cornerRadius) - var(--gameBoardBorder));
     }
     .tr_corner {
-        border-top-right-radius: var(--cornerRadius);
+        border-top-right-radius: calc(var(--cornerRadius) - var(--gameBoardBorder));
     }
     .br_corner {
-        border-bottom-right-radius: var(--cornerRadius);
+        border-bottom-right-radius: calc(var(--cornerRadius) - var(--gameBoardBorder));
     }
     .bl_corner {
-        border-bottom-left-radius: var(--cornerRadius);
+        border-bottom-left-radius: calc(var(--cornerRadius) - var(--gameBoardBorder));
     }
     button svg {
         margin: auto;

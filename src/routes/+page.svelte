@@ -5,7 +5,7 @@
 	import { quintOut } from 'svelte/easing';
 
     import { saveStorage, getStorage } from '../lib/playerSettings'
-    import { clickOutside, didWin, getLevel, getTimePlayed, setContrast } from '../lib/logic'
+    import { clickOutside, didWin, getLevel, getTimePlayed, setContrast, getBackground } from '../lib/logic'
     import Swatch from '../components/Swatch.svelte';
     import RoundBtn from '../components/RoundBtn.svelte';
     import Modal from '../components/Modal.svelte';
@@ -17,7 +17,6 @@
     import pop_select from "../assets/sounds/pop_select.mp3"
     import pop_swap from "../assets/sounds/pop_up_off.mp3"
     import kirakira from "../assets/sounds/kirakira.mp3"
-    import Footer from '../components/Footer.svelte';
     import Header from '../components/Header.svelte';
     
     // sound assets references
@@ -30,9 +29,10 @@
 
     // ui states variables
     let win = false
-    let aboutModal = false
     let settingModal = false
     let tutorialModal = false
+    let aboutModal = false
+    
 
     // setup inital default settings for load
     let playerSettings = {hasSound: true, hasHaptics: true, setDiffultity: 'any', tutorialDone: false, wins: 0}
@@ -48,9 +48,7 @@
     let playerHints = 0
     let playerTime = game.startTime
     let selectedIndex = null
-    let swapIndex = null
     let playedLevels = []
-
 
     function playEffects(type) {
         playVibrate(type)
@@ -190,9 +188,6 @@
         playerMoves = 0
         playerTime = game.startTime
     }
-
-    updatePlayedLevels(playedLevels, game.levelIndex)
-
     // swatch related function
     function isLock(index) {
         return game.locks.includes(index)
@@ -212,27 +207,31 @@
             return 'br_corner'
         }
     }
-
     // handle deselecting if user clicks outside of gameboard
     function handleClickOutside(event) {
         selectedIndex = null
     }
-
     // toggle modal functions
-
     function toggleModals(modal) {
         playEffects('click')
         settingModal = false
         tutorialModal = false
+        aboutModal = false
+        const dialogs = document.getElementsByTagName('dialog')
+
+        Array.from(dialogs).forEach(element => {
+            element.close()
+        });
 
         switch (modal) {
             case "settingModal":
                 settingModal = true
-                console.log("tutorial " + tutorialModal)
                 break;
             case "tutorialModal":
                 tutorialModal = true
-                console.log("setting " + settingModal)
+                break
+            case "aboutModal":
+                aboutModal = true
                 break
         
             default:
@@ -243,21 +242,8 @@
         // open modal
     }
 
-    // modal functions
-    function toggleSettings() {
-        playEffects('click')
-        settingModal = !settingModal
-    }
-
-    // modal functions
-    function toggleTutorial() {
-        playEffects('click')
-        tutorialModal = !tutorialModal
-    }
-    function toggleWin() {
-        win = !win
-    }
-
+    updatePlayedLevels(playedLevels, game.levelIndex)
+    
 
 
 </script>
@@ -273,7 +259,7 @@
 
         {#key game.levelIndex}
 
-            <div class="game_board" style="--colSize: {game.columns}; --rowSize: {game.rows} " 
+            <div class="game_board" style="--colSize: {game.columns}; --rowSize: {game.rows}; background: {getBackground(game.palette)}; border: var(--gameBoardBorder) solid {getBackground(game.palette)}" 
                 out:fly|local={{ duration: 1000, x: '-90vw', opacity: 0, easing: quintOut }} 
                 in:fly|local={{ duration: 1000, x: '90vw', opacity: 1, easing: quintOut }}
             >
@@ -330,7 +316,7 @@
 
 
 
-<Modal showModal={settingModal}>
+<Modal showModal={settingModal} large={false}>
     <section>
         <h2 class="modalTitle">Settings</h2>
         <div class="modalContainer">
@@ -343,14 +329,16 @@
         <h2 class="modalTitle">Links</h2>
         <div class="modalContainer">
             <!-- <Linkrow url={"google.com"} linkLabel={"How to Play"}/> -->
-             <button on:click={() => toggleModals("tutorialModal")}>How to Play</button>
-            <Linkrow url={"/about"} linkLabel={"About"}/>
+             <button class="itemRow" on:click={() => toggleModals("tutorialModal")}>How to Play</button>
+             <button class="itemRow" on:click={() => toggleModals("aboutModal")}>About</button>
+            <!-- <Linkrow url={"/about"} linkLabel={"About"}/> -->
             <!-- <Linkrow url={"/changelog"} linkLabel={"Changelog"}/> -->
         </div>
     </section>
 </Modal>
 
-<Modal showModal={tutorialModal}>
+<Modal showModal={tutorialModal} large={true}>
+    <section>
     <h2 class="modalTitle">How to play</h2>
     <div class="modalContainer">
         <div>
@@ -358,10 +346,27 @@
             <p>Tap and move the tiles to put the colors in order.</p>
         </div>
         <div>
-            <img src="" alt="tutorial example of locked tiles">
             <p>Tiles with locks are in the correct postion and can not be moved.</p>
         </div>
     </div>
+</section>
+</Modal>
+
+<Modal showModal={aboutModal} large={true}>
+    <section>
+        <!-- <h2 class="modalTitle">About</h2> -->
+        <div class="modalContainer">
+            <section>
+            <h3>What is Chromacross?</h3>
+            <p>Chromacross is a color puzzle game where the objective is to organize a grid of colored tiles perfectly according to their hue and chroma. </p>
+            <p>Originally developed for the Ubuntu Phone in 2015 under the name "Chromatic", the game was conceived as a way to pass time while waiting for the bus at college.</p>
+            <p>After the phone project died. I decided to rebuild the game for the web as a way to learn new JavaScript frameworks.</p>
+
+            <h3>Your Data</h3>
+            <p>Your game data is stored only in your device’s local storage. Never sent anywhere. Not accessible to anyone else. Contains zero information about anything but the game itself.</p>
+            </section>
+        </div>
+    </section>
 </Modal>
 
 </main>
@@ -406,7 +411,6 @@
         width: 100%;
         grid-column: 1/-1;
         grid-row: 1/9;
-        /* background-color: #E5E9F2; */
     }
     .board_container:before{
         content: '';
@@ -428,6 +432,7 @@
     }
 
     .game_board {
+        box-sizing: border-box;
         z-index: 2;
         display: grid;
         grid-template-columns: repeat(var(--colSize), minmax(0, 1fr));
@@ -502,6 +507,11 @@
         grid-template-rows: subgrid;
         grid-row: 5/10;
         grid-column: 1/-1;
+        width: 100%;
+        min-width: 160px;
+        gap: 16px;
+    }
+    .results div {
         margin: 0 24px;
     }
     .win .controls {
@@ -515,7 +525,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 200px;
-        background: black;
+        background: var(--neutral-900);
         color: var(--textOnAccent);
         height: 48px;
         width: 100%;
@@ -533,6 +543,7 @@
     }
     .result_title, .result_label {
         color: var(--contrastColor);
+        /* color: var(--textPrimary); */
     }
     .results div:last-child {
         margin-bottom: 32px;
@@ -562,20 +573,33 @@
 
     /* modals */
 
-    /* .modalTitle {
-        font-size: var(--type-md);
-        margin: 0;
-        margin: 16px 0;
-        user-select: none;
+    .modalContainer section {
+        overflow: auto;
+        padding: 2.5rem 1rem;
     }
-    .modalContainer {
-        display: flex;
-        flex-direction: column;
-		background: white;
-		border-radius: 24px;
-		padding: 12px;
-		gap: 0px;
-	} */
+    .modalContainer section p {
+        margin-bottom: 1rem;
+    }
+
+    .modalContainer section h3 {
+        margin-top: 2.5rem;
+        margin-bottom: .5;
+    }
+    .modalContainer section h3:first-child {
+        margin-top: 0;
+        margin-bottom: .5;
+    }
+
+     .modalContainer img {
+        width: 100%;
+        margin-bottom: 1rem;
+     }
+
+     @media screen and (max-height: 812px) {
+        .controls {
+            margin: 8px 24px;
+        }
+     }
 
     @media screen and (min-width: 750px) {
         main {
@@ -603,6 +627,9 @@
         bottom: 0;
         right: -100%;
         grid-template-columns: none;
+    }
+    .result_title, .result_label {
+        color: var(--textPrimary);
     }
     }
 
@@ -639,7 +666,7 @@
         max-width: 200px;
     }
     .result_title, .result_label {
-        color: black;
+        color: var(--textPrimary);
     }
     }
 
