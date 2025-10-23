@@ -1,0 +1,102 @@
+/* src/global.css */
+:root {
+    /* colors */
+    --selected-2: #3DB68C;
+    --selected-1: #3AB184;
+    --selected-0: #0CA678;
+    --cell-highlight: 12, 167, 131;
+    --surface-1: #fffbe7;
+
+    --surface-2: #F1DEB4;
+    --surface-edge-2: #ffd6b2;
+    --surface-edge-3: #f4c79f;
+    --text-color: #292524;
+    --text-light: #43140799;
+    --white: #ffffff;
+    --board-shadow: #C9BEA2;
+
+    /* easeing */
+    --gentle: 750ms;
+    --slow: 550ms;
+    --fast: 150ms;
+
+    /* curves */
+    --spring-glide: linear(0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1);
+    --shoot-ease: linear(0, -0.004 4.9%, -0.02 9.4%, -0.124 26.4%, -0.126 30.5%, -0.104 34.1%, -0.027 38.8%, 0.108 43.1%, 0.299 47%, 0.817 55.2%, 0.97 59.1%, 1.071 63.4%, 1.118 67.7%, 1.127 72.6%, 1.108 77.2%, 1.019 90.7%, 1.004 95.2%, 1);
+    }
+
+@font-face {
+    font-family: 'Radaction';
+    font-style: normal;
+    font-weight: 500;
+    src: url('./fonts/Redaction-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+
+html, body {
+    overflow: hidden;
+    height: 100dvh;
+    line-height: 1.5;
+    color: var(--text-color);
+    background: var(--surface-1);
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+html * {
+    user-select: none;
+    transition-behavior: allow-discrete;
+    text-box-trim: trim-both;
+}
+body {
+    box-sizing: border-box;
+    margin: 0;
+    user-select: none;
+    font-family: 'system-ui','Inter', sans-serif; /* Set a global font */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.02em;
+    font-family: 'Radaction', system-ui, sans-serif;
+}
+h1 {
+    font-size: 2em;
+    font-weight: 500;
+}
+
+#crownLogo {
+    fill: var(--text-color);
+    height: 40px;
+    padding-bottom: 16px;
+}
+
+.drawer-content:focus-within {
+    outline: none;
+}
+
+/* keyframe animation */
+@keyframes fadeOnLoad {
+    0% {
+        transform: translateY(2rem);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (height <= 375px) {
+    html, body {
+        font-size: 14px;
+    }
+
+    #crownLogo {
+        height: 28px;
+    }
+}
+
+
+/* Add more global styles as needed */

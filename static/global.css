@@ -1,0 +1,215 @@
+/* src/global.css */
+:root {
+    /* font sizes */
+    --font-xs: 0.75rem; /* 12px */
+    --font-sm: 0.875rem; /* 14px */
+    --font-md: 1rem; /* 16px */
+    --font-lg: 1.125rem; /* 18px */
+    --font-xl: 1.25rem; /* 20px */
+    --font-2xl: 1.5rem; /* 24px */
+
+
+    /* text colors */
+    --ink-25: #f9f9f8;
+    --ink-50: #f2f4f5;
+    --ink-100: #e9ecef;
+    --ink-200: #ccd1d6;
+    --ink-300: #b3bac2;
+    --ink-400: #808c99;
+    --ink-500: #66707a;
+    --ink-600: #495057;
+    --ink-700: #343a40;
+    --ink-800: #212529;
+    --ink-900: #121416;
+    
+
+
+        /* radii */
+    --rad-sm: .5rem;
+    --rad-md: 1rem;
+    --rad-lg: 1.5rem;
+    --rad-xl: 2rem;
+    --rad-xxl: 3rem;
+    --rad-round: 50%;
+
+    /* easeing */
+    --gentle: 750ms;
+    --slow: 550ms;
+    --fast: 150ms;
+
+    /* global padding */
+    --topBottomPadding: 1rem;
+    --sidePadding: 1rem; 
+    --boardGaps: 1rem;
+
+    /* curves */
+    --spring-glide: linear(0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1);
+    --shoot-ease: linear(0, -0.004 4.9%, -0.02 9.4%, -0.124 26.4%, -0.126 30.5%, -0.104 34.1%, -0.027 38.8%, 0.108 43.1%, 0.299 47%, 0.817 55.2%, 0.97 59.1%, 1.071 63.4%, 1.118 67.7%, 1.127 72.6%, 1.108 77.2%, 1.019 90.7%, 1.004 95.2%, 1);
+    
+
+    /* evevation */
+        --swatchThickness: inset 0 -2px 0px 0 rgba(0, 0, 0, 0.25);
+        --elevation-1: 0px 2px 4px -2px rgba(0, 0, 0, 0.2);
+        
+        --elevation-4: 0px 16px 20px -8px rgba(0, 0, 0, 0.28);
+        --elevation-5: 0px 20px 24px 0 rgba(0, 0, 0, 0.32);
+
+}
+
+
+
+@view-transition {
+  navigation: auto;
+}
+
+
+.bricolage-grotesque {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-style: normal;
+  
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
+}
+
+
+
+
+
+html, body {
+    overflow: hidden;
+    height: 100dvh;
+    line-height: 1.5;
+    color: var(--text-color);
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+}
+/* body {
+    height: 100dvh;
+    padding: var(--topBottomPadding) var(--sidePadding);
+} */
+
+
+html * {
+    box-sizing: border-box;
+    user-select: none;
+    text-rendering: optimizeLegibility;
+    transition-behavior: allow-discrete;
+    text-box-trim: trim-both;
+}
+body {
+    box-sizing: border-box;
+    margin: 0;
+    background: var(--ink-25);
+    user-select: none;
+    font-family: 'system-ui','Inter', sans-serif; /* Set a global font */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--ink-900);
+    letter-spacing: 0.02em;
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight: 450;
+}
+h1 {
+    font-size: 2em;
+}
+p {
+    line-height: 1.5;
+    margin: 0;
+    color: var(--ink-700);
+    font-size: var(--font-md);
+    
+}
+.finePrint, .btn_label {
+    color: var(--ink-500);
+    font-size: var(--font-xs);
+}
+
+
+.drawer-content:focus-within {
+    outline: none;
+}
+
+/* keyframe animation */
+@keyframes fadeOnLoad {
+    0% {
+        opacity: 0;
+        transform: translateY(2rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (height <= 375px) {
+    html, body {
+        font-size: 14px;
+    }
+
+    #crownLogo {
+        height: 28px;
+    }
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.column {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+button {
+    all: unset;
+    color: var(--white);
+    background-color: var(--ink-900);
+    transition: all var(--slow) var(--shoot-ease);
+    letter-spacing: .5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+button:hover {
+    border-radius: 20px;
+    cursor: pointer;
+}
+button:active {
+    transition: transform 50ms;
+    transform: scale(0.95);
+}
+
+
+/* Add more global styles as needed */
+
+
+@media (prefers-color-scheme: dark) {
+
+    :root{
+
+    /* text colors */
+    --ink-900: #f9f9f8;
+    --ink-800: #f2f4f5;
+    --ink-700: #e9ecef;
+    --ink-600: #ccd1d6;
+    --ink-500: #b3bac2;
+    --ink-400: #808c99;
+    --ink-300: #66707a;
+    --ink-200: #495057;
+    --ink-100: #343a40;
+    --ink-50: #212529;
+    --ink-25: #121416;
+    }
+
+    button {
+        color: var(--ink-25);
+        background-color: var(--ink-100);
+    }
+    
+}
