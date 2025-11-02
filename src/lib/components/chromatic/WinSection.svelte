@@ -1,12 +1,16 @@
 <script>
-    import { gameData } from "$lib/state/Store.svelte";
+    import { gameData, nextLevel } from "$lib/state/Store.svelte";
+
+    let isVisible = $state(document.visibilityState === "visible");
+    const handleVisibilityChange = () => {
+        isVisible = document.visibilityState === "visible";
+    };
 
     function formatDate(dateString) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const options = { year: "numeric", month: "long", day: "numeric" };
         const date = new Date(dateString);
         return date.toLocaleDateString(undefined, options);
     }
-    
 
     const listOfWinMessages = [
         "Amazing",
@@ -18,33 +22,55 @@
         "Marvelous",
         "Phenomenal",
         "Stupendous",
-        "Remarkable"
+        "Remarkable",
     ];
 
     function getRandomWinMessage() {
         const index = Math.floor(Math.random() * listOfWinMessages.length);
         return listOfWinMessages[index];
     }
+
+    // Run a side effect when the component is created.
+    $effect(() => {
+        // Add the event listener.
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // This is the cleanup function that removes the listener when the effect ends.
+        return () => {
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibilityChange,
+            );
+        };
+    });
 </script>
 
 <section class="column">
     <!-- win message -->
-     <div class="textColumn">
+    <div class="textColumn">
         <h2>{getRandomWinMessage()}</h2>
-        <p>You completed today's puzzle in {gameData.puzzle.moves} moves.</p>
-     </div>
+        <p class="formatPretty">
+            You completed today's puzzle in {gameData.puzzle.moves} moves
+            {#if gameData.puzzle.hints}
+                and using {gameData.puzzle.hints} hints
+            {/if}
+        </p>
+    </div>
 
-     <!-- share button -->
-      {#if formatDate(gameData.puzzle.date) !== formatDate(new Date()) && gameData.puzzle.completed}
-        <button>Play Today's Puzzle</button>
-        {:else}
+    <!-- share button -->
+    {#if gameData.puzzle.date !== new Date()
+            .toISOString()
+            .split("T")[0] && gameData.puzzle.completed && isVisible === true}
+        <button onclick={nextLevel}>Play Today's Puzzle</button>
+    {:else}
         <button disabled>New Puzzle Tomorrow</button>
-        {/if}
-        <!-- small label for new puzzle tomorrow -->
-        <!-- <p class="finePrint">A new puzzle will be available tomorrow!</p> -->
+    {/if}
 </section>
 
 <style>
+    .column {
+        grid-column: 3/-1;
+    }
     section {
         text-align: center;
         padding: 1rem 1rem 2rem 1rem;
@@ -61,9 +87,10 @@
     .textColumn {
         display: flex;
         flex-direction: column;
-        gap: .5lh;
+        gap: 0.5lh;
         margin-bottom: 1rem;
-        p, h2 {
+        p,
+        h2 {
             margin: 0;
             text-wrap: pretty;
         }

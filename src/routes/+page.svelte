@@ -12,43 +12,49 @@
     let hueRotate = $state(0);
 </script>
 
-<main class:paused={gameData.state === 'paused'}>
-    <Header toggleMenu={openMenu}/>
+<main class:paused={gameData.state === "paused"}>
+    <Header toggleMenu={openMenu} />
     <Board />
 </main>
 
 <HelpModal bind:showModal={uiState.modals.help} />
-<HamburgerMenu bind:showModal={uiState.modals.sidebar} bind:showHelp={uiState.modals.help} />
-
-
-
-
-
+<HamburgerMenu
+    bind:showModal={uiState.modals.sidebar}
+    bind:showHelp={uiState.modals.help}
+/>
 
 <style>
-
     main {
         /* display: flex; */
         display: grid;
-        grid-template-rows: auto minmax(auto, 600px) auto;
+        grid-template-rows: auto 1fr auto;
         grid-template-columns: 1fr;
         flex-direction: column;
         align-items: center;
-        padding: var(--topBottomPadding) var(--sidePadding);
+        /*padding: var(--topBottomPadding) var(--sidePadding);*/
+        padding: 0 var(--sidePadding);
         gap: var(--boardGaps);
-        height: 100vh;
+        height: 100dvh;
         max-height: 900px;
         color: var(--text-color);
         filter: hue-rotate(var(--hueRotate, 0deg));
     }
 
-    @media (max-height: 700px) and (orientation: landscape) {
-    /* Add your CSS rules here */
-        main{
+    @media (orientation: landscape) {
+        /* Add your CSS rules here */
+        main {
+            grid-template-rows: auto 8fr 1fr;
+            grid-template-columns: 1fr minmax(auto, 350px) 1fr;
+            align-items: center;
+            padding: 1rem var(--sidePadding);
+        }
+    }
+
+    /*@media (max-height: 700px) and (orientation: landscape) {
+        main {
             grid-template-rows: 8fr 1fr;
             grid-template-columns: 6fr 4fr;
             align-items: end;
-
         }
-    }
+    }*/
 </style>

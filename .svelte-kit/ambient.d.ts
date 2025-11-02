@@ -27,7 +27,6 @@
  */
 declare module '$env/static/private' {
 	export const _VOLTA_TOOL_RECURSION: string;
-	export const MANPATH: string;
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -51,6 +50,7 @@ declare module '$env/static/private' {
 	export const PATH: string;
 	export const npm_package_json: string;
 	export const _: string;
+	export const LaunchInstanceID: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
 	export const __CFBundleIdentifier: string;
@@ -81,6 +81,7 @@ declare module '$env/static/private' {
 	export const DISPLAY: string;
 	export const RUBYOPT: string;
 	export const OSLogRateLimit: string;
+	export const SECURITYSESSIONID: string;
 	export const RUBY_VERSION: string;
 	export const npm_node_execpath: string;
 	export const npm_config_prefix: string;
@@ -118,7 +119,6 @@ declare module '$env/static/public' {
 declare module '$env/dynamic/private' {
 	export const env: {
 		_VOLTA_TOOL_RECURSION: string;
-		MANPATH: string;
 		TERM_PROGRAM: string;
 		NODE: string;
 		INIT_CWD: string;
@@ -142,6 +142,7 @@ declare module '$env/dynamic/private' {
 		PATH: string;
 		npm_package_json: string;
 		_: string;
+		LaunchInstanceID: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
 		__CFBundleIdentifier: string;
@@ -172,6 +173,7 @@ declare module '$env/dynamic/private' {
 		DISPLAY: string;
 		RUBYOPT: string;
 		OSLogRateLimit: string;
+		SECURITYSESSIONID: string;
 		RUBY_VERSION: string;
 		npm_node_execpath: string;
 		npm_config_prefix: string;
