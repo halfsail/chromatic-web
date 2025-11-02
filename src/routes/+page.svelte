@@ -32,7 +32,7 @@
         flex-direction: column;
         align-items: center;
         /*padding: var(--topBottomPadding) var(--sidePadding);*/
-        padding: 0 var(--sidePadding);
+        padding: 1rem var(--sidePadding);
         gap: var(--boardGaps);
         height: 100dvh;
         max-height: 900px;
