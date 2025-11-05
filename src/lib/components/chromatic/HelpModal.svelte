@@ -1,5 +1,9 @@
 <script>
-    import { uiState, closeMenu, openMenu } from '$lib/state/InterfaceState.svelte';
+    import {
+        uiState,
+        closeMenu,
+        openMenu,
+    } from "$lib/state/InterfaceState.svelte";
     let dialog; // HTMLDialogElement
 
     $effect(() => {
@@ -13,7 +17,7 @@
     });
 
     function handleClose() {
-        closeMenu('help')
+        closeMenu("help");
     }
 
     function handleClick(event) {
@@ -23,7 +27,6 @@
     }
 </script>
 
-
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <dialog
@@ -32,32 +35,62 @@
     onclick={handleClick}
     class="modal"
 >
-	
-	<div class="dialog_container main-dialog" role="dialog" aria-labelledby="dialog-title" onclick={event => event.stopPropagation()}>		
+    <div
+        class="dialog_container main-dialog"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        onclick={(event) => event.stopPropagation()}
+    >
+        <video src="/tutorialWide.webm" autoplay="true" muted="true" loop
+        ></video>
         <div>
             <h3>How to Play</h3>
-            <p>Move the tiles until the gradient is seamless and all the colors flow perfectly into one another.</p>
+            <p>
+                Move the tiles until the gradient is seamless and all the colors
+                flow perfectly into one another.
+            </p>
         </div>
-        <div>
+        <!-- <div>
             <h3>Controls</h3>
             <p>Drag and drop or click color tiles to swap two tiles.</p>
-        </div>
+        </div> -->
         <div>
             <h3>Tips</h3>
-            <p>Locked Tiles are in the correct spot. Use them as reference points to help sort the gradient.</p>
-            <p>Use Rotate Hues if you are having trouble seeing the different between colors.</p>
+            <p>
+                Locked Tiles are in the correct spot. Use them as reference
+                points to help sort the gradient.
+            </p>
+            <p>
+                Use Rotate Hues if you are having trouble seeing the different
+                between colors.
+            </p>
         </div>
-	</div>
-    <button type="button" aria-label="Close help dialog" class="closeButton" onclick={handleClose}>
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"/>
-        </svg>    
+    </div>
+    <button
+        type="button"
+        aria-label="Close help dialog"
+        class="closeButton"
+        onclick={handleClose}
+    >
+        <svg
+            width="24"
+            height="25"
+            viewBox="0 0 24 25"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822"
+                stroke="white"
+                stroke-width="2.5"
+            />
+        </svg>
     </button>
 </dialog>
 
 <style>
-    .main_dialog {
-        view-transition-name: main-modal;
+    video {
+        width: 100%;
     }
     dialog {
         display: flex;
@@ -76,17 +109,16 @@
         overflow: hidden;
         --duration: 250ms;
 
-        transition: 
-            translate var(--duration) var(--spring-glide), 
-            scale     var(--duration) var(--spring-glide),
-            filter    var(--duration) var(--spring-glide),
-            opacity   var(--duration) ease,
-            display   var(--duration) ease allow-discrete;
+        transition:
+            translate var(--duration) var(--spring-glide),
+            scale var(--duration) var(--spring-glide),
+            filter var(--duration) var(--spring-glide),
+            opacity var(--duration) ease,
+            display var(--duration) ease allow-discrete;
 
         &[open] .dialog_container {
-
             /* Post-Entry (Normal) State */
-            
+
             translate: 0 0;
             scale: 1;
             filter: blur(0);
@@ -94,7 +126,7 @@
             /* Pre-Entry State */
             @starting-style {
                 translate: 0 8vh;
-                scale: .5;
+                scale: 0.5;
                 filter: blur(5px);
             }
         }
@@ -103,7 +135,7 @@
         &:not([open]) .dialog_container {
             display: none;
             translate: 0 8vh;
-            scale: .5;
+            scale: 0.5;
             filter: blur(5px);
         }
     }
@@ -124,12 +156,12 @@
         transform-origin: bottom center;
         --duration: 250ms;
 
-        transition: 
-        translate var(--duration) var(--spring-glide), 
-        scale     var(--duration) var(--spring-glide),
-        filter    var(--duration) var(--spring-glide),
-        opacity   var(--duration) ease,
-        display   var(--duration) ease allow-discrete;
+        transition:
+            translate var(--duration) var(--spring-glide),
+            scale var(--duration) var(--spring-glide),
+            filter var(--duration) var(--spring-glide),
+            opacity var(--duration) ease,
+            display var(--duration) ease allow-discrete;
     }
     .dialog_container:nth-child(2) {
         transition-delay: 100ms;
@@ -143,13 +175,13 @@
         backdrop-filter: blur(80px) saturate(1.5);
         -webkit-backdrop-filter: blur(80px) saturate(1.5);
     }
-	dialog > div {
-		padding: 1em;
-	}
+    dialog > div {
+        padding: 1em;
+    }
 
     h3 {
         margin: 0;
-        margin-bottom: .5lh;
+        margin-bottom: 0.5lh;
     }
 
     p {
@@ -158,21 +190,16 @@
         font-size: var(--font-sm);
     }
     p + p {
-        margin-top: .5lh;
+        margin-top: 0.5lh;
     }
-
 
     /* fixing weird chrome button not disappear */
     dialog:not([open]) .closeButton {
         display: none;
         translate: 0 8vh;
-        scale: .5;
+        scale: 0.5;
         filter: blur(5px);
     }
-
-
-
-
 
     .closeButton {
         all: unset;
@@ -189,10 +216,9 @@
         transition: transform 150ms var(--shoot-ease);
         transition-behavior: allow-discrete;
 
-
         @starting-style {
             /* display: none; */
-            transform: scale(.5);
+            transform: scale(0.5);
         }
     }
 
@@ -204,17 +230,16 @@
         transform: scale(0.9);
     }
 
-	button {
-		display: block;
-	}
+    button {
+        display: block;
+    }
 
     @media (prefers-color-scheme: dark) {
         .closeButton {
             background: var(--ink-25);
         }
         dialog::backdrop {
-            background: rgba(0 0 0 / 0.2)
+            background: rgba(0 0 0 / 0.2);
         }
     }
-
 </style>
