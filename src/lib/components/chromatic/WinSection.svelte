@@ -69,7 +69,7 @@
 
 <style>
     .column {
-        grid-column: 3/-1;
+        grid-column: 1/-1;
     }
     section {
         text-align: center;
@@ -116,5 +116,12 @@
     }
     button:active {
         transform: scale(0.95);
+    }
+
+    @media (min-width: 730px) {
+        .column {
+            grid-column: 3/4;
+            grid-row: 2/3;
+        }
     }
 </style>

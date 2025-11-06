@@ -1,7 +1,15 @@
 <script>
-    import { version } from '$app/environment';
-    import { gameData, toggleHaptic, toggleSound } from "$lib/state/Store.svelte";
-    import { uiState, closeMenu, openMenu } from "$lib/state/InterfaceState.svelte";
+    import { version } from "$app/environment";
+    import {
+        gameData,
+        toggleHaptic,
+        toggleSound,
+    } from "$lib/state/Store.svelte";
+    import {
+        uiState,
+        closeMenu,
+        openMenu,
+    } from "$lib/state/InterfaceState.svelte";
     import Toggle from "./Toggle.svelte";
 
     let dialog; // HTMLDialogElement
@@ -17,7 +25,7 @@
     });
 
     function handleClose() {
-        closeMenu('sidebar');
+        closeMenu("sidebar");
     }
 
     function handleClick(event) {
@@ -27,11 +35,10 @@
     }
 
     function openHelp() {
-        closeMenu('sidebar');
-        openMenu('help');
+        closeMenu("sidebar");
+        openMenu("help");
     }
 </script>
-
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -41,51 +48,101 @@
     onclick={handleClick}
     class="modal"
 >
-	
-	<div class="dialog_container main-dialog fixedWidth" role="dialog" aria-labelledby="dialog-title" onclick={event => event.stopPropagation()}>	
+    <div
+        class="dialog_container main-dialog fixedWidth"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        onclick={(event) => event.stopPropagation()}
+    >
         <div class="modalHeader">
-            <img src="/favicon.svg" alt="">
-            <h2>Chromatic</h2>	
+            <img src="/favicon.svg" alt="" />
+            <h2>Chromatic</h2>
             <p class="versionPill">{version}</p>
             <p>A casual color puzzle game about organizing gradients.</p>
-            <p class="madeBy"> <span>Game by</span> <a href="https://feyder.design">Feyder</a></p>
-            
+            <p class="madeBy">
+                <span>Game by</span> <a href="https://feyder.co">Feyder</a>
+            </p>
         </div>
-        
-	</div>
-    <div class="dialog_container fixedWidth" role="dialog" aria-labelledby="dialog-title" onclick={event => event.stopPropagation()}>		
+    </div>
+    <div
+        class="dialog_container fixedWidth"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        onclick={(event) => event.stopPropagation()}
+    >
         <ul>
             <li>
                 <button class="listBtn" onclick={openHelp}>
                     <span>How to Play</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12H19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 5L19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M5 12H19"
+                            stroke="var(--ink-900)"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M12 5L19 12L12 19"
+                            stroke="var(--ink-900)"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
                     </svg>
                 </button>
             </li>
             <li>
-                <Toggle label="Sound Effects" name="sound" bind:checked={gameData.settings.soundEnabled} toggle={toggleSound}/>
+                <Toggle
+                    label="Sound Effects"
+                    name="sound"
+                    bind:checked={gameData.settings.soundEnabled}
+                    toggle={toggleSound}
+                />
             </li>
             <li>
-                <Toggle label="Haptics" name="haptic" bind:checked={gameData.settings.hapticEnabled} toggle={toggleHaptic}/>
+                <Toggle
+                    label="Haptics"
+                    name="haptic"
+                    bind:checked={gameData.settings.hapticEnabled}
+                    toggle={toggleHaptic}
+                />
             </li>
         </ul>
-	</div>
-    <button type="button" aria-label="Close help dialog" class="closeButton" onclick={handleClose}>
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"/>
-        </svg>    
+    </div>
+    <button
+        type="button"
+        aria-label="Close help dialog"
+        class="closeButton"
+        onclick={handleClose}
+    >
+        <svg
+            width="24"
+            height="25"
+            viewBox="0 0 24 25"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822"
+                stroke="white"
+                stroke-width="2.5"
+            />
+        </svg>
     </button>
 </dialog>
 
 <style>
-
     .main-dialog {
         view-transition-name: main-modal;
     }
 
-    
     dialog {
         display: flex;
         flex-direction: column;
@@ -103,17 +160,16 @@
         overflow: hidden;
         --duration: 250ms;
 
-        transition: 
-        translate var(--duration) var(--spring-glide), 
-        scale     var(--duration) var(--spring-glide),
-        filter    var(--duration) var(--spring-glide),
-        opacity   var(--duration) var(--spring-glide),
-        display   var(--duration) ease allow-discrete;
+        transition:
+            translate var(--duration) var(--spring-glide),
+            scale var(--duration) var(--spring-glide),
+            filter var(--duration) var(--spring-glide),
+            opacity var(--duration) var(--spring-glide),
+            display var(--duration) ease allow-discrete;
 
         &[open] .dialog_container {
-
             /* Post-Entry (Normal) State */
-            
+
             translate: 0 0;
             scale: 1;
             filter: blur(0);
@@ -149,7 +205,7 @@
         flex-direction: column;
         align-items: center;
         gap: 1rem;
-        padding: .5rem;
+        padding: 0.5rem;
         width: 100%;
         max-width: 325px;
         background: var(--ink-25);
@@ -159,12 +215,12 @@
         transform-origin: bottom center;
         --duration: 350ms;
 
-        transition: 
-        translate var(--duration) var(--shoot-ease), 
-        scale     var(--duration) var(--spring-glide),
-        filter    var(--duration) var(--spring-glide),
-        opacity   var(--duration) ease,
-        display   var(--duration) ease allow-discrete;
+        transition:
+            translate var(--duration) var(--shoot-ease),
+            scale var(--duration) var(--spring-glide),
+            filter var(--duration) var(--spring-glide),
+            opacity var(--duration) ease,
+            display var(--duration) ease allow-discrete;
     }
     .dialog_container:nth-child(2) {
         transition-delay: 50ms;
@@ -193,7 +249,7 @@
         font-weight: 400;
     }
     p + p {
-        margin-top: .5lh;
+        margin-top: 0.5lh;
     }
 
     .madeBy {
@@ -201,7 +257,7 @@
         color: var(--ink-300);
         /* font-size: var(--font-sm); */
         width: 100%;
-        gap: .5rem;
+        gap: 0.5rem;
         margin-top: 1rem;
         align-items: center;
         justify-content: center;
@@ -221,7 +277,7 @@
     a {
         display: block;
         width: 100%;
-        padding: .75rem;
+        padding: 0.75rem;
         color: var(--ink-900);
         text-decoration: none;
     }
@@ -244,9 +300,9 @@
         width: 100%;
 
         img {
-        width: 64px;
-        height: 64px;
-    }
+            width: 64px;
+            height: 64px;
+        }
 
         * {
             text-align: center;
@@ -272,7 +328,8 @@
             display: block;
             width: 100%;
         }
-        li, button {
+        li,
+        button {
             border-radius: var(--rad-md);
             margin: 0;
             width: initial;
@@ -281,8 +338,6 @@
             }
         }
     }
-
-
 
     /* fixing weird chrome button not disappear */
     dialog:not([open]) .closeButton {
@@ -305,11 +360,7 @@
 
     .listBtn:hover svg {
         transform: translateX(8px);
-        
     }
-
-
-
 
     .closeButton {
         all: unset;
@@ -332,32 +383,32 @@
     .closeButton:active {
         transform: scale(0.9);
     }
-	@keyframes zoom {
-		from {
+    @keyframes zoom {
+        from {
             opacity: 0;
-			transform: translatey(100px) scale(0.75);
+            transform: translatey(100px) scale(0.75);
             filter: blur(10px);
-		}
-		to {
+        }
+        to {
             opacity: 1;
-			transform: translatey(0) scale(1);
+            transform: translatey(0) scale(1);
             filter: blur(0px);
-		}
-	}
-	/* dialog[open]::backdrop {
+        }
+    }
+    /* dialog[open]::backdrop {
 		animation: fade 0.2s ease-out;
 	} */
-	@keyframes fade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-	button {
-		display: block;
-	}
+    @keyframes fade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    button {
+        display: block;
+    }
 
     @media (prefers-color-scheme: dark) {
         .closeButton {
@@ -367,8 +418,7 @@
             color: var(--ink-900);
         }
         dialog::backdrop {
-            background: rgba(0 0 0 / 0.2)
+            background: rgba(0 0 0 / 0.2);
         }
     }
-
 </style>

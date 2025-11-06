@@ -40,21 +40,13 @@
         filter: hue-rotate(var(--hueRotate, 0deg));
     }
 
-    @media (orientation: landscape) {
+    @media (min-width: 730px) {
         /* Add your CSS rules here */
         main {
             grid-template-rows: auto 8fr 1fr;
-            grid-template-columns: 1fr minmax(auto, 350px) 1fr;
+            grid-template-columns: minmax(1rem, auto) minmax(auto, 350px) auto;
             align-items: center;
             padding: 1rem var(--sidePadding);
         }
     }
-
-    /*@media (max-height: 700px) and (orientation: landscape) {
-        main {
-            grid-template-rows: 8fr 1fr;
-            grid-template-columns: 6fr 4fr;
-            align-items: end;
-        }
-    }*/
 </style>

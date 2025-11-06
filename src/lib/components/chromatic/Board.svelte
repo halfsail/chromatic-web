@@ -96,7 +96,9 @@
                     if (selectedElements && selectedElements.length > 0) {
                         selectedElements.forEach((el) => {
                             if (el) {
-                                gsap.set(el, { clearProps: "transform,scale,zIndex" });
+                                gsap.set(el, {
+                                    clearProps: "transform,scale,zIndex",
+                                });
                             }
                         });
                         selectedElements = [];
@@ -624,7 +626,7 @@
             max-height: initial;
         }
     }*/
-    @media (orientation: landscape) {
+    @media (min-width: 730px) {
         /* Add your CSS rules here */
         .boardContainer {
             grid-column: 2/3;

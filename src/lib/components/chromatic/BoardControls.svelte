@@ -138,6 +138,7 @@
 
 <style>
     .controlContainer {
+        grid-column: 1/-1;
         width: 100%;
         max-width: 375px;
         margin: 0 auto;
@@ -145,8 +146,8 @@
         display: flex;
         justify-content: space-evenly;
         gap: 2rem;
-        --icon-color: var(--ink-50);
-        --btn-background: var(--ink-800);
+        --icon-color: var(--ink-700);
+        --btn-background: var(--ink-100);
 
         button {
             display: grid;
@@ -192,7 +193,14 @@
         display: none;
     }
 
-    @media (orientation: landscape) {
+    /*@media (prefers-color-scheme: dark) {
+        .controlContainer {
+            --icon-color: var(--ink-50);
+            --btn-background: var(--ink-800);
+        }
+    }*/
+
+    @media (min-width: 730px) {
         .controlContainer {
             display: flex;
             flex-direction: column;
@@ -218,20 +226,4 @@
             display: flex;
         }
     }
-
-    /*@media (max-height: 700px) and (orientation: landscape) {
-    .controlContainer {
-        display: flex;
-        justify-content: start;
-        align-items: start;
-        margin: 0;
-        grid-row: 1/2;
-    }
-    .btn_col {
-        margin: 0;
-        width: fit-content;
-        flex: none;
-
-    }
-}*/
 </style>
