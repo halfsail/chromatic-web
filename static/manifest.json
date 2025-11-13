@@ -6,6 +6,12 @@
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#ffffff",
+	"user_preferences": {
+    "color_scheme_dark": {
+      "theme_color": "#121416",
+      "background_color": "#121416"
+    }
+  },
 	"orientation": "portrait-primary",
 	"categories": ["game", "puzzle", "casual"],
 	
