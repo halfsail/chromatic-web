@@ -55,7 +55,7 @@
         onclick={(event) => event.stopPropagation()}
     >
         <div class="modalHeader">
-            <img src="/favicon.svg" alt="" />
+            <img class="icon" src="/favicon.png" alt="" />
             <h2>Chromatic</h2>
             <p class="versionPill">{version}</p>
             <p>A casual color puzzle game about organizing gradients.</p>
@@ -139,6 +139,11 @@
 </dialog>
 
 <style>
+
+    .icon {
+        border-radius: 2rem;
+        corner-shape: squircle;
+    }
     .main-dialog {
         view-transition-name: main-modal;
     }
