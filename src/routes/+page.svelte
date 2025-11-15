@@ -31,7 +31,6 @@
         grid-template-columns: 1fr;
         flex-direction: column;
         align-items: center;
-        /*padding: var(--topBottomPadding) var(--sidePadding);*/
         padding: 1rem var(--sidePadding);
         gap: var(--boardGaps);
         height: 100dvh;

@@ -2,7 +2,7 @@
 	"name": "Chromatic",
 	"short_name": "Chromatic",
 	"description": "A relaxing color-based puzzle game to unwind your mind.",
-	"start_url": "/",
+	"display_override": ["window-control-overlay", "minimal-ui"],
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#ffffff",

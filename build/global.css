@@ -10,6 +10,7 @@
 
 
     /* text colors */
+    --ink-0: #ffffff;
     --ink-25: #f9f9f8;
     --ink-50: #f2f4f5;
     --ink-100: #e9ecef;
@@ -99,7 +100,7 @@ html * {
 body {
     box-sizing: border-box;
     margin: 0;
-    background: var(--ink-25);
+    background: var(--ink-0);
     user-select: none;
     font-family: 'system-ui','Inter', sans-serif; /* Set a global font */
 }
@@ -205,6 +206,7 @@ button:active {
     --ink-100: #343a40;
     --ink-50: #212529;
     --ink-25: #121416;
+    --ink-0: #121416;
     }
 
     button {

@@ -41,7 +41,7 @@
         aria-labelledby="dialog-title"
         onclick={(event) => event.stopPropagation()}
     >
-        <video src="/tutorialWide.webm" autoplay="true" muted="true" loop
+        <video src="/tutorialWide.webm" playsinline mute autoplay loop
         ></video>
         <div>
             <h3>How to Play</h3>

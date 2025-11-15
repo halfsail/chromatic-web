@@ -223,7 +223,7 @@ function HamburgerMenu($$payload, $$props) {
 }
 function HelpModal($$payload, $$props) {
   push();
-  $$payload.out += `<dialog class="modal svelte-4cbhhf"><div class="dialog_container main-dialog svelte-4cbhhf" role="dialog" aria-labelledby="dialog-title"><video src="/tutorialWide.webm" autoplay="true" muted="true" loop class="svelte-4cbhhf"></video> <div><h3 class="svelte-4cbhhf">How to Play</h3> <p class="svelte-4cbhhf">Move the tiles until the gradient is seamless and all the colors
+  $$payload.out += `<dialog class="modal svelte-4cbhhf"><div class="dialog_container main-dialog svelte-4cbhhf" role="dialog" aria-labelledby="dialog-title"><video src="/tutorialWide.webm" playsinline mute="" autoplay loop class="svelte-4cbhhf"></video> <div><h3 class="svelte-4cbhhf">How to Play</h3> <p class="svelte-4cbhhf">Move the tiles until the gradient is seamless and all the colors
                 flow perfectly into one another.</p></div> <div><h3 class="svelte-4cbhhf">Tips</h3> <p class="svelte-4cbhhf">Locked Tiles are in the correct spot. Use them as reference
                 points to help sort the gradient.</p> <p class="svelte-4cbhhf">Use Rotate Hues if you are having trouble seeing the different
                 between colors.</p></div></div> <button type="button" aria-label="Close help dialog" class="closeButton svelte-4cbhhf"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"></path></svg></button></dialog>`;
@@ -234,7 +234,7 @@ function _page($$payload, $$props) {
   let $$settled = true;
   let $$inner_payload;
   function $$render_inner($$payload2) {
-    $$payload2.out += `<main${attr("class", `svelte-vnblpe ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
+    $$payload2.out += `<main${attr("class", `svelte-1bjwvtb ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
     Header($$payload2, { toggleMenu: openMenu });
     $$payload2.out += `<!----> `;
     Board($$payload2);
