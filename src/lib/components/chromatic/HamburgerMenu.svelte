@@ -55,7 +55,7 @@
         onclick={(event) => event.stopPropagation()}
     >
         <div class="modalHeader">
-            <img class="icon" src="/favicon.png" alt="" />
+            <img class="icon" src="./favicon.png" alt="" />
             <h2>Chromatic</h2>
             <p class="versionPill">{version}</p>
             <p>A casual color puzzle game about organizing gradients.</p>

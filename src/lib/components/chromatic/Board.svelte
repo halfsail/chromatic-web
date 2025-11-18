@@ -244,7 +244,13 @@
                     borderRadius: "0px",
                     clearProps: "transform,scale,zIndex, borderRadius", // Clear all transform properties
                 });
-
+                // Make sure any drag-over state is cleared on these elements
+                try {
+                    element1.classList && element1.classList.remove("dragover");
+                } catch (e) {}
+                try {
+                    element2.classList && element2.classList.remove("dragover");
+                } catch (e) {}
                 // Update the state after animation is complete
                 gameData.puzzle.history = newHistory;
                 increaseMove(1); // Increment the move count
@@ -255,6 +261,11 @@
                     gameData.puzzle.rows,
                     gameData.puzzle.columns,
                 );
+                // Check and lock correct positions
+                [index1, index2].forEach((idx) => {
+                    isCorrectPosition(idx, gameData.puzzle.history);
+                    
+                });
             },
         });
 
@@ -346,12 +357,12 @@
                 JSON.stringify(currentColors)
             ) {
                 correct = true;
-                completePuzzle();
                 playFeedback("win");
+                completePuzzle();
+                
                 break;
             }
         }
-
         return correct;
     }
     // get constrast levels
@@ -427,6 +438,26 @@
         hueRotate += 40;
         if (hueRotate > 360) {
             hueRotate = 0;
+        }
+    }
+
+    function isCorrectPosition(index, history) {
+        // check if color at index matches the palette
+        //if yes then push to locks to give lock effect
+        if (history[index] === gameData.puzzle.palette[index]) {
+            // push to locks (avoid duplicates)
+            if (!gameData.puzzle.locks.includes(index)) {
+                gameData.puzzle.locks = [...gameData.puzzle.locks, index];
+            }
+            // ensure any drag-over visual state is removed from the DOM element
+            try {
+                if (itemElements[index]) {
+                    itemElements[index].classList.remove("dragover");
+                }
+            } catch (e) {}
+            return true;
+        } else {
+            return false;
         }
     }
 </script>
