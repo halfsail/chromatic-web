@@ -19,6 +19,7 @@ export function initializeSounds() {
             cellMove: './audio/lock_48k.ogg',
             cellHover: './audio/lock.ogg',
             win: './audio/kirakira.mp3',
+            correctSpot: './audio/correct_spot.opus',
         };
 
         // Create a promise for each sound file
@@ -88,6 +89,10 @@ const haptics = {
     error: {
         pattern: 200, // Single 200ms vibration
         intensity: 0.3
+    },
+    correctSpot: {
+        pattern: [30,20,30], // Simple pattern
+        intensity: 1
     }
 };
 

@@ -233,6 +233,14 @@
             newHistory[index1],
         ];
         playFeedback("cellMove");
+        // Add a transient class to hide lock icons while swapping/animating
+        try {
+            element1.classList && element1.classList.add("swapping");
+        } catch (e) {}
+        try {
+            element2.classList && element2.classList.add("swapping");
+        } catch (e) {}
+
         // Create a timeline for synchronized animation
         const tl = gsap.timeline({
             onComplete: () => {
@@ -251,6 +259,13 @@
                 try {
                     element2.classList && element2.classList.remove("dragover");
                 } catch (e) {}
+                // Remove transient swapping class so lock icon returns
+                try {
+                    element1.classList && element1.classList.remove("swapping");
+                } catch (e) {}
+                try {
+                    element2.classList && element2.classList.remove("swapping");
+                } catch (e) {}
                 // Update the state after animation is complete
                 gameData.puzzle.history = newHistory;
                 increaseMove(1); // Increment the move count
@@ -261,11 +276,14 @@
                     gameData.puzzle.rows,
                     gameData.puzzle.columns,
                 );
-                // Check and lock correct positions
-                [index1, index2].forEach((idx) => {
+
+                if (gameData.settings.relaxedMode === true) {
+                    // Check and lock correct positions if in relaxed mode
+                    [index1, index2].forEach((idx) => {
                     isCorrectPosition(idx, gameData.puzzle.history);
-                    
                 });
+                }
+                
             },
         });
 
@@ -405,6 +423,8 @@
             (b, a) => (b.includes(a) && b.splice(b.indexOf(a), 1), b),
             [...indexOrder],
         );
+        // filter out correct positions
+        
 
         // Return if no more hints available
         if (hintCells.length === 0) return;
@@ -448,6 +468,7 @@
             // push to locks (avoid duplicates)
             if (!gameData.puzzle.locks.includes(index)) {
                 gameData.puzzle.locks = [...gameData.puzzle.locks, index];
+                
             }
             // ensure any drag-over visual state is removed from the DOM element
             try {
@@ -455,6 +476,7 @@
                     itemElements[index].classList.remove("dragover");
                 }
             } catch (e) {}
+            playFeedback("correctSpot");
             return true;
         } else {
             return false;
@@ -573,7 +595,6 @@
     .swatch {
         display: grid;
         place-items: center;
-        cursor: grab;
         position: relative;
         transform-origin: center center;
         transition:
@@ -612,7 +633,6 @@
         cursor: not-allowed;
         &:hover {
             border-radius: 0.5rem;
-            transform: scale(0.85);
             z-index: 1;
         }
     }
@@ -631,8 +651,20 @@
         pointer-events: none;
     }
 
+    /* Hide lock icon while dragging (improves visual clarity) */
+    :global(.swatch.dragging) svg {
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* Hide lock icon while programmatically swapping/animating */
+    .swatch.swapping svg {
+        opacity: 0;
+        visibility: hidden;
+    }
+
     .swatch:active {
-        cursor: grabbing;
+        /* cursor: grabbing; */
         z-index: 10;
     }
 

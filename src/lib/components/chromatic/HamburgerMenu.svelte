@@ -11,6 +11,7 @@
         openMenu,
     } from "$lib/state/InterfaceState.svelte";
     import Toggle from "./Toggle.svelte";
+    import SettingsContainer from "./SettingsContainer.svelte";
 
     let dialog; // HTMLDialogElement
 
@@ -58,7 +59,7 @@
             <img class="icon" src="./favicon.png" alt="" />
             <h2>Chromatic</h2>
             <p class="versionPill">{version}</p>
-            <p>A casual color puzzle game about organizing gradients.</p>
+            <p>A casual relaxing puzzle game. Where you sort color and create gradients.</p>
             <p class="madeBy">
                 <span>Game by</span> <a href="https://feyder.co">Feyder</a>
             </p>
@@ -70,51 +71,9 @@
         aria-labelledby="dialog-title"
         onclick={(event) => event.stopPropagation()}
     >
-        <ul>
-            <li>
-                <button class="listBtn" onclick={openHelp}>
-                    <span>How to Play</span>
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M5 12H19"
-                            stroke="var(--ink-900)"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                        <path
-                            d="M12 5L19 12L12 19"
-                            stroke="var(--ink-900)"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <Toggle
-                    label="Sound Effects"
-                    name="sound"
-                    bind:checked={gameData.settings.soundEnabled}
-                    toggle={toggleSound}
-                />
-            </li>
-            <li>
-                <Toggle
-                    label="Haptics"
-                    name="haptic"
-                    bind:checked={gameData.settings.hapticEnabled}
-                    toggle={toggleHaptic}
-                />
-            </li>
-        </ul>
+
+    <SettingsContainer />
+    
     </div>
     <button
         type="button"

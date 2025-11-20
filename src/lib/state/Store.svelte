@@ -35,6 +35,7 @@
             theme: "dark",
             soundEnabled: true,
             hapticEnabled: true,
+            relaxedMode: true,
         },
     };
 
@@ -52,6 +53,7 @@
         if (storedData) {
             let parsedData = JSON.parse(storedData);
             initialState = migrateData(parsedData);
+            
 
             const today = getTodayDate();
             const storedDate = initialState.puzzle.date?.split("T")[0]; // Handle the date comparison correctly
@@ -117,6 +119,9 @@
     }
     export function toggleHaptic() {
         gameData.settings.hapticEnabled = !gameData.settings.hapticEnabled;
+    }
+    export function toggleRelaxedMode() {
+        gameData.settings.relaxedMode = !gameData.settings.relaxedMode;
     }
     export function setTheme(theme) {
         gameData.settings.theme = theme;
@@ -193,16 +198,27 @@
     }
 
     function migrateData(oldData) {
-        const currentVersion = CONFIG.VERSION;
+        const currentVersion = CONFIG.VERSION_KEY;
 
+        // Ensure we have an object to work with
+        oldData = oldData || {};
+
+        // Merge default settings so missing keys (like relaxedMode) are added
+        oldData.settings = { ...defaultData.settings, ...(oldData.settings || {}) };
+
+        // Optionally ensure other top-level defaults exist without overwriting user values
+        oldData.deviceId = oldData.deviceId ?? defaultData.deviceId;
+        oldData.lastSync = oldData.lastSync ?? defaultData.lastSync;
+        oldData.state = oldData.state ?? defaultData.state;
+
+        // If the stored version is different, run any structural migrations
         if (oldData.version !== currentVersion) {
-            // Perform any necessary data structure updates
+            // Perform any necessary data structure updates here
             oldData.version = currentVersion;
 
-            // Add any missing fields
-            oldData.settings = oldData.settings || defaultData.settings;
             // Add more migration logic as needed
         }
+
         return oldData;
     }
 
@@ -242,7 +258,7 @@
         }
         // check to see if current streak is greater than best streak. if it is than set best streak to current streak
         if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
-          gameData.stats.bestStreak == gameData.stats.currentStreak
+          gameData.stats.bestStreak = gameData.stats.currentStreak
         }
 
         if (gameData.stats.averageMoves === 0 || gameData.averageMoves === null) {
