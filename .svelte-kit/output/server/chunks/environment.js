@@ -1,4 +1,4 @@
-const version = "0.0.3";
+const version = "0.1.2";
 let prerendering = false;
 function set_building() {
 }

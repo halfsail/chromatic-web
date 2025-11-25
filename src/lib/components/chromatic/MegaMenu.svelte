@@ -1,21 +1,15 @@
 <script>
-    import { version } from "$app/environment";
-    import {
-        gameData,
-        toggleHaptic,
-        toggleSound,
-    } from "$lib/state/Store.svelte";
     import {
         uiState,
         closeMenu,
         openMenu,
     } from "$lib/state/InterfaceState.svelte";
-    import Toggle from "./Toggle.svelte";
+
     import SettingsContainer from "./SettingsContainer.svelte";
-    import WeekStreak from "./WeekStreak.svelte";
     import AboutContainer from "./AboutContainer.svelte";
 
     let dialog; // HTMLDialogElement
+    let activeTab = $state("game");
 
     $effect(() => {
         if (dialog) {
@@ -27,16 +21,20 @@
         }
     });
 
+    function switchTab(tab) {
+        if (tab === activeTab) return;
+        activeTab = tab;
+    }
+
+
     function handleClose() {
         closeMenu("sidebar");
     }
-
     function handleClick(event) {
         if (event.target === dialog) {
             handleClose();
         }
     }
-
     function openHelp() {
         closeMenu("sidebar");
         openMenu("help");
@@ -57,41 +55,68 @@
         aria-labelledby="dialog-title"
         onclick={(event) => event.stopPropagation()}
     >
-    <AboutContainer />
-    </div>
-    <div
-        class="dialog_container fixedWidth"
-        role="dialog"
-        aria-labelledby="dialog-title"
-        onclick={(event) => event.stopPropagation()}
-    >
+            <div class="tabContent {activeTab}">
+                <div class="game">
+                    <AboutContainer />
+                </div>
+                <div class="settings">
+                    <SettingsContainer />
+                </div>
+                
+            </div>
 
-    <SettingsContainer />
-    
+        <div class="tabBar">
+            <button class="tab" onclick={() => switchTab("game")}>Game</button>
+            <button class="tab" onclick={() => switchTab("settings")}>Settings</button>
+            <div class="highlight" class:game={activeTab === 'game'} class:settings={activeTab === 'settings'}></div>
+        </div>
     </div>
-    <button
-        type="button"
-        aria-label="Close help dialog"
-        class="closeButton"
-        onclick={handleClose}
-    >
-        <svg
-            width="24"
-            height="25"
-            viewBox="0 0 24 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822"
-                stroke="white"
-                stroke-width="2.5"
-            />
-        </svg>
-    </button>
+
 </dialog>
 
 <style>
+    .tabBar {
+        position: relative;
+        height: 44px;
+        background-color: var(--ink-100);
+        border-radius: var(--rad-lg);
+        border: 2px solid var(--ink-100);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .tab {
+            flex: 1;
+            background: none;
+            border: none;
+            font-size: var(--font-md);
+            font-weight: 500;
+            color: var(--ink-700);
+            cursor: pointer;
+            z-index: 1;
+            text-align: center;
+            font-family: "Bricolage Grotesque", sans-serif;
+        }
+
+        .highlight {
+            display: block;
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background-color: var(--ink-0);
+            border-radius: var(--rad-lg);
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+        .game {
+            transform: translateX(0%);
+        }
+        .settings {
+            transform: translateX(100%);
+        }
+    }
+
     .main-dialog {
         view-transition-name: main-modal;
     }
@@ -110,7 +135,7 @@
         background-color: transparent;
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
-        overflow-x: hidden;
+        overflow: hidden;
         --duration: 250ms;
 
         transition:
@@ -151,6 +176,27 @@
             }
         }
     }
+    .tabContent {
+        display: block;
+    }
+    .tabContent.settings .game, .tabContent.game .settings {
+        display: none;
+        opacity: 0;
+    }
+    div.settings, div.game {
+        display: block;
+        opacity: 1;
+        filter: blur(0);
+        scale: 1;
+        transition: all 1s ease;
+
+        /* @starting-style {
+            display: none;
+            opacity: 0;
+            scale: .5;
+            filter: blur(10px);
+        } */
+    }
 
     .dialog_container {
         position: relative;
@@ -163,7 +209,6 @@
         max-width: 325px;
         background: var(--ink-25);
         border-radius: var(--rad-lg);
-        corner-shape: squircle;
         border: 1px solid var(--ink-100);
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
@@ -192,39 +237,6 @@
         backdrop-filter: blur(80px) saturate(1.5);
         -webkit-backdrop-filter: blur(80px) saturate(1.5);
     }
-
-
-
-    /* fixing weird chrome button not disappear */
-    dialog:not([open]) .closeButton {
-        display: none;
-        translate: 0 8vh;
-        scale: 0;
-        filter: blur(5px);
-    }
-
-
-    .closeButton {
-        all: unset;
-        margin: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--ink-900);
-        border-radius: 50%;
-        height: 40px;
-        width: 40px;
-        cursor: pointer;
-        transition: transform 150ms var(--shoot-ease);
-    }
-
-    .closeButton:hover {
-        transform: scale(1.1);
-    }
-
-    .closeButton:active {
-        transform: scale(0.9);
-    }
     @keyframes zoom {
         from {
             opacity: 0;
@@ -248,17 +260,9 @@
             opacity: 1;
         }
     }
-    button {
-        display: block;
-    }
+
 
     @media (prefers-color-scheme: dark) {
-        .closeButton {
-            background: var(--ink-25);
-        }
-        .listBtn {
-            color: var(--ink-900);
-        }
         dialog::backdrop {
             background: rgba(0 0 0 / 0.2);
         }

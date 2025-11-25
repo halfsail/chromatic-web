@@ -1,5 +1,5 @@
 <script>
-    import { gameData, toggleHaptic, toggleSound, toggleRelaxedMode } from "$lib/state/Store.svelte";
+    import { gameData, toggleHaptic, toggleSound, toggleRelaxedMode, nextLevel } from "$lib/state/Store.svelte";
     import { onMount } from "svelte";
 
     // A variable to track the support status
@@ -11,12 +11,37 @@
       isVibrationSupported = true;
     }
   });
+
 </script>
 
 <div class="container">
 
 <section>
     <p class="subHeader">Game Play</p>
+    <div class="list_item_grid">
+        <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.66669 8.33508C1.69081 5.49006 1.84876 3.92167 2.88305 2.88738C4.10375 1.66667 6.06845 1.66667 9.99785 1.66667C13.9272 1.66667 15.8919 1.66667 17.1126 2.88738C18.3334 4.10809 18.3334 6.07278 18.3334 10.0022C18.3334 13.9316 18.3334 15.8963 17.1126 17.117C16.0784 18.1513 14.51 18.3092 11.6649 18.3333" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4.16561 10.8333C3.1904 10.8626 2.60897 10.971 2.20666 11.3733C1.80434 11.7756 1.69591 12.3571 1.66669 13.3323M6.66776 10.8333C7.64298 10.8626 8.2244 10.971 8.62672 11.3733C9.02903 11.7756 9.13746 12.3571 9.16669 13.3323M9.16669 15.8344C9.13746 16.8096 9.02903 17.3911 8.62672 17.7934C8.2244 18.1957 7.64298 18.3041 6.66776 18.3333M4.16562 18.3333C3.1904 18.3041 2.60897 18.1957 2.20666 17.7934C1.80434 17.3911 1.69591 16.8096 1.66669 15.8344" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+        </div>
+        <div class="copy">
+            <p class="label">Puzzle Size</p>
+        </div>
+        <div class="selectContainer">
+        <select name="size" id="puzzleSize" class="dropDown" bind:value={gameData.settings.difficulty} onchange={nextLevel}>
+            <option value="easy">Small 4×5</option>
+            <option value="normal">Normal 5×6</option>
+            <option value="medium">Medium 6×6</option>
+            <option value="hard">Hard 7×7</option>
+        </select>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 9.00049L11.2929 14.2934C11.6262 14.6267 11.7929 14.7934 12 14.7934C12.2071 14.7934 12.3738 14.6267 12.7071 14.2934L18 9.00049" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        </div>
+    </div>
 
     <div class="list_item_grid">
         <div class="icon">
@@ -88,7 +113,7 @@
 
 <style>
     .container, section {
-        padding: 1rem;
+        padding: 0 .5rem;
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
@@ -142,9 +167,52 @@
     .copy {
         grid-column: 2/3;
     }
-    .description {
+    .description, .dropDown {
         grid-column: 2/-1;
         grid-row: 2/3;
+    }
+    .selectContainer {
+        position: relative;
+        grid-column: 1/-1;
+        grid-row: 2/3;
+        margin: .5rem 0 .75rem 0;
+
+        svg {
+            position: absolute;
+            right: 1rem;
+            width: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--ink-500);
+        }
+    }
+    .dropDown {
+        width: 100%;
+        min-height: 40px;
+        border-radius: 30px;
+        padding: 4px 1rem;
+        cursor: pointer;
+        
+        font-size: var(--font-sm);
+        border: 1px solid var(--ink-200);
+        background-color: var(--ink-100);
+        color: var(--ink-900);
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        &:active, &:focus {
+            box-shadow: none;
+            border-color: var(--ink-300);
+            outline: none;
+        }
+
+        &:hover {
+            background-color: var(--ink-50);
+            border-color: var(--ink-200);
+            border-radius: var(--rad-md);
+        }
     }
 }
 .icon,.control {

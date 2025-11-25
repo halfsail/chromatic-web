@@ -1,6 +1,6 @@
 <script>
     import { gameData, nextLevel, getTodayDate } from "$lib/state/Store.svelte";
-    export let toggleMenu;
+    const { toggleMenu } = $props();
 
     function formatDate(dateString) {
         const options = {
@@ -12,6 +12,10 @@
         const date = new Date(dateString);
         return date.toLocaleDateString(undefined, options);
     }
+    $effect(() => {
+        // This effect runs whenever gameData.puzzle.date changes
+        formatDate(gameData.puzzle.date);
+    })
 </script>
 
 <nav>
@@ -85,7 +89,7 @@
     <p class="dateText">
         <span>{formatDate(gameData.puzzle.date)}</span>
         {#if formatDate(gameData.puzzle.date) !== formatDate(new Date())}
-            <button onclick={nextLevel}>Play Today's Game.</button>
+            <button onclick={ () => nextLevel()}>Play Today's Game.</button>
         {/if}
     </p>
 </nav>

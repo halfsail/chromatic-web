@@ -2,6 +2,7 @@
     import { gameData } from "$lib/state/Store.svelte";
     import { levels } from "$lib/utils/levels.js";
     import { getColors, convertToP3 } from "$lib/utils/colorUtils.js";
+    import WeekStreak from "$lib/components/chromatic/WeekStreak.svelte";
     
     import chroma from "chroma-js";
     import { onMount } from 'svelte';
@@ -176,6 +177,8 @@
     </div>
 </section>
 
+<WeekStreak />
+
 <style>
 .spectrumBar {
     height: 160px;
@@ -208,7 +211,8 @@
 }
 
 .previewBoard {
-    display: grid;
+    /* display: grid; */
+    display: none;
     width: 325px;
     height: 500px;
     border: 1px solid var(--ink-200);

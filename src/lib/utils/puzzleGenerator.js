@@ -11,9 +11,10 @@ export function seededRandom(seed) {
     };
 }
 
-export function getLocks(today, rowSize, colSize) {
+export function getLocks(today, rowSize, colSize, numberOfLocks) {
+    console.log('Generating locks for date:', today);
     const seed = today.split('-').join('');
-    const lockNum = 7;
+    const lockNum = numberOfLocks;
     const puzzleSize = rowSize * colSize;
 
     const rng = seededRandom(seed);

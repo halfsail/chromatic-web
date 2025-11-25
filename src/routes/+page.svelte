@@ -7,6 +7,7 @@
     // modals and menus
     import HamburgerMenu from "$lib/components/chromatic/HamburgerMenu.svelte";
     import HelpModal from "$lib/components/chromatic/HelpModal.svelte";
+    import MegaMenu from "$lib/components/chromatic/MegaMenu.svelte";
 
     // modal state variables
     let hueRotate = $state(0);
@@ -18,10 +19,11 @@
 </main>
 
 <HelpModal bind:showModal={uiState.modals.help} />
-<HamburgerMenu
+<!-- <HamburgerMenu
     bind:showModal={uiState.modals.sidebar}
     bind:showHelp={uiState.modals.help}
-/>
+/> -->
+<MegaMenu bind:showModal={uiState.modals.sidebar} />
 
 <style>
     main {

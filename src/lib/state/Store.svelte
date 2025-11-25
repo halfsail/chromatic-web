@@ -13,6 +13,13 @@
         START_DATE: "2025-01-01", // Example start date for the game
     };
 
+    const difficultyLevels = {
+        easy: {rows: 5, cols: 4, locks: 5},
+        normal: {rows: 6, cols: 5, locks: 7},
+        medium: {rows: 6, cols: 6, locks: 9},
+        hard: {rows: 7, cols: 7, locks: 13},
+    };
+
     const defaultData = {
         version: CONFIG.VERSION_KEY,
         deviceId: null, // Will be set later
@@ -30,12 +37,15 @@
             currentStreak: 0,
             bestStreak: 0,
             averageMoves: 0,
+            completedDates: [],
+            weekStartDate: getTodayDate(),
         },
         settings: {
             theme: "dark",
             soundEnabled: true,
             hapticEnabled: true,
             relaxedMode: true,
+            difficulty: "normal",
         },
     };
 
@@ -69,12 +79,18 @@
                 initialState.puzzle.completed = parsedData.puzzle.completed;
             }
         } else {
+            // no stored data, generate new puzzle
             let extraData = generationLevel();
             initialState.puzzle = { ...initialState.puzzle, ...extraData };
         }
     }
 
     export const gameData = $state(initialState);
+
+    // Check and reset weekly stats on app load
+    if (browser) {
+        checkAndResetWeeklyStats();
+    }
 
     // Use an $effect to automatically save data to localStorage whenever it changes.
 
@@ -93,10 +109,28 @@
     // It's good practice to export functions that modify the state.
     // This keeps your state logic centralized and components cleaner.
 
-    // Update the getTodayDate function to only return the date portion
     export function getTodayDate() {
         const todayDate = new Date();
         return todayDate.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
+    }
+
+    export function getWeekStartDate(date = new Date()) {
+        // Returns the Monday of the current week
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        return new Date(d.setDate(diff)).toISOString().split("T")[0];
+    }
+
+    export function checkAndResetWeeklyStats() {
+        const today = getTodayDate();
+        const currentWeekStart = getWeekStartDate();
+
+        // If the week has changed, reset completedDates
+        if (gameData.stats.weekStartDate !== currentWeekStart) {
+            gameData.stats.completedDates = [];
+            gameData.stats.weekStartDate = currentWeekStart;
+        }
     }
 
     export function increaseMove(moves) {
@@ -109,6 +143,13 @@
         gameData.puzzle.completed = true;
         gameData.puzzle.completedAt = new Date().toISOString();
         gameData.state = "completed";
+        
+        // Add today's date to completedDates if not already there
+        const today = getTodayDate();
+        if (!gameData.stats.completedDates.includes(today)) {
+            gameData.stats.completedDates = [...gameData.stats.completedDates, today];
+        }
+        
         updateStats();
     }
 
@@ -127,8 +168,9 @@
         gameData.settings.theme = theme;
     }
 
-    export function nextLevel() {
-        let extraData = generationLevel();
+    export function nextLevel(date) {
+        const today = date ?? getTodayDate();
+        let extraData = generationLevel(gameData.settings.difficulty, date);
         gameData.puzzle = { ...gameData.puzzle, ...extraData };
         gameData.puzzle.completed = false;
         gameData.puzzle.hints = 0;
@@ -140,13 +182,15 @@
         // To reset, we can re-assign the properties from the default object.
         Object.assign(gameData, defaultData);
     }
+    
 
-    export function generationLevel() {
-        // use date to generate seed for generate locks
-        const today = getTodayDate();
+    export function generationLevel(difficulty, date) {
+        // If no date is provided, use today's date
+        const today = date ?? getTodayDate();
+        const difficultyLevel = difficultyLevels[difficulty] || difficultyLevels["normal"];
         let testPuzzle = {
-            col: 5,
-            row: 6,
+            col: difficultyLevel.cols,
+            row: difficultyLevel.rows,
             date: today,
             hues: getPalette(today),
             history: [],
@@ -154,7 +198,7 @@
             hints: 0,
             completedAt: null,
         };
-        testPuzzle.locks = getLocks(today, testPuzzle.row, testPuzzle.col);
+        testPuzzle.locks = getLocks(today, testPuzzle.row, testPuzzle.col, difficultyLevel.locks);
         testPuzzle.palette = getColors(
             testPuzzle.hues,
             testPuzzle.col,

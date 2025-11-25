@@ -29,18 +29,12 @@ const defaultData = {
   settings: {
     theme: "dark",
     soundEnabled: true,
-    hapticEnabled: true
+    hapticEnabled: true,
+    relaxedMode: true
   }
 };
 let initialState = { ...defaultData };
 const gameData = initialState;
-function toggleSound() {
-  console.log("toggling sound");
-  gameData.settings.soundEnabled = !gameData.settings.soundEnabled;
-}
-function toggleHaptic() {
-  gameData.settings.hapticEnabled = !gameData.settings.hapticEnabled;
-}
 const uiState = {
   modals: { sidebar: false, help: false }
 };
@@ -142,18 +136,18 @@ function Board($$payload, $$props) {
     }
   }
   const each_array = ensure_array_like(gameData.puzzle.history);
-  $$payload.out += `<section${attr("class", `boardContainer svelte-tc0g80 ${stringify([
+  $$payload.out += `<section${attr("class", `boardContainer svelte-484gtp ${stringify([
     gameData.puzzle.completed === true ? "complete" : ""
-  ].filter(Boolean).join(" "))}`)}${attr("style", `--hueRotate: ${stringify(hueRotate)}deg;`)}><section class="board svelte-tc0g80"${attr("style", `--colSize: ${stringify(gameData.puzzle.col)}; --rowSize: ${stringify(gameData.puzzle.row)};`)}><!--[-->`;
+  ].filter(Boolean).join(" "))}`)}${attr("style", `--hueRotate: ${stringify(hueRotate)}deg;`)}><section class="board svelte-484gtp"${attr("style", `--colSize: ${stringify(gameData.puzzle.col)}; --rowSize: ${stringify(gameData.puzzle.row)};`)}><!--[-->`;
   for (let i = 0, $$length = each_array.length; i < $$length; i++) {
     let color = each_array[i];
-    $$payload.out += `<div${attr("class", `swatch ${stringify(isCorner(i))} svelte-tc0g80 ${stringify([
+    $$payload.out += `<div${attr("class", `swatch ${stringify(isCorner(i))} svelte-484gtp ${stringify([
       selectedElements.includes(itemElements[i]) ? "selected" : "",
       gameData.puzzle.locks.includes(i) ? "locked" : ""
     ].filter(Boolean).join(" "))}`)}${attr("style", `--background: ${stringify(color)}; --color: ${stringify(setContrast(color))};`)}${attr("data-index", i)}${attr("data-color", color)}>`;
     if (gameData.puzzle.locks.includes(i)) {
       $$payload.out += "<!--[-->";
-      $$payload.out += `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-tc0g80"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9995 4.20264C13.1659 4.20264 14.285 4.666 15.1099 5.49072C15.9347 6.31557 16.3989 7.43454 16.3989 8.60107V10.3208H16.7583C18.0614 10.3209 19.1176 11.3772 19.1177 12.6802V17.438C19.1174 18.7407 18.0613 19.7982 16.7583 19.7983H7.2417C5.93878 19.7983 4.88259 18.7408 4.88232 17.438V12.6802C4.88238 11.3772 5.93868 10.3209 7.2417 10.3208H7.60107V8.60107C7.60114 7.43461 8.06439 6.31556 8.88916 5.49072C9.71396 4.66592 10.8331 4.20277 11.9995 4.20264ZM11.9995 6.20264C11.3635 6.20277 10.7529 6.45506 10.3032 6.90479C9.85352 7.35456 9.60114 7.96506 9.60107 8.60107V10.3208H14.3989V8.60107C14.3989 7.96501 14.1456 7.35458 13.6958 6.90479C13.2461 6.4552 12.6356 6.20264 11.9995 6.20264Z" fill="var(--color)"></path></svg>`;
+      $$payload.out += `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-484gtp"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9995 4.20264C13.1659 4.20264 14.285 4.666 15.1099 5.49072C15.9347 6.31557 16.3989 7.43454 16.3989 8.60107V10.3208H16.7583C18.0614 10.3209 19.1176 11.3772 19.1177 12.6802V17.438C19.1174 18.7407 18.0613 19.7982 16.7583 19.7983H7.2417C5.93878 19.7983 4.88259 18.7408 4.88232 17.438V12.6802C4.88238 11.3772 5.93868 10.3209 7.2417 10.3208H7.60107V8.60107C7.60114 7.43461 8.06439 6.31556 8.88916 5.49072C9.71396 4.66592 10.8331 4.20277 11.9995 4.20264ZM11.9995 6.20264C11.3635 6.20277 10.7529 6.45506 10.3032 6.90479C9.85352 7.35456 9.60114 7.96506 9.60107 8.60107V10.3208H14.3989V8.60107C14.3989 7.96501 14.1456 7.35458 13.6958 6.90479C13.2461 6.4552 12.6356 6.20264 11.9995 6.20264Z" fill="var(--color)"></path></svg>`;
     } else {
       $$payload.out += "<!--[!-->";
     }
@@ -170,55 +164,20 @@ function Board($$payload, $$props) {
   $$payload.out += `<!--]-->`;
   pop();
 }
-function Toggle($$payload, $$props) {
-  let {
-    label = "Toggle",
-    checked = void 0,
-    name = "toggle",
-    toggle
-  } = $$props;
-  $$payload.out += `<div class="inputRow svelte-1t840aw"><p class="svelte-1t840aw">${escape_html(label)}</p> <label${attr("for", name)}${attr("class", `svelte-1t840aw ${stringify([checked ? "check" : ""].filter(Boolean).join(" "))}`)}><input${attr("checked", checked, true)}${attr("id", name)} class="checkbox_container svelte-1t840aw" type="checkbox"> <div class="twoDots svelte-1t840aw"><div class="emptyDot svelte-1t840aw"><svg class="noToggle svelte-1t840aw" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="var(--ink-900)" stroke-width="2.5"></path></svg></div> <div class="checkedDot svelte-1t840aw"><svg class="yesToggle svelte-1t840aw" viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg></div></div></label></div>`;
-  bind_props($$props, { checked });
+function SettingsContainer($$payload, $$props) {
+  push();
+  $$payload.out += `<div class="container svelte-1jimsc"><section class="svelte-1jimsc"><p class="subHeader svelte-1jimsc">Game Play</p> <div class="list_item_grid svelte-1jimsc"><div class="icon svelte-1jimsc"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1jimsc"><path d="M11.7595 5.50128C11.861 5.21432 11.9163 4.90548 11.9163 4.58374C11.9163 3.06496 10.685 1.83374 9.16626 1.83374C7.64747 1.83374 6.41626 3.06496 6.41626 4.58374C6.41626 4.90548 6.47151 5.21432 6.57305 5.50128C4.47867 5.50893 3.36098 5.58327 2.63838 6.30586C1.91585 7.02839 1.84146 8.14594 1.8338 10.2399C2.12027 10.1388 2.4285 10.0837 2.74959 10.0837C4.26837 10.0837 5.49959 11.315 5.49959 12.8337C5.49959 14.3525 4.26837 15.5837 2.74959 15.5837C2.4285 15.5837 2.12027 15.5287 1.8338 15.4276C1.84146 17.5215 1.91585 18.6391 2.63838 19.3616C3.3609 20.0841 4.47845 20.1585 6.57243 20.1662C6.47129 19.8797 6.41626 19.5715 6.41626 19.2504C6.41626 17.7316 7.64747 16.5004 9.16626 16.5004C10.685 16.5004 11.9163 17.7316 11.9163 19.2504C11.9163 19.5715 11.8612 19.8797 11.7601 20.1662C13.8541 20.1585 14.9716 20.0841 15.6941 19.3616C16.4167 18.639 16.4911 17.5213 16.4987 15.4269C16.7857 15.5285 17.0945 15.5837 17.4163 15.5837C18.935 15.5837 20.1663 14.3525 20.1663 12.8337C20.1663 11.315 18.935 10.0837 17.4163 10.0837C17.0945 10.0837 16.7857 10.139 16.4987 10.2405C16.4911 8.14616 16.4167 7.02846 15.6941 6.30586C14.9715 5.58327 13.8538 5.50893 11.7595 5.50128Z" stroke="var(--ink-900)" stroke-width="1.5" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1jimsc"><p class="label svelte-1jimsc">Relaxed Mode</p></div> <div class="control svelte-1jimsc"><label class="material-toggle-switch svelte-1jimsc" for="relaxedMode"><input id="relaxedMode" type="checkbox" class="material-toggle-input svelte-1jimsc"${attr("checked", gameData.settings.relaxedMode, true)}> <span class="material-toggle-slider svelte-1jimsc"></span></label></div> <p class="description svelte-1jimsc">Lock tiles when moved into correct spot.</p></div></section> <section class="svelte-1jimsc"><p class="subHeader svelte-1jimsc">Effects</p> <div class="list_item svelte-1jimsc"><div class="icon svelte-1jimsc"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1jimsc"><path d="M2.29169 11C2.29169 6.89481 2.29169 4.84224 3.56699 3.56693C4.8423 2.29163 6.89487 2.29163 11 2.29163C15.1052 2.29163 17.1577 2.29163 18.433 3.56693C19.7084 4.84224 19.7084 6.89481 19.7084 11C19.7084 15.1051 19.7084 17.1577 18.433 18.433C17.1577 19.7083 15.1052 19.7083 11 19.7083C6.89487 19.7083 4.8423 19.7083 3.56699 18.433C2.29169 17.1577 2.29169 15.1051 2.29169 11Z" stroke="var(--ink-900)" stroke-width="1.5"></path><path d="M11.9166 13.2916C11.9166 14.5573 10.8906 15.5833 9.62498 15.5833C8.35933 15.5833 7.33331 14.5573 7.33331 13.2916C7.33331 12.026 8.35933 11 9.62498 11C10.8906 11 11.9166 12.026 11.9166 13.2916ZM11.9166 13.2916V6.41663C12.2222 6.87496 12.4666 8.79996 14.6666 9.16663" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1jimsc"><p class="label svelte-1jimsc">Sounds Effect</p></div> <div class="control svelte-1jimsc"><label class="material-toggle-switch svelte-1jimsc" for="soundEnabled"><input id="soundEnabled" type="checkbox" class="material-toggle-input svelte-1jimsc"${attr("checked", gameData.settings.soundEnabled, true)}> <span class="material-toggle-slider svelte-1jimsc"></span></label></div></div> `;
+  {
+    $$payload.out += "<!--[!-->";
+  }
+  $$payload.out += `<!--]--></section></div>`;
+  pop();
 }
 function HamburgerMenu($$payload, $$props) {
   push();
-  let $$settled = true;
-  let $$inner_payload;
-  function $$render_inner($$payload2) {
-    $$payload2.out += `<dialog class="modal svelte-crqphh"><div class="dialog_container main-dialog fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title"><div class="modalHeader svelte-crqphh"><img class="icon svelte-crqphh" src="./favicon.png" alt=""> <h2 class="svelte-crqphh">Chromatic</h2> <p class="versionPill svelte-crqphh">${escape_html(version)}</p> <p class="svelte-crqphh">A casual color puzzle game about organizing gradients.</p> <p class="madeBy svelte-crqphh"><span class="svelte-crqphh">Game by</span> <a href="https://feyder.co" class="svelte-crqphh">Feyder</a></p></div></div> <div class="dialog_container fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title"><ul class="svelte-crqphh"><li class="svelte-crqphh"><button class="listBtn svelte-crqphh"><span>How to Play</span> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-crqphh"><path d="M5 12H19" stroke="var(--ink-900)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 5L19 12L12 19" stroke="var(--ink-900)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li> <li class="svelte-crqphh">`;
-    Toggle($$payload2, {
-      label: "Sound Effects",
-      name: "sound",
-      toggle: toggleSound,
-      get checked() {
-        return gameData.settings.soundEnabled;
-      },
-      set checked($$value) {
-        gameData.settings.soundEnabled = $$value;
-        $$settled = false;
-      }
-    });
-    $$payload2.out += `<!----></li> <li class="svelte-crqphh">`;
-    Toggle($$payload2, {
-      label: "Haptics",
-      name: "haptic",
-      toggle: toggleHaptic,
-      get checked() {
-        return gameData.settings.hapticEnabled;
-      },
-      set checked($$value) {
-        gameData.settings.hapticEnabled = $$value;
-        $$settled = false;
-      }
-    });
-    $$payload2.out += `<!----></li></ul></div> <button type="button" aria-label="Close help dialog" class="closeButton svelte-crqphh"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"></path></svg></button></dialog>`;
-  }
-  do {
-    $$settled = true;
-    $$inner_payload = copy_payload($$payload);
-    $$render_inner($$inner_payload);
-  } while (!$$settled);
-  assign_payload($$payload, $$inner_payload);
+  $$payload.out += `<dialog class="modal svelte-crqphh"><div class="dialog_container main-dialog fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title"><div class="modalHeader svelte-crqphh"><img class="icon svelte-crqphh" src="./favicon.png" alt=""> <h2 class="svelte-crqphh">Chromatic</h2> <p class="versionPill svelte-crqphh">${escape_html(version)}</p> <p class="svelte-crqphh">A casual relaxing puzzle game. Where you sort color and create gradients.</p> <p class="madeBy svelte-crqphh"><span class="svelte-crqphh">Game by</span> <a href="https://feyder.co" class="svelte-crqphh">Feyder</a></p></div></div> <div class="dialog_container fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title">`;
+  SettingsContainer($$payload);
+  $$payload.out += `<!----></div> <button type="button" aria-label="Close help dialog" class="closeButton svelte-crqphh"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"></path></svg></button></dialog>`;
   pop();
 }
 function HelpModal($$payload, $$props) {
