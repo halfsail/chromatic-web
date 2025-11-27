@@ -15,11 +15,11 @@ export function initializeSounds() {
         // Load all sound files
         const soundFiles = {
             tap: './audio/pop_down.mp3',
-            cellClick: './audio/lock.ogg',
-            cellMove: './audio/lock_48k.ogg',
-            cellHover: './audio/lock.ogg',
+            cellClick: './audio/lock.mp3',
+            cellMove: './audio/lock_48k.mp3',
+            cellHover: './audio/lock.mp3',
             win: './audio/kirakira.mp3',
-            correctSpot: './audio/correct_spot.opus',
+            correctSpot: './audio/correct_spot.mp3',
         };
 
         // Create a promise for each sound file

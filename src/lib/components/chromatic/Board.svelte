@@ -19,7 +19,7 @@
     import { playFeedback } from "$lib/utils/feedback.js";
 
     // Use Map to properly track elements by their actual DOM position
-    let itemElements = [];
+    let itemElements = $state([]);
     let dragInstances = [];
     let boardElement;
     let selectedElements = $state([]); // Track selected elements for swapping

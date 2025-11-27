@@ -67,9 +67,10 @@
 
             const today = getTodayDate();
             const storedDate = initialState.puzzle.date?.split("T")[0]; // Handle the date comparison correctly
+            const lastKnownDifficulty = initialState.settings.difficulty || "normal";
 
             if (storedDate !== today && initialState.puzzle.completed) {
-                let extraData = generationLevel();
+                let extraData = generationLevel(lastKnownDifficulty);
                 initialState.puzzle = { ...initialState.puzzle, ...extraData };
                 initialState.puzzle.completed = false;
                 initialState.state = "START";
@@ -123,8 +124,12 @@
     }
 
     export function checkAndResetWeeklyStats() {
-        const today = getTodayDate();
+        // const today = getTodayDate();
         const currentWeekStart = getWeekStartDate();
+
+        // console.log("Today:", today);
+        console.log("Game Week Start:", gameData.stats.weekStartDate);
+        console.log("Current Week Start:", currentWeekStart);
 
         // If the week has changed, reset completedDates
         if (gameData.stats.weekStartDate !== currentWeekStart) {
@@ -145,9 +150,9 @@
         gameData.state = "completed";
         
         // Add today's date to completedDates if not already there
-        const today = getTodayDate();
-        if (!gameData.stats.completedDates.includes(today)) {
-            gameData.stats.completedDates = [...gameData.stats.completedDates, today];
+        // const today = getTodayDate();
+        if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
+            gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
         }
         
         updateStats();

@@ -1,5 +1,6 @@
 <script>
     import { gameData, nextLevel } from "$lib/state/Store.svelte";
+    import { openMenu } from "$lib/state/InterfaceState.svelte";
 
     let isVisible = $state(document.visibilityState === "visible");
     const handleVisibilityChange = () => {
@@ -30,6 +31,23 @@
         return listOfWinMessages[index];
     }
 
+    function checkForPastDays() {
+        // check the day of the current week. ex if today is wednesday it is day 3
+        // then check to see if the user has completed the previous days
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 (Sun) to 6 (Sat)
+        console.log("Day of week:", dayOfWeek);
+        console.log(
+            "Completed Dates:",
+            gameData.stats.completedDates.length,
+        );
+        // If today is Sunday (0), there are no past days to check
+        if (gameData.stats.completedDates.length < dayOfWeek) {
+            return true;
+        }
+
+    }
+
     // Run a side effect when the component is created.
     $effect(() => {
         // Add the event listener.
@@ -58,10 +76,16 @@
     </div>
 
     <!-- share button -->
-    {#if gameData.puzzle.date !== new Date()
+    <!-- {#if gameData.puzzle.date !== new Date()
             .toISOString()
             .split("T")[0] && gameData.puzzle.completed && isVisible === true}
         <button onclick={nextLevel}>Play Today's Puzzle</button>
+    {:else}
+        <button disabled>New Puzzle Tomorrow</button>
+    {/if} -->
+
+    {#if checkForPastDays() === true}
+        <button onclick={ () => openMenu("sidebar")}>Play Past Days</button>
     {:else}
         <button disabled>New Puzzle Tomorrow</button>
     {/if}

@@ -10,12 +10,10 @@ export const uiState = $state({
 
 export function openMenu(name) {
     uiState.modals[name] = true;
-    console.log(uiState.modals)
 }
 
 export function closeMenu(name) {
     uiState.modals[name] = false;
-    console.log(uiState.modals)
 }
 
 </script>

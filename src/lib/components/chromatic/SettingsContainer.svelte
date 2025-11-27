@@ -1,5 +1,6 @@
 <script>
     import { gameData, toggleHaptic, toggleSound, toggleRelaxedMode, nextLevel } from "$lib/state/Store.svelte";
+    import { closeMenu } from "$lib/state/InterfaceState.svelte";
     import { onMount } from "svelte";
 
     // A variable to track the support status
@@ -11,6 +12,11 @@
       isVibrationSupported = true;
     }
   });
+
+  function toggleDifficulty() {
+    nextLevel(gameData.puzzle.date)
+    closeMenu('sidebar')
+  }
 
 </script>
 
@@ -30,7 +36,7 @@
             <p class="label">Puzzle Size</p>
         </div>
         <div class="selectContainer">
-        <select name="size" id="puzzleSize" class="dropDown" bind:value={gameData.settings.difficulty} onchange={nextLevel}>
+        <select name="size" id="puzzleSize" class="dropDown" bind:value={gameData.settings.difficulty} onchange={ toggleDifficulty() }>
             <option value="easy">Small 4×5</option>
             <option value="normal">Normal 5×6</option>
             <option value="medium">Medium 6×6</option>
@@ -285,7 +291,7 @@
 
 /* Checked state: change background and move thumb */
 .material-toggle-input:checked + .material-toggle-slider {
-  background-color: #2196F3; /* Checked state color (Material Blue) */
+  background-color: #EBC16E; /* Checked state color (Material Blue) */
 }
 
 .material-toggle-input:checked + .material-toggle-slider::before {

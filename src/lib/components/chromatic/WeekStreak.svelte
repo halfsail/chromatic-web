@@ -140,7 +140,7 @@
         width: 1.75rem;
         aspect-ratio: 1;
         border-radius: 50%;
-        background-color: #e0e0e0;
+        background-color: var(--ink-200);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -149,7 +149,7 @@
 
     .future .indicator {
         border: 0;
-        background: rgb(0 0 0 / 20%);
+        background: light-dark(var(--ink-200), var(--ink-100));
     }
 
     
@@ -180,7 +180,7 @@
     }
 
     .missed .indicator {
-        border: dashed 1.5px var(--ink-300);
+        border: dashed 1.5px var(--ink-700);
     }
 
     

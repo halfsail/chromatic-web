@@ -17,6 +17,7 @@
                 dialog.showModal();
             } else if (!uiState.modals.sidebar && dialog.open) {
                 dialog.close();
+                activeTab = 'game'
             }
         }
     });
@@ -136,7 +137,7 @@
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
         overflow: hidden;
-        --duration: 250ms;
+        --duration_in: 250ms;
 
         transition:
             translate var(--duration) var(--spring-glide),
@@ -147,34 +148,25 @@
 
         &[open] .dialog_container {
             /* Post-Entry (Normal) State */
-
-            translate: 0 0;
+            opacity: 1;
             scale: 1;
             filter: blur(0);
 
             /* Pre-Entry State */
             @starting-style {
-                /* display: none; */
-                translate: 0 8vh;
-                scale: 0;
+                opacity: .7;
+                scale: .5;
                 filter: blur(5px);
             }
         }
 
         /* Exiting State */
-        &:not([open]) .dialog_container {
+        /* &:not([open]) .dialog_container {
             display: none;
-            translate: 0 8vh;
-            scale: 0;
+            opacity: .7;
+            scale: .5;
             filter: blur(5px);
-
-            &:nth-child(2) {
-                transition-delay: 100ms;
-            }
-            &:nth-child(3) {
-                transition-delay: 50ms;
-            }
-        }
+        } */
     }
     .tabContent {
         display: block;
@@ -189,13 +181,6 @@
         filter: blur(0);
         scale: 1;
         transition: all 1s ease;
-
-        /* @starting-style {
-            display: none;
-            opacity: 0;
-            scale: .5;
-            filter: blur(10px);
-        } */
     }
 
     .dialog_container {
@@ -212,7 +197,7 @@
         border: 1px solid var(--ink-100);
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
-        --duration: 350ms;
+        --duration: 250ms;
 
         transition:
             translate var(--duration) var(--shoot-ease),
@@ -220,12 +205,6 @@
             filter var(--duration) var(--spring-glide),
             opacity var(--duration) ease,
             display var(--duration) ease allow-discrete;
-    }
-    .dialog_container:nth-child(2) {
-        transition-delay: 50ms;
-    }
-    .dialog_container:nth-child(3) {
-        transition-delay: 100ms;
     }
 
     .fixedWidth {
@@ -236,22 +215,21 @@
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(80px) saturate(1.5);
         -webkit-backdrop-filter: blur(80px) saturate(1.5);
+        
     }
     @keyframes zoom {
         from {
-            opacity: 0;
-            transform: translatey(100px) scale(0.75);
-            filter: blur(10px);
+            backdrop-filter: blur(0) saturate(1);
+            -webkit-backdrop-filter: blur(0) saturate(1);
         }
         to {
-            opacity: 1;
-            transform: translatey(0) scale(1);
-            filter: blur(0px);
+            backdrop-filter: blur(80px) saturate(1.5);
+            -webkit-backdrop-filter: blur(80px) saturate(1.5);
         }
     }
-    /* dialog[open]::backdrop {
-		animation: fade 0.2s ease-out;
-	} */
+    dialog[open]::backdrop {
+		animation: zoom 0.2s ease-out forwards;
+	}
     @keyframes fade {
         from {
             opacity: 0;
