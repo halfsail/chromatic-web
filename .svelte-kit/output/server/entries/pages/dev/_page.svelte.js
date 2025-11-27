@@ -1,6 +1,6 @@
-import { e as ensure_array_like, f as stringify, c as pop, p as push } from "../../../chunks/index.js";
+import { e as ensure_array_like, d as stringify, c as pop, p as push } from "../../../chunks/index.js";
+import { a as attr, W as WeekStreak } from "../../../chunks/WeekStreak.js";
 import chroma from "chroma-js";
-import { a as attr } from "../../../chunks/attributes.js";
 import { e as escape_html } from "../../../chunks/escaping.js";
 let levels = [
   ["#b17f59", "#a5b68d", "#c1cfa1", "#ede8dc"],
@@ -504,28 +504,30 @@ function _page($$payload, $$props) {
   const each_array = ensure_array_like(spectrum);
   const each_array_1 = ensure_array_like(Object.entries(stats));
   const each_array_2 = ensure_array_like(previewBoard);
-  $$payload.out += `<section class="spectrumBar svelte-rz7t24"><!--[-->`;
+  $$payload.out += `<section class="spectrumBar svelte-ug2kqn"><!--[-->`;
   for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
     let color = each_array[$$index];
-    $$payload.out += `<div class="colorBlock svelte-rz7t24"${attr("style", `background-color: ${stringify(color)};`)}></div>`;
+    $$payload.out += `<div class="colorBlock svelte-ug2kqn"${attr("style", `background-color: ${stringify(color)};`)}></div>`;
   }
-  $$payload.out += `<!--]--></section> <section class="spectrumStats svelte-rz7t24"><div><p class="svelte-rz7t24">Colors</p> <h2 class="svelte-rz7t24">${escape_html(spectrum.length)}</h2></div> <div><p class="svelte-rz7t24">Puzzles</p> <h2 class="svelte-rz7t24">${escape_html(spectrum.length / 4)}</h2></div> <!--[-->`;
+  $$payload.out += `<!--]--></section> <section class="spectrumStats svelte-ug2kqn"><div><p class="svelte-ug2kqn">Colors</p> <h2 class="svelte-ug2kqn">${escape_html(spectrum.length)}</h2></div> <div><p class="svelte-ug2kqn">Puzzles</p> <h2 class="svelte-ug2kqn">${escape_html(spectrum.length / 4)}</h2></div> <!--[-->`;
   for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
     let [color, count] = each_array_1[$$index_1];
     if (color !== "total") {
       $$payload.out += "<!--[-->";
-      $$payload.out += `<div><p class="svelte-rz7t24">${escape_html(color)}</p> <h2 class="svelte-rz7t24">${escape_html(count)}</h2></div>`;
+      $$payload.out += `<div><p class="svelte-ug2kqn">${escape_html(color)}</p> <h2 class="svelte-ug2kqn">${escape_html(count)}</h2></div>`;
     } else {
       $$payload.out += "<!--[!-->";
     }
     $$payload.out += `<!--]-->`;
   }
-  $$payload.out += `<!--]--></section> <section><div class="previewBoard svelte-rz7t24"${attr("style", `grid-template-columns: repeat(${stringify(cols)}, 1fr);`)}><!--[-->`;
+  $$payload.out += `<!--]--></section> <section><div class="previewBoard svelte-ug2kqn"${attr("style", `grid-template-columns: repeat(${stringify(cols)}, 1fr);`)}><!--[-->`;
   for (let $$index_2 = 0, $$length = each_array_2.length; $$index_2 < $$length; $$index_2++) {
     let color = each_array_2[$$index_2];
-    $$payload.out += `<div class="swatch svelte-rz7t24"${attr("style", `background-color: color(display-p3 ${stringify(convertToP3(color))}); background-color: ${stringify(color)};`)}></div>`;
+    $$payload.out += `<div class="swatch svelte-ug2kqn"${attr("style", `background-color: color(display-p3 ${stringify(convertToP3(color))}); background-color: ${stringify(color)};`)}></div>`;
   }
-  $$payload.out += `<!--]--></div> <div class="previewControl"><label for="index">Level Index</label> <input type="number" name="index" id="" step="1"${attr("value", lvlIndex)} min="0"${attr("max", levels.length - 1)}> <label for="col">Columns</label> <input type="number" name="col" id=""${attr("value", cols)} min="1" max="10"> <label for="row">Rows</label> <input type="number" name="row" id=""${attr("value", rows)}> <p>${escape_html(isDuplicateColor())}</p></div></section>`;
+  $$payload.out += `<!--]--></div> <div class="previewControl"><label for="index">Level Index</label> <input type="number" name="index" id="" step="1"${attr("value", lvlIndex)} min="0"${attr("max", levels.length - 1)}> <label for="col">Columns</label> <input type="number" name="col" id=""${attr("value", cols)} min="1" max="10"> <label for="row">Rows</label> <input type="number" name="row" id=""${attr("value", rows)}> <p>${escape_html(isDuplicateColor())}</p></div></section> `;
+  WeekStreak($$payload);
+  $$payload.out += `<!---->`;
   pop();
 }
 export {

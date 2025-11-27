@@ -38,7 +38,7 @@
             bestStreak: 0,
             averageMoves: 0,
             completedDates: [],
-            weekStartDate: getTodayDate(),
+            weekStartDate: getWeekStartDate(),
         },
         settings: {
             theme: "dark",
@@ -255,6 +255,11 @@
         // Merge default settings so missing keys (like relaxedMode) are added
         oldData.settings = { ...defaultData.settings, ...(oldData.settings || {}) };
 
+        // Merge stats and ensure weekly tracking fields exist
+        oldData.stats = { ...defaultData.stats, ...(oldData.stats || {}) };
+        // Ensure weekStartDate is set to the week's Monday when missing
+        oldData.stats.weekStartDate = oldData.stats.weekStartDate ?? getWeekStartDate();
+
         // Optionally ensure other top-level defaults exist without overwriting user values
         oldData.deviceId = oldData.deviceId ?? defaultData.deviceId;
         oldData.lastSync = oldData.lastSync ?? defaultData.lastSync;
@@ -292,7 +297,7 @@
 
         // setup time vars for later checks
         const today = new Date();
-        const lastPlayedDate = gameData.puzzle.completedAt;
+        const lastPlayedDate = gameData.puzzle?.completedAt ? new Date(gameData.puzzle.completedAt) : new Date();
         // todo fix date check problem
 
         console.log("today:", today.getDate());

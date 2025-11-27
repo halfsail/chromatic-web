@@ -1,50 +1,11 @@
-import { p as push, d as bind_props, c as pop, e as ensure_array_like, f as stringify, h as copy_payload, i as assign_payload } from "../../chunks/index.js";
+import { p as push, c as pop, e as ensure_array_like, d as stringify, f as copy_payload, h as assign_payload } from "../../chunks/index.js";
+import { g as gameData, a as attr, W as WeekStreak } from "../../chunks/WeekStreak.js";
+import { e as escape_html } from "../../chunks/escaping.js";
 import "clsx";
 import chroma from "chroma-js";
 import { v as version } from "../../chunks/environment.js";
-import { e as escape_html } from "../../chunks/escaping.js";
-import { a as attr } from "../../chunks/attributes.js";
-const CONFIG = {
-  VERSION_KEY: version
-};
-const defaultData = {
-  version: CONFIG.VERSION_KEY,
-  deviceId: null,
-  // Will be set later
-  lastSync: null,
-  state: "START",
-  isAnimating: false,
-  puzzle: {
-    completed: false,
-    hints: 0,
-    moves: 0,
-    completedAt: null
-  },
-  stats: {
-    totalCompleted: 0,
-    currentStreak: 0,
-    bestStreak: 0,
-    averageMoves: 0
-  },
-  settings: {
-    theme: "dark",
-    soundEnabled: true,
-    hapticEnabled: true,
-    relaxedMode: true
-  }
-};
-let initialState = { ...defaultData };
-const gameData = initialState;
-const uiState = {
-  modals: { sidebar: false, help: false }
-};
-function openMenu(name) {
-  uiState.modals[name] = true;
-  console.log(uiState.modals);
-}
 function Header($$payload, $$props) {
   push();
-  let toggleMenu = $$props["toggleMenu"];
   function formatDate(dateString) {
     const options = {
       year: "numeric",
@@ -63,12 +24,10 @@ function Header($$payload, $$props) {
     $$payload.out += "<!--[!-->";
   }
   $$payload.out += `<!--]--></p></nav>`;
-  bind_props($$props, { toggleMenu });
   pop();
 }
 function WinSection($$payload, $$props) {
   push();
-  let isVisible = document.visibilityState === "visible";
   const listOfWinMessages = [
     "Amazing",
     "Incredible",
@@ -85,6 +44,15 @@ function WinSection($$payload, $$props) {
     const index = Math.floor(Math.random() * listOfWinMessages.length);
     return listOfWinMessages[index];
   }
+  function checkForPastDays() {
+    const today = /* @__PURE__ */ new Date();
+    const dayOfWeek = today.getDay();
+    console.log("Day of week:", dayOfWeek);
+    console.log("Completed Dates:", gameData.stats.completedDates.length);
+    if (gameData.stats.completedDates.length < dayOfWeek) {
+      return true;
+    }
+  }
   $$payload.out += `<section class="column svelte-16g8kmv"><div class="textColumn svelte-16g8kmv"><h2 class="svelte-16g8kmv">${escape_html(getRandomWinMessage())}</h2> <p class="formatPretty svelte-16g8kmv">You completed today's puzzle in ${escape_html(gameData.puzzle.moves)} moves `;
   if (gameData.puzzle.hints) {
     $$payload.out += "<!--[-->";
@@ -92,10 +60,10 @@ function WinSection($$payload, $$props) {
   } else {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--></p></div> `;
-  if (gameData.puzzle.date !== (/* @__PURE__ */ new Date()).toISOString().split("T")[0] && gameData.puzzle.completed && isVisible === true) {
+  $$payload.out += `<!--]--></p></div>  `;
+  if (checkForPastDays() === true) {
     $$payload.out += "<!--[-->";
-    $$payload.out += `<button class="svelte-16g8kmv">Play Today's Puzzle</button>`;
+    $$payload.out += `<button class="svelte-16g8kmv">Play Past Days</button>`;
   } else {
     $$payload.out += "<!--[!-->";
     $$payload.out += `<button disabled class="svelte-16g8kmv">New Puzzle Tomorrow</button>`;
@@ -166,19 +134,17 @@ function Board($$payload, $$props) {
 }
 function SettingsContainer($$payload, $$props) {
   push();
-  $$payload.out += `<div class="container svelte-1jimsc"><section class="svelte-1jimsc"><p class="subHeader svelte-1jimsc">Game Play</p> <div class="list_item_grid svelte-1jimsc"><div class="icon svelte-1jimsc"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1jimsc"><path d="M11.7595 5.50128C11.861 5.21432 11.9163 4.90548 11.9163 4.58374C11.9163 3.06496 10.685 1.83374 9.16626 1.83374C7.64747 1.83374 6.41626 3.06496 6.41626 4.58374C6.41626 4.90548 6.47151 5.21432 6.57305 5.50128C4.47867 5.50893 3.36098 5.58327 2.63838 6.30586C1.91585 7.02839 1.84146 8.14594 1.8338 10.2399C2.12027 10.1388 2.4285 10.0837 2.74959 10.0837C4.26837 10.0837 5.49959 11.315 5.49959 12.8337C5.49959 14.3525 4.26837 15.5837 2.74959 15.5837C2.4285 15.5837 2.12027 15.5287 1.8338 15.4276C1.84146 17.5215 1.91585 18.6391 2.63838 19.3616C3.3609 20.0841 4.47845 20.1585 6.57243 20.1662C6.47129 19.8797 6.41626 19.5715 6.41626 19.2504C6.41626 17.7316 7.64747 16.5004 9.16626 16.5004C10.685 16.5004 11.9163 17.7316 11.9163 19.2504C11.9163 19.5715 11.8612 19.8797 11.7601 20.1662C13.8541 20.1585 14.9716 20.0841 15.6941 19.3616C16.4167 18.639 16.4911 17.5213 16.4987 15.4269C16.7857 15.5285 17.0945 15.5837 17.4163 15.5837C18.935 15.5837 20.1663 14.3525 20.1663 12.8337C20.1663 11.315 18.935 10.0837 17.4163 10.0837C17.0945 10.0837 16.7857 10.139 16.4987 10.2405C16.4911 8.14616 16.4167 7.02846 15.6941 6.30586C14.9715 5.58327 13.8538 5.50893 11.7595 5.50128Z" stroke="var(--ink-900)" stroke-width="1.5" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1jimsc"><p class="label svelte-1jimsc">Relaxed Mode</p></div> <div class="control svelte-1jimsc"><label class="material-toggle-switch svelte-1jimsc" for="relaxedMode"><input id="relaxedMode" type="checkbox" class="material-toggle-input svelte-1jimsc"${attr("checked", gameData.settings.relaxedMode, true)}> <span class="material-toggle-slider svelte-1jimsc"></span></label></div> <p class="description svelte-1jimsc">Lock tiles when moved into correct spot.</p></div></section> <section class="svelte-1jimsc"><p class="subHeader svelte-1jimsc">Effects</p> <div class="list_item svelte-1jimsc"><div class="icon svelte-1jimsc"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1jimsc"><path d="M2.29169 11C2.29169 6.89481 2.29169 4.84224 3.56699 3.56693C4.8423 2.29163 6.89487 2.29163 11 2.29163C15.1052 2.29163 17.1577 2.29163 18.433 3.56693C19.7084 4.84224 19.7084 6.89481 19.7084 11C19.7084 15.1051 19.7084 17.1577 18.433 18.433C17.1577 19.7083 15.1052 19.7083 11 19.7083C6.89487 19.7083 4.8423 19.7083 3.56699 18.433C2.29169 17.1577 2.29169 15.1051 2.29169 11Z" stroke="var(--ink-900)" stroke-width="1.5"></path><path d="M11.9166 13.2916C11.9166 14.5573 10.8906 15.5833 9.62498 15.5833C8.35933 15.5833 7.33331 14.5573 7.33331 13.2916C7.33331 12.026 8.35933 11 9.62498 11C10.8906 11 11.9166 12.026 11.9166 13.2916ZM11.9166 13.2916V6.41663C12.2222 6.87496 12.4666 8.79996 14.6666 9.16663" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1jimsc"><p class="label svelte-1jimsc">Sounds Effect</p></div> <div class="control svelte-1jimsc"><label class="material-toggle-switch svelte-1jimsc" for="soundEnabled"><input id="soundEnabled" type="checkbox" class="material-toggle-input svelte-1jimsc"${attr("checked", gameData.settings.soundEnabled, true)}> <span class="material-toggle-slider svelte-1jimsc"></span></label></div></div> `;
+  $$payload.out += `<div class="container svelte-1nu25bd"><section class="svelte-1nu25bd"><p class="subHeader svelte-1nu25bd">Game Play</p> <div class="list_item_grid svelte-1nu25bd"><div class="icon svelte-1nu25bd"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1nu25bd"><path d="M1.66669 8.33508C1.69081 5.49006 1.84876 3.92167 2.88305 2.88738C4.10375 1.66667 6.06845 1.66667 9.99785 1.66667C13.9272 1.66667 15.8919 1.66667 17.1126 2.88738C18.3334 4.10809 18.3334 6.07278 18.3334 10.0022C18.3334 13.9316 18.3334 15.8963 17.1126 17.117C16.0784 18.1513 14.51 18.3092 11.6649 18.3333" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.16561 10.8333C3.1904 10.8626 2.60897 10.971 2.20666 11.3733C1.80434 11.7756 1.69591 12.3571 1.66669 13.3323M6.66776 10.8333C7.64298 10.8626 8.2244 10.971 8.62672 11.3733C9.02903 11.7756 9.13746 12.3571 9.16669 13.3323M9.16669 15.8344C9.13746 16.8096 9.02903 17.3911 8.62672 17.7934C8.2244 18.1957 7.64298 18.3041 6.66776 18.3333M4.16562 18.3333C3.1904 18.3041 2.60897 18.1957 2.20666 17.7934C1.80434 17.3911 1.69591 16.8096 1.66669 15.8344" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1nu25bd"><p class="label svelte-1nu25bd">Puzzle Size</p></div> <div class="selectContainer svelte-1nu25bd"><select name="size" id="puzzleSize" class="dropDown svelte-1nu25bd"><option value="easy">Small 4×5</option><option value="normal">Normal 5×6</option><option value="medium">Medium 6×6</option><option value="hard">Hard 7×7</option></select> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1nu25bd"><path d="M6 9.00049L11.2929 14.2934C11.6262 14.6267 11.7929 14.7934 12 14.7934C12.2071 14.7934 12.3738 14.6267 12.7071 14.2934L18 9.00049" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></div> <div class="list_item_grid svelte-1nu25bd"><div class="icon svelte-1nu25bd"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1nu25bd"><path d="M11.7595 5.50128C11.861 5.21432 11.9163 4.90548 11.9163 4.58374C11.9163 3.06496 10.685 1.83374 9.16626 1.83374C7.64747 1.83374 6.41626 3.06496 6.41626 4.58374C6.41626 4.90548 6.47151 5.21432 6.57305 5.50128C4.47867 5.50893 3.36098 5.58327 2.63838 6.30586C1.91585 7.02839 1.84146 8.14594 1.8338 10.2399C2.12027 10.1388 2.4285 10.0837 2.74959 10.0837C4.26837 10.0837 5.49959 11.315 5.49959 12.8337C5.49959 14.3525 4.26837 15.5837 2.74959 15.5837C2.4285 15.5837 2.12027 15.5287 1.8338 15.4276C1.84146 17.5215 1.91585 18.6391 2.63838 19.3616C3.3609 20.0841 4.47845 20.1585 6.57243 20.1662C6.47129 19.8797 6.41626 19.5715 6.41626 19.2504C6.41626 17.7316 7.64747 16.5004 9.16626 16.5004C10.685 16.5004 11.9163 17.7316 11.9163 19.2504C11.9163 19.5715 11.8612 19.8797 11.7601 20.1662C13.8541 20.1585 14.9716 20.0841 15.6941 19.3616C16.4167 18.639 16.4911 17.5213 16.4987 15.4269C16.7857 15.5285 17.0945 15.5837 17.4163 15.5837C18.935 15.5837 20.1663 14.3525 20.1663 12.8337C20.1663 11.315 18.935 10.0837 17.4163 10.0837C17.0945 10.0837 16.7857 10.139 16.4987 10.2405C16.4911 8.14616 16.4167 7.02846 15.6941 6.30586C14.9715 5.58327 13.8538 5.50893 11.7595 5.50128Z" stroke="var(--ink-900)" stroke-width="1.5" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1nu25bd"><p class="label svelte-1nu25bd">Relaxed Mode</p></div> <div class="control svelte-1nu25bd"><label class="material-toggle-switch svelte-1nu25bd" for="relaxedMode"><input id="relaxedMode" type="checkbox" class="material-toggle-input svelte-1nu25bd"${attr("checked", gameData.settings.relaxedMode, true)}> <span class="material-toggle-slider svelte-1nu25bd"></span></label></div> <p class="description svelte-1nu25bd">Lock tiles when moved into correct spot.</p></div></section> <section class="svelte-1nu25bd"><p class="subHeader svelte-1nu25bd">Effects</p> <div class="list_item svelte-1nu25bd"><div class="icon svelte-1nu25bd"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-1nu25bd"><path d="M2.29169 11C2.29169 6.89481 2.29169 4.84224 3.56699 3.56693C4.8423 2.29163 6.89487 2.29163 11 2.29163C15.1052 2.29163 17.1577 2.29163 18.433 3.56693C19.7084 4.84224 19.7084 6.89481 19.7084 11C19.7084 15.1051 19.7084 17.1577 18.433 18.433C17.1577 19.7083 15.1052 19.7083 11 19.7083C6.89487 19.7083 4.8423 19.7083 3.56699 18.433C2.29169 17.1577 2.29169 15.1051 2.29169 11Z" stroke="var(--ink-900)" stroke-width="1.5"></path><path d="M11.9166 13.2916C11.9166 14.5573 10.8906 15.5833 9.62498 15.5833C8.35933 15.5833 7.33331 14.5573 7.33331 13.2916C7.33331 12.026 8.35933 11 9.62498 11C10.8906 11 11.9166 12.026 11.9166 13.2916ZM11.9166 13.2916V6.41663C12.2222 6.87496 12.4666 8.79996 14.6666 9.16663" stroke="var(--ink-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div> <div class="copy svelte-1nu25bd"><p class="label svelte-1nu25bd">Sounds Effect</p></div> <div class="control svelte-1nu25bd"><label class="material-toggle-switch svelte-1nu25bd" for="soundEnabled"><input id="soundEnabled" type="checkbox" class="material-toggle-input svelte-1nu25bd"${attr("checked", gameData.settings.soundEnabled, true)}> <span class="material-toggle-slider svelte-1nu25bd"></span></label></div></div> `;
   {
     $$payload.out += "<!--[!-->";
   }
   $$payload.out += `<!--]--></section></div>`;
   pop();
 }
-function HamburgerMenu($$payload, $$props) {
-  push();
-  $$payload.out += `<dialog class="modal svelte-crqphh"><div class="dialog_container main-dialog fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title"><div class="modalHeader svelte-crqphh"><img class="icon svelte-crqphh" src="./favicon.png" alt=""> <h2 class="svelte-crqphh">Chromatic</h2> <p class="versionPill svelte-crqphh">${escape_html(version)}</p> <p class="svelte-crqphh">A casual relaxing puzzle game. Where you sort color and create gradients.</p> <p class="madeBy svelte-crqphh"><span class="svelte-crqphh">Game by</span> <a href="https://feyder.co" class="svelte-crqphh">Feyder</a></p></div></div> <div class="dialog_container fixedWidth svelte-crqphh" role="dialog" aria-labelledby="dialog-title">`;
-  SettingsContainer($$payload);
-  $$payload.out += `<!----></div> <button type="button" aria-label="Close help dialog" class="closeButton svelte-crqphh"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"></path></svg></button></dialog>`;
-  pop();
+function AboutContainer($$payload) {
+  $$payload.out += `<section class="svelte-gnm3ka"><img class="icon svelte-gnm3ka" src="./favicon.png" alt=""> <div class="aboutText svelte-gnm3ka"><h2 class="svelte-gnm3ka">Chromatic</h2> <p class="svelte-gnm3ka">A casual relaxing puzzle game. Where you sort color and create gradients.</p></div> `;
+  WeekStreak($$payload);
+  $$payload.out += `<!----> <div class="footer svelte-gnm3ka"><p class="svelte-gnm3ka">version ${escape_html(version)}</p> <p class="svelte-gnm3ka"><span>Game by</span> <a href="https://feyder.co" class="svelte-gnm3ka">Feyder.co</a></p></div></section>`;
 }
 function HelpModal($$payload, $$props) {
   push();
@@ -188,19 +154,32 @@ function HelpModal($$payload, $$props) {
                 between colors.</p></div></div> <button type="button" aria-label="Close help dialog" class="closeButton svelte-4cbhhf"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6.28223L17.5 17.7822M17.5 6.28223L6 17.7822" stroke="white" stroke-width="2.5"></path></svg></button></dialog>`;
   pop();
 }
+function MegaMenu($$payload, $$props) {
+  push();
+  let activeTab = "game";
+  $$payload.out += `<dialog class="modal svelte-1n9h9jx"><div class="dialog_container main-dialog fixedWidth svelte-1n9h9jx" role="dialog" aria-labelledby="dialog-title"><div${attr("class", `tabContent ${stringify(activeTab)} svelte-1n9h9jx`)}><div class="game svelte-1n9h9jx">`;
+  AboutContainer($$payload);
+  $$payload.out += `<!----></div> <div class="settings svelte-1n9h9jx">`;
+  SettingsContainer($$payload);
+  $$payload.out += `<!----></div></div> <div class="tabBar svelte-1n9h9jx"><button class="tab svelte-1n9h9jx">Game</button> <button class="tab svelte-1n9h9jx">Settings</button> <div${attr("class", `highlight svelte-1n9h9jx ${stringify([
+    "game",
+    ""
+  ].filter(Boolean).join(" "))}`)}></div></div></div></dialog>`;
+  pop();
+}
 function _page($$payload, $$props) {
   push();
   let $$settled = true;
   let $$inner_payload;
   function $$render_inner($$payload2) {
     $$payload2.out += `<main${attr("class", `svelte-1bjwvtb ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
-    Header($$payload2, { toggleMenu: openMenu });
+    Header($$payload2);
     $$payload2.out += `<!----> `;
     Board($$payload2);
     $$payload2.out += `<!----></main> `;
     HelpModal($$payload2);
     $$payload2.out += `<!----> `;
-    HamburgerMenu($$payload2);
+    MegaMenu($$payload2);
     $$payload2.out += `<!---->`;
   }
   do {

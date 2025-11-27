@@ -9,10 +9,12 @@
       "_environment.js"
     ]
   },
-  "_attributes.js": {
-    "file": "chunks/attributes.js",
-    "name": "attributes",
+  "_WeekStreak.js": {
+    "file": "chunks/WeekStreak.js",
+    "name": "WeekStreak",
     "imports": [
+      "_index.js",
+      "_environment.js",
       "_escaping.js"
     ]
   },
@@ -90,9 +92,9 @@
     "isEntry": true,
     "imports": [
       "_index.js",
-      "_environment.js",
+      "_WeekStreak.js",
       "_escaping.js",
-      "_attributes.js"
+      "_environment.js"
     ]
   },
   "src/routes/dev/+page.svelte": {
@@ -102,12 +104,12 @@
     "isEntry": true,
     "imports": [
       "_index.js",
-      "_attributes.js",
+      "_WeekStreak.js",
       "_escaping.js"
     ]
   },
   "style.css": {
-    "file": "_app/immutable/assets/style.mcTXvzWG.css",
+    "file": "_app/immutable/assets/style.CQg2iWJF.css",
     "src": "style.css"
   }
 }

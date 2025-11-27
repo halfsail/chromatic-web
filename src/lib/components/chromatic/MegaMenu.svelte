@@ -161,12 +161,13 @@
         }
 
         /* Exiting State */
-        /* &:not([open]) .dialog_container {
+        &:not([open]) .dialog_container {
+            --duration: 35ms;
             display: none;
-            opacity: .7;
+            opacity: .5;
             scale: .5;
             filter: blur(5px);
-        } */
+        }
     }
     .tabContent {
         display: block;
