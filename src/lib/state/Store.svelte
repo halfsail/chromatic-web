@@ -70,14 +70,15 @@
             const lastKnownDifficulty = initialState.settings.difficulty || "normal";
 
             if (storedDate !== today && initialState.puzzle.completed) {
-                let extraData = generationLevel(lastKnownDifficulty);
+                let extraData = generationLevel(lastKnownDifficulty, today);
                 initialState.puzzle = { ...initialState.puzzle, ...extraData };
+                // initialState.puzzle = {}
                 initialState.puzzle.completed = false;
                 initialState.state = "START";
             } else {
                 console.log("existing puzzle is up to date");
                 // Preserve the completed state from stored data
-                initialState.puzzle.completed = parsedData.puzzle.completed;
+                // initialState.puzzle.completed = parsedData.puzzle.completed;
             }
         } else {
             // no stored data, generate new puzzle
@@ -257,6 +258,14 @@
 
         // Merge stats and ensure weekly tracking fields exist
         oldData.stats = { ...defaultData.stats, ...(oldData.stats || {}) };
+        // Ensure completedDates is preserved if present, else set to default
+        if (Array.isArray(oldData.stats.completedDates)) {
+            // keep user's completedDates
+            console.log("preserving completedDates");
+        } else {
+            oldData.stats.completedDates = [...defaultData.stats.completedDates];
+            console.log("setting default completedDates");
+        }
         // Ensure weekStartDate is set to the week's Monday when missing
         oldData.stats.weekStartDate = oldData.stats.weekStartDate ?? getWeekStartDate();
 
