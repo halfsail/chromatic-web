@@ -3,6 +3,7 @@
     import { playGame, completeGame } from "$lib/state/GameState.svelte";
     import { getPalette, getLocks } from "$lib/utils/puzzleGenerator.js";
     import { getColors, shuffleColors } from "$lib/utils/colorUtils.js";
+    import { migrateData } from "$lib/utils/migration.js";
     import { version } from "$app/environment";
     import { levels } from "$lib/utils/levels.js";
     import { browser } from "$app/environment";
@@ -61,8 +62,9 @@
         let storedData = loadFromStorage();
 
         if (storedData) {
+            // if data exists, parse and migrate if necessary
             let parsedData = JSON.parse(storedData);
-            initialState = migrateData(parsedData);
+            initialState = migrateData(parsedData, defaultData, CONFIG.VERSION_KEY, getWeekStartDate);
             
 
             const today = getTodayDate();
@@ -70,19 +72,19 @@
             const lastKnownDifficulty = initialState.settings.difficulty || "normal";
 
             if (storedDate !== today && initialState.puzzle.completed) {
+                // if user has completed the puzzle and it's a new day, generate a new puzzle
                 let extraData = generationLevel(lastKnownDifficulty, today);
-                initialState.puzzle = { ...initialState.puzzle, ...extraData };
-                // initialState.puzzle = {}
+                // initialState.puzzle = { ...initialState.puzzle, ...extraData };
+                initialState.puzzle  = { ...extraData };
                 initialState.puzzle.completed = false;
                 initialState.state = "START";
             } else {
-                console.log("existing puzzle is up to date");
-                // Preserve the completed state from stored data
-                // initialState.puzzle.completed = parsedData.puzzle.completed;
+                console.log("user has not completed today's puzzle or it's the same day");
             }
         } else {
-            // no stored data, generate new puzzle
+            // no stored data, gernate a new save and new puzzle
             let extraData = generationLevel();
+            // add puzzle data to initial state
             initialState.puzzle = { ...initialState.puzzle, ...extraData };
         }
     }
@@ -107,7 +109,7 @@
         });
     }
 
-    // --- Helper Functions (Recommended) ---
+    // --- Helper Functions ---
     // It's good practice to export functions that modify the state.
     // This keeps your state logic centralized and components cleaner.
 
@@ -247,43 +249,7 @@
         }
     }
 
-    function migrateData(oldData) {
-        const currentVersion = CONFIG.VERSION_KEY;
 
-        // Ensure we have an object to work with
-        oldData = oldData || {};
-
-        // Merge default settings so missing keys (like relaxedMode) are added
-        oldData.settings = { ...defaultData.settings, ...(oldData.settings || {}) };
-
-        // Merge stats and ensure weekly tracking fields exist
-        oldData.stats = { ...defaultData.stats, ...(oldData.stats || {}) };
-        // Ensure completedDates is preserved if present, else set to default
-        if (Array.isArray(oldData.stats.completedDates)) {
-            // keep user's completedDates
-            console.log("preserving completedDates");
-        } else {
-            oldData.stats.completedDates = [...defaultData.stats.completedDates];
-            console.log("setting default completedDates");
-        }
-        // Ensure weekStartDate is set to the week's Monday when missing
-        oldData.stats.weekStartDate = oldData.stats.weekStartDate ?? getWeekStartDate();
-
-        // Optionally ensure other top-level defaults exist without overwriting user values
-        oldData.deviceId = oldData.deviceId ?? defaultData.deviceId;
-        oldData.lastSync = oldData.lastSync ?? defaultData.lastSync;
-        oldData.state = oldData.state ?? defaultData.state;
-
-        // If the stored version is different, run any structural migrations
-        if (oldData.version !== currentVersion) {
-            // Perform any necessary data structure updates here
-            oldData.version = currentVersion;
-
-            // Add more migration logic as needed
-        }
-
-        return oldData;
-    }
 
     function getHoursDifference(date1, date2) {
     // Define the number of milliseconds in one hour (60 minutes * 60 seconds * 1000 milliseconds)
