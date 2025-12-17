@@ -86,12 +86,14 @@
             </button>
         </div>
     </header>
+    {#if gameData.puzzle.date !== "Random" && !gameData.puzzle.completed}
     <p class="dateText">
         <span>{formatDate(gameData.puzzle.date)}</span>
         {#if formatDate(gameData.puzzle.date) !== formatDate(new Date())}
             <button onclick={ () => nextLevel()}>Play Today's Game.</button>
         {/if}
     </p>
+    {/if}
 </nav>
 
 <style>

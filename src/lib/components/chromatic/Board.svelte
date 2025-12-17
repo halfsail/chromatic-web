@@ -45,6 +45,7 @@
             "--color3",
             gameData.puzzle.hues[3],
         );
+
         // Small delay to ensure DOM is fully rendered
         setTimeout(initializeDraggables, 50);
         return () => {
@@ -109,7 +110,7 @@
                 },
                 onDrag: function () {
                     gsap.set(this.target, {
-                        scale: 0.75,
+                        scale: 1.2,
                         rotate: -4,
                         zIndex: 900,
                         ease: "power2.out",
@@ -268,7 +269,18 @@
                 } catch (e) {}
                 // Update the state after animation is complete
                 gameData.puzzle.history = newHistory;
+
+                if (gameData.settings.relaxedMode === true) {
+                    // Check and lock correct positions if in relaxed mode
+                    [index1, index2].forEach((idx) => {
+                    isCorrectPosition(idx, gameData.puzzle.history);
+                    });
+                    // Force reactivity update by reassigning locks array
+                    gameData.puzzle.locks = [...gameData.puzzle.locks];
+                }
+
                 increaseMove(1); // Increment the move count
+                
                 didWin(
                     gameData.puzzle.palette,
                     newHistory,
@@ -277,12 +289,7 @@
                     gameData.puzzle.columns,
                 );
 
-                if (gameData.settings.relaxedMode === true) {
-                    // Check and lock correct positions if in relaxed mode
-                    [index1, index2].forEach((idx) => {
-                    isCorrectPosition(idx, gameData.puzzle.history);
-                });
-                }
+                
                 
             },
         });
@@ -467,7 +474,7 @@
         if (history[index] === gameData.puzzle.palette[index]) {
             // push to locks (avoid duplicates)
             if (!gameData.puzzle.locks.includes(index)) {
-                gameData.puzzle.locks = [...gameData.puzzle.locks, index];
+                gameData.puzzle.locks = [...gameData.puzzle.locks, parseInt(index)];
                 
             }
             // ensure any drag-over visual state is removed from the DOM element
@@ -482,6 +489,12 @@
             return false;
         }
     }
+
+    // debugging
+    $inspect(() => {
+        console.log("history updated:", gameData.puzzle.history);
+        console.log("Locks updated:", gameData.puzzle.locks);
+    });
 </script>
 
 <section
@@ -495,7 +508,9 @@
             .row};"
         bind:this={boardElement}
     >
-        {#each gameData.puzzle.history as color, i (i)}
+        <!-- {#each gameData.puzzle.history as color, i (i)} -->
+         <!-- {#key gameData.puzzle.history} -->
+         {#each gameData.puzzle.history as color, i (color + '-' + i)}
             <div
                 class="swatch {isCorner(i)}"
                 class:selected={selectedElements.includes(itemElements[i])}
@@ -505,6 +520,7 @@
                 data-index={i}
                 data-color={color}
             >
+
                 {#if gameData.puzzle.locks.includes(i)}
                     <svg
                         width="24"
@@ -521,8 +537,10 @@
                         />
                     </svg>
                 {/if}
+
             </div>
         {/each}
+        <!-- {/key} -->
     </section>
 </section>
 
@@ -681,14 +699,6 @@
         border-bottom-left-radius: var(--cornerRadius) !important;
     }
 
-    /*@media (max-height: 700px) and (orientation: landscape) {
-        .boardContainer {
-            grid-column: 1/2;
-            grid-row: 1/-1;
-            max-width: initial;
-            max-height: initial;
-        }
-    }*/
     @media (min-width: 730px) {
         /* Add your CSS rules here */
         .boardContainer {
@@ -705,6 +715,11 @@
             border-radius: 16px;
             z-index: 10;
             border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .swatch.locked:hover {
+            border-radius: 0.5rem;
+            z-index: 1;
         }
     }
 </style>

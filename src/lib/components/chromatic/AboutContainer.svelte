@@ -1,6 +1,13 @@
 <script>
     import { version } from "$app/environment";
     import WeekStreak from "./WeekStreak.svelte";
+    import { randomPlayLevel } from "$lib/state/Store.svelte";
+    import { closeMenu } from "$lib/state/InterfaceState.svelte";
+
+    function playRandomLevel() {
+        randomPlayLevel();
+        closeMenu("sidebar");
+    }
 </script>
 
 <section>
@@ -12,6 +19,16 @@
     </div>
 
     <WeekStreak />
+
+    <!-- <button class="fancy-button" onclick={playRandomLevel}>
+        <div class="gradient-glow"></div>
+        <div class="button-body">Play Random Level</div>
+        
+    </button> -->
+
+    <button class="gradientBtn" onclick={playRandomLevel}>
+        <div>Play Random Level</div>
+    </button>
     <div class="footer">
         <p>version {version}</p>
         <p>

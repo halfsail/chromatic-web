@@ -3,6 +3,7 @@
     import { playGame, completeGame } from "$lib/state/GameState.svelte";
     import { getPalette, getLocks } from "$lib/utils/puzzleGenerator.js";
     import { getColors, shuffleColors } from "$lib/utils/colorUtils.js";
+    import { initializeSounds } from "$lib/utils/feedback";
     import { migrateData } from "$lib/utils/migration.js";
     import { version } from "$app/environment";
     import { levels } from "$lib/utils/levels.js";
@@ -87,14 +88,18 @@
             // add puzzle data to initial state
             initialState.puzzle = { ...initialState.puzzle, ...extraData };
         }
+        
     }
 
     export const gameData = $state(initialState);
 
-    // Check and reset weekly stats on app load
     if (browser) {
+        // Check and reset weekly stats on app load
         checkAndResetWeeklyStats();
+        // Initialize sounds so they are ready to use
+        initializeSounds(gameData.settings.soundEnabled);
     }
+
 
     // Use an $effect to automatically save data to localStorage whenever it changes.
 
@@ -189,6 +194,22 @@
     export function resetGame() {
         // To reset, we can re-assign the properties from the default object.
         Object.assign(gameData, defaultData);
+    }
+
+    function randomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+    }
+
+    export function randomPlayLevel() {
+        const date = randomDate(new Date(2025, 0, 1), new Date()).toISOString().split("T")[0];
+        const difficulty = gameData.settings.difficulty;
+        let testPuzzle = generationLevel(difficulty, date);
+        gameData.puzzle = { ...gameData.puzzle, ...testPuzzle };
+        gameData.puzzle.completed = false;
+        gameData.puzzle.hints = 0;
+        gameData.puzzle.moves = 0;
+        gameData.puzzle.date = "Random";
+        gameData.state = "start";
     }
     
 

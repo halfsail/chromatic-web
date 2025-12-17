@@ -1408,7 +1408,20 @@ const options = {
   root,
   service_worker: true,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets2 + '/favicon.png" />\n	<link rel="manifest" crossorigin="use-credentials" href="' + assets2 + '/manifest.json" />\n	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" viewport-fit=cover"/>\n	<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">\n    <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">\n	<meta name="apple-mobile-web-app-status-bar-style" content="default">\n\n\n	<link rel="stylesheet" href="' + assets2 + '/global.css" />\n	<title>Chromatic</title>\n	<meta property="og:type" content="website" />\n	<meta property="og:image" content="https://feyder.co/projects/chromatic/icons/ogImage.png" />\n	<meta name="description" content="Sort colors, create gradients, find your daily calm." />\n	<meta property="og:title" content="Chromatic - A Colorful Daily Puzzle Game" />\n    <meta property="og:description" content="Sort colors, create gradients, find your daily calm.">\n	' + head + '\n	<link rel="preconnect" href="https://fonts.googleapis.com">\n	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">\n	\n</head>\n\n<body data-sveltekit-preload-data="hover">\n	<div style="display: contents">' + body + "</div>\n</body>\n\n</html>",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets2 + '/favicon.png" />\n	<link rel="manifest" crossorigin="use-credentials" href="' + assets2 + '/manifest.json" />\n	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" viewport-fit=cover"/>\n	<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">\n    <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">\n	<meta name="apple-mobile-web-app-status-bar-style" content="default">\n\n\n	<link rel="stylesheet" href="' + assets2 + '/global.css" />\n	<title>Chromatic</title>\n	<meta property="og:type" content="website" />\n	<meta property="og:image" content="https://feyder.co/projects/chromatic/icons/ogImage.png" />\n	<meta name="description" content="Sort colors, create gradients, find your daily calm." />\n	<meta property="og:title" content="Chromatic - A Colorful Daily Puzzle Game" />\n    <meta property="og:description" content="Sort colors, create gradients, find your daily calm.">\n	' + head + '\n	<link rel="preconnect" href="https://fonts.googleapis.com">\n	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">\n	\n</head>\n\n<body data-sveltekit-preload-data="hover">\n	<div style="display: contents">' + body + `</div>
+
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3GL80BHS1R"><\/script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3GL80BHS1R');
+<\/script>
+</body>
+
+</html>`,
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -1480,7 +1493,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1wncwm"
+  version_hash: "1xz7dg"
 };
 async function get_hooks() {
   let handle;

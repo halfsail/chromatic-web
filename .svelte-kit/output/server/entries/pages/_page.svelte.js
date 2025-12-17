@@ -104,18 +104,18 @@ function Board($$payload, $$props) {
     }
   }
   const each_array = ensure_array_like(gameData.puzzle.history);
-  $$payload.out += `<section${attr("class", `boardContainer svelte-484gtp ${stringify([
+  $$payload.out += `<section${attr("class", `boardContainer svelte-gous9w ${stringify([
     gameData.puzzle.completed === true ? "complete" : ""
-  ].filter(Boolean).join(" "))}`)}${attr("style", `--hueRotate: ${stringify(hueRotate)}deg;`)}><section class="board svelte-484gtp"${attr("style", `--colSize: ${stringify(gameData.puzzle.col)}; --rowSize: ${stringify(gameData.puzzle.row)};`)}><!--[-->`;
+  ].filter(Boolean).join(" "))}`)}${attr("style", `--hueRotate: ${stringify(hueRotate)}deg;`)}><section class="board svelte-gous9w"${attr("style", `--colSize: ${stringify(gameData.puzzle.col)}; --rowSize: ${stringify(gameData.puzzle.row)};`)}><!--[-->`;
   for (let i = 0, $$length = each_array.length; i < $$length; i++) {
     let color = each_array[i];
-    $$payload.out += `<div${attr("class", `swatch ${stringify(isCorner(i))} svelte-484gtp ${stringify([
+    $$payload.out += `<div${attr("class", `swatch ${stringify(isCorner(i))} svelte-gous9w ${stringify([
       selectedElements.includes(itemElements[i]) ? "selected" : "",
       gameData.puzzle.locks.includes(i) ? "locked" : ""
     ].filter(Boolean).join(" "))}`)}${attr("style", `--background: ${stringify(color)}; --color: ${stringify(setContrast(color))};`)}${attr("data-index", i)}${attr("data-color", color)}>`;
     if (gameData.puzzle.locks.includes(i)) {
       $$payload.out += "<!--[-->";
-      $$payload.out += `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-484gtp"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9995 4.20264C13.1659 4.20264 14.285 4.666 15.1099 5.49072C15.9347 6.31557 16.3989 7.43454 16.3989 8.60107V10.3208H16.7583C18.0614 10.3209 19.1176 11.3772 19.1177 12.6802V17.438C19.1174 18.7407 18.0613 19.7982 16.7583 19.7983H7.2417C5.93878 19.7983 4.88259 18.7408 4.88232 17.438V12.6802C4.88238 11.3772 5.93868 10.3209 7.2417 10.3208H7.60107V8.60107C7.60114 7.43461 8.06439 6.31556 8.88916 5.49072C9.71396 4.66592 10.8331 4.20277 11.9995 4.20264ZM11.9995 6.20264C11.3635 6.20277 10.7529 6.45506 10.3032 6.90479C9.85352 7.35456 9.60114 7.96506 9.60107 8.60107V10.3208H14.3989V8.60107C14.3989 7.96501 14.1456 7.35458 13.6958 6.90479C13.2461 6.4552 12.6356 6.20264 11.9995 6.20264Z" fill="var(--color)"></path></svg>`;
+      $$payload.out += `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svelte-gous9w"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9995 4.20264C13.1659 4.20264 14.285 4.666 15.1099 5.49072C15.9347 6.31557 16.3989 7.43454 16.3989 8.60107V10.3208H16.7583C18.0614 10.3209 19.1176 11.3772 19.1177 12.6802V17.438C19.1174 18.7407 18.0613 19.7982 16.7583 19.7983H7.2417C5.93878 19.7983 4.88259 18.7408 4.88232 17.438V12.6802C4.88238 11.3772 5.93868 10.3209 7.2417 10.3208H7.60107V8.60107C7.60114 7.43461 8.06439 6.31556 8.88916 5.49072C9.71396 4.66592 10.8331 4.20277 11.9995 4.20264ZM11.9995 6.20264C11.3635 6.20277 10.7529 6.45506 10.3032 6.90479C9.85352 7.35456 9.60114 7.96506 9.60107 8.60107V10.3208H14.3989V8.60107C14.3989 7.96501 14.1456 7.35458 13.6958 6.90479C13.2461 6.4552 12.6356 6.20264 11.9995 6.20264Z" fill="var(--color)"></path></svg>`;
     } else {
       $$payload.out += "<!--[!-->";
     }

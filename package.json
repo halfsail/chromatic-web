@@ -1,7 +1,7 @@
 {
 	"name": "Chromatic",
 	"private": true,
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -23,6 +23,7 @@
 		"chroma-js": "^3.1.2",
 		"gsap": "^3.13.0",
 		"number-flow": "^0.5.8",
+		"svelte-sonner": "^1.0.7",
 		"svelte-sound": "^0.6.0",
 		"workbox-precaching": "^7.3.0"
 	}

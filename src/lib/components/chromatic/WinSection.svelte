@@ -1,11 +1,40 @@
 <script>
-    import { gameData, nextLevel } from "$lib/state/Store.svelte";
+    import { gameData, nextLevel, randomPlayLevel } from "$lib/state/Store.svelte";
     import { openMenu } from "$lib/state/InterfaceState.svelte";
+    import WeekStreak from "./WeekStreak.svelte";
+    import { Toaster, toast } from "svelte-sonner";
+    import { random } from "chroma-js";
 
     let isVisible = $state(document.visibilityState === "visible");
     const handleVisibilityChange = () => {
         isVisible = document.visibilityState === "visible";
     };
+
+    function shareResults() {
+        const date = formatDate(gameData.puzzle.date);
+        let resultText = "";
+
+        if (gameData.puzzle.date !== "Random") {
+            resultText = "Check out Chromatic"
+        } else {
+            resultText = `Chromatic puzzle for ${date} in ${gameData.puzzle.moves} moves`;
+            if (gameData.puzzle.hints) {
+                resultText += ` using ${gameData.puzzle.hints} hints`;
+            }
+        }
+        
+        resultText += "!\n\nhttps://feyder.co/projects/chromatic";
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(resultText).then(
+            () => {
+                toast.success("Results copied to clipboard!");
+            },
+            () => {
+                toast.error("Failed to copy results to clipboard.");
+            },
+        );
+    }
 
     function formatDate(dateString) {
         const options = { year: "numeric", month: "long", day: "numeric" };
@@ -74,30 +103,41 @@
             {/if}
         </p>
     </div>
-
-    <!-- share button -->
-    <!-- {#if gameData.puzzle.date !== new Date()
-            .toISOString()
-            .split("T")[0] && gameData.puzzle.completed && isVisible === true}
-        <button onclick={nextLevel}>Play Today's Puzzle</button>
-    {:else}
-        <button disabled>New Puzzle Tomorrow</button>
-    {/if} -->
-
-    {#if checkForPastDays() === true}
-        <button onclick={ () => openMenu("sidebar")}>Play Past Days</button>
-    {:else}
-        <button disabled>New Puzzle Tomorrow</button>
-    {/if}
+    <div class="hideMobile">
+        <WeekStreak />
+    </div>
+    
+    <button class="gradientBtn" onclick={randomPlayLevel}>
+        <div>Play Random Level</div>
+    </button>
+    <button class="text-button" onclick={shareResults}>Share Results</button>
+    <!-- toast.success('Event has been created') -->
+     <Toaster
+     theme="dark"
+     position="top-center"
+        toastOptions={{
+            style: ' border-radius: var(--rad-md);',
+            duration: 750,
+            class: 'my-toast',
+            descriptionClass: 'my-toast-description'
+        }}
+/>
 </section>
 
 <style>
+    .hideMobile {
+        display: none;
+    }
+
+
+
+
     .column {
         grid-column: 1/-1;
     }
     section {
         text-align: center;
-        padding: 1rem 1rem 2rem 1rem;
+        /* padding: 1rem 1rem 2rem 1rem; */
         width: 100%;
         max-width: 400px;
         margin: auto;
@@ -120,32 +160,18 @@
         }
     }
 
-    button {
-        all: unset;
-        background-color: black;
-        color: white;
-        border-radius: var(--rad-xxl);
-        height: 56px;
-        width: 100%;
-        transition: all var(--slow) var(--shoot-ease);
-    }
-    :global(button:disabled) {
-        background-color: var(--ink-200);
-        color: var(--ink-700);
-        cursor: not-allowed;
-    }
-    button:hover {
-        border-radius: 20px;
-        cursor: pointer;
-    }
-    button:active {
-        transform: scale(0.95);
-    }
 
     @media (min-width: 730px) {
         .column {
             grid-column: 3/4;
             grid-row: 2/3;
+            align-self: end;
+            margin: 0 auto;
+        }
+        .hideMobile {
+            display: block;
         }
     }
 </style>
+
+

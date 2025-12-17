@@ -15,7 +15,7 @@
 
   function toggleDifficulty() {
     nextLevel(gameData.puzzle.date)
-    closeMenu('sidebar')
+    // closeMenu('sidebar')
   }
 
 </script>
