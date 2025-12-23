@@ -1,5 +1,7 @@
-import { n as noop, c as safe_not_equal } from "./equality.js";
+import { n as noop } from "./utils2.js";
+import { a as safe_not_equal } from "./equality.js";
 import "clsx";
+const SCHEME = /^[a-z][a-z\d+\-.]+:/i;
 const internal = new URL("sveltekit-internal://");
 function resolve(base, path) {
   if (path[0] === "/" && path[1] === "/") return path;
@@ -213,13 +215,14 @@ const validate_layout_server_exports = validator(valid_layout_server_exports);
 const validate_page_server_exports = validator(valid_page_server_exports);
 const validate_server_exports = validator(valid_server_exports);
 export {
+  SCHEME as S,
   decode_params as a,
-  resolve as b,
-  decode_pathname as c,
+  validate_layout_exports as b,
+  validate_page_server_exports as c,
   disable_search as d,
-  validate_layout_exports as e,
-  validate_page_server_exports as f,
-  validate_page_exports as g,
+  validate_page_exports as e,
+  resolve as f,
+  decode_pathname as g,
   validate_server_exports as h,
   make_trackable as m,
   normalize_path as n,

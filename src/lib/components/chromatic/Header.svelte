@@ -1,6 +1,10 @@
 <script>
     import { gameData, nextLevel, getTodayDate } from "$lib/state/Store.svelte";
+    import { onMount } from "svelte";
+    import RoundBtn from "../buttons/RoundBtn.svelte";
     const { toggleMenu } = $props();
+
+    let longDate = $state();
 
     function formatDate(dateString) {
         const options = {
@@ -12,83 +16,53 @@
         const date = new Date(dateString);
         return date.toLocaleDateString(undefined, options);
     }
+    onMount(() => {
+      longDate = formatDate(gameData.puzzle.date)
+    })
     $effect(() => {
         // This effect runs whenever gameData.puzzle.date changes
-        formatDate(gameData.puzzle.date);
+        longDate = formatDate(gameData.puzzle.date)
     })
 </script>
 
 <nav>
-    <header>
-        <div class="leftSide">
-            <button
-                class="portrait_btn"
-                aria-label="menu"
-                onclick={() => toggleMenu("sidebar")}
-            >
-                <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M20.75 7C20.75 7.41421 20.4142 7.75 20 7.75L4 7.75C3.58579 7.75 3.25 7.41421 3.25 7C3.25 6.58579 3.58579 6.25 4 6.25L20 6.25C20.4142 6.25 20.75 6.58579 20.75 7Z"
-                        fill="var(--ink-800)"
-                    />
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M20.75 12C20.75 12.4142 20.4142 12.75 20 12.75L4 12.75C3.58579 12.75 3.25 12.4142 3.25 12C3.25 11.5858 3.58579 11.25 4 11.25L20 11.25C20.4142 11.25 20.75 11.5858 20.75 12Z"
-                        fill="var(--ink-800)"
-                    />
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M20.75 17C20.75 17.4142 20.4142 17.75 20 17.75L4 17.75C3.58579 17.75 3.25 17.4142 3.25 17C3.25 16.5858 3.58579 16.25 4 16.25L20 16.25C20.4142 16.25 20.75 16.5858 20.75 17Z"
-                        fill="var(--ink-800)"
-                    />
-                </svg>
-            </button>
-        </div>
-        <h1>Chromatic</h1>
-        <div class="rightSide">
-            <button
-                class="portrait_btn"
-                aria-label="rules"
-                onclick={() => toggleMenu("help")}
-            >
-                <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <circle
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="var(--ink-800)"
-                        stroke-width="1.5"
-                    />
-                    <path
-                        d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
-                        stroke="var(--ink-800)"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                    />
-                    <circle cx="12" cy="16" r="1" fill="var(--ink-800)" />
-                </svg>
-            </button>
-        </div>
-    </header>
+    <div class="wideScreen">
+    <RoundBtn
+        type="subtle"
+        onclick={() => toggleMenu("sidebar")}
+    >
+      {#snippet icon()}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 5L20 5" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 12L20 12" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 19L20 19" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+      {/snippet}
+    </RoundBtn>
+    </div>
+
+    <h1>Chromatic</h1>
+
+    <div class="wideScreen">
+    <RoundBtn
+        label="Rules"
+        type="subtle"
+        onclick={() => toggleMenu("help")}
+    >
+    {#snippet icon()}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="var(--icon-color)" stroke-width="1.5"/>
+            <path d="M10 9C10 7.89543 10.8954 7 12 7C13.1046 7 14 7.89543 14 9C14 9.39815 13.8837 9.76913 13.6831 10.0808C13.0854 11.0097 12 11.8954 12 13V13.5" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M11.992 17H12.001" stroke="var(--icon-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+    {/snippet}
+    </RoundBtn>
+    </div>
+
     {#if gameData.puzzle.date !== "Random" && !gameData.puzzle.completed}
     <p class="dateText">
-        <span>{formatDate(gameData.puzzle.date)}</span>
+        <span>{longDate}</span>
         {#if formatDate(gameData.puzzle.date) !== formatDate(new Date())}
             <button onclick={ () => nextLevel()}>Play Today's Game.</button>
         {/if}
@@ -97,72 +71,34 @@
 </nav>
 
 <style>
-    header {
-        display: grid;
-        justify-content: space-between;
-        align-items: center;
-        grid-template-columns: 1fr 2fr 1fr;
-        color: var(--ink-900);
-        width: 100%;
-    }
     nav {
-        width: 100%;
-        margin: 0 auto;
         grid-column: 1/-1;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: 48px auto;
+        align-items: center;
+        align-self: start;
         p {
             text-align: center;
             margin: 0;
             font-size: var(--font-sm);
-            font-weight: 300;
             letter-spacing: 1px;
-            color: var(--ink-500);
+            color: var(--text-color-secondary);
+            /*color: light-dark(var(--grey-6), var(--grey-5));*/
         }
     }
+    .wideScreen {
+        display: block;
+    }
     h1 {
+        grid-column: 2/3;
         margin: 0;
         font-size: var(--font-lg);
         justify-self: center;
     }
-    button {
-        all: unset;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        svg {
-            opacity: 0.55;
-        }
-    }
-    button:hover {
-        background-color: var(--ink-100);
-        border-radius: var(--rad-md);
-
-        svg {
-            opacity: 1;
-        }
-    }
-    button:active {
-        transform: scale(0.9);
-        svg {
-            transform: scale(1.1);
-        }
-    }
-
-    .rightSide,
-    .leftSide {
-        display: flex;
-    }
-    .leftSide {
-        justify-self: start;
-    }
-    .rightSide {
-        justify-self: end;
-    }
 
     .dateText {
+        grid-column: 1/-1;
         display: flex;
         gap: 0.75rem;
         align-items: center;
@@ -176,16 +112,16 @@
             cursor: pointer;
             font-size: var(--font-sm);
             font-weight: 500;
-            color: var(--ink-900);
+            color: var(--text-color-primary);
             border-bottom: 1px solid transparent;
             transition: all 150ms ease;
             text-decoration: underline;
             text-underline-offset: 3px;
             text-decoration-thickness: 2px;
-            text-decoration-color: var(--ink-300);
+            text-decoration-color: light-dark(var(--grey-5), var(--grey-7));
 
             &:hover {
-                text-decoration-color: var(--ink-900);
+                text-decoration-color: light-dark(var(--grey-9), var(--grey-1));
             }
             &:active {
                 text-underline-offset: 1px;
@@ -203,16 +139,9 @@
             max-width: initial;
             justify-self: start;
             grid-column: 2/3;
-            padding: 1rem;
         }
-        header {
-            justify-content: space-between;
-            align-items: center;
-            text-align: left;
-            grid-column: 1/-1;
-            margin-bottom: 0.5rem;
-        }
-        .portrait_btn {
+
+        .wideScreen {
             display: none;
         }
     }

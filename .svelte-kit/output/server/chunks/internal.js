@@ -1,32 +1,14 @@
-import { s as safe_equals, e as equals, g as get_descriptor, i as index_of, d as define_property, a as is_array, b as array_from } from "./equality.js";
-import { H as HYDRATION_ERROR, a as HYDRATION_START, b as HYDRATION_END, r as render, p as push$1, s as setContext, c as pop$1 } from "./index.js";
+import { B as BROWSER } from "./server.js";
+import { g as get_descriptor, i as index_of, d as define_property, a as is_array, b as array_from } from "./utils2.js";
+import { s as safe_equals, e as equals } from "./equality.js";
+import { H as HYDRATION_ERROR, a as HYDRATION_START, b as HYDRATION_END, i as is_passive_event, r as render, p as push$1, s as setContext, c as pop$1 } from "./index.js";
 import "clsx";
 import "./environment.js";
-const BROWSER = false;
-let base = "";
-let assets = base;
-const app_dir = "_app";
-const initial = { base, assets };
-function override(paths) {
-  base = paths.base;
-  assets = paths.assets;
-}
-function reset() {
-  base = initial.base;
-  assets = initial.assets;
-}
-function set_assets(path) {
-  assets = initial.assets = path;
-}
 let public_env = {};
-let safe_public_env = {};
 function set_private_env(environment) {
 }
 function set_public_env(environment) {
   public_env = environment;
-}
-function set_safe_public_env(environment) {
-  safe_public_env = environment;
 }
 const DERIVED = 1 << 1;
 const EFFECT = 1 << 2;
@@ -982,10 +964,6 @@ const STATUS_MASK = -7169;
 function set_signal_status(signal, status) {
   signal.f = signal.f & STATUS_MASK | status;
 }
-const PASSIVE_EVENTS = ["touchstart", "touchmove"];
-function is_passive_event(name) {
-  return PASSIVE_EVENTS.includes(name);
-}
 const all_registered_events = /* @__PURE__ */ new Set();
 const root_event_handles = /* @__PURE__ */ new Set();
 function handle_event_propagation(event) {
@@ -1371,9 +1349,10 @@ function Root($$payload, $$props) {
     Pyramid_0($$payload, {
       data: data_0,
       form,
+      params: page.params,
       children: ($$payload2) => {
         $$payload2.out += `<!---->`;
-        Pyramid_1($$payload2, { data: data_1, form });
+        Pyramid_1($$payload2, { data: data_1, form, params: page.params });
         $$payload2.out += `<!---->`;
       },
       $$slots: { default: true }
@@ -1383,7 +1362,7 @@ function Root($$payload, $$props) {
     $$payload.out += "<!--[!-->";
     const Pyramid_0 = constructors[0];
     $$payload.out += `<!---->`;
-    Pyramid_0($$payload, { data: data_0, form });
+    Pyramid_0($$payload, { data: data_0, form, params: page.params });
     $$payload.out += `<!---->`;
   }
   $$payload.out += `<!--]--> `;
@@ -1396,8 +1375,10 @@ function Root($$payload, $$props) {
 const root = asClassComponent(Root);
 const options = {
   app_template_contains_nonce: false,
+  async: false,
   csp: { "mode": "auto", "directives": { "upgrade-insecure-requests": false, "block-all-mixed-content": false }, "reportOnly": { "upgrade-insecure-requests": false, "block-all-mixed-content": false } },
   csrf_check_origin: true,
+  csrf_trusted_origins: [],
   embedded: false,
   env_public_prefix: "PUBLIC_",
   env_private_prefix: "",
@@ -1407,8 +1388,9 @@ const options = {
   preload_strategy: "modulepreload",
   root,
   service_worker: true,
+  service_worker_options: void 0,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets2 + '/favicon.png" />\n	<link rel="manifest" crossorigin="use-credentials" href="' + assets2 + '/manifest.json" />\n	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" viewport-fit=cover"/>\n	<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">\n    <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">\n	<meta name="apple-mobile-web-app-status-bar-style" content="default">\n\n\n	<link rel="stylesheet" href="' + assets2 + '/global.css" />\n	<title>Chromatic</title>\n	<meta property="og:type" content="website" />\n	<meta property="og:image" content="https://feyder.co/projects/chromatic/icons/ogImage.png" />\n	<meta name="description" content="Sort colors, create gradients, find your daily calm." />\n	<meta property="og:title" content="Chromatic - A Colorful Daily Puzzle Game" />\n    <meta property="og:description" content="Sort colors, create gradients, find your daily calm.">\n	' + head + '\n	<link rel="preconnect" href="https://fonts.googleapis.com">\n	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">\n	\n</head>\n\n<body data-sveltekit-preload-data="hover">\n	<div style="display: contents">' + body + `</div>
+    app: ({ head, body, assets, nonce, env }) => '<!doctype html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets + '/favicon.png" />\n	<link rel="manifest" crossorigin="use-credentials" href="' + assets + '/manifest.json" />\n	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" viewport-fit=cover"/>\n	<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">\n    <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">\n	<meta name="apple-mobile-web-app-status-bar-style" content="default">\n\n\n	<!--<link rel="stylesheet" href="' + assets + '/global.css" />-->\n	<title>Chromatic</title>\n	<meta property="og:type" content="website" />\n	<meta property="og:image" content="https://feyder.co/projects/chromatic/icons/ogImage.png" />\n	<meta name="description" content="Sort colors, create gradients, find your daily calm." />\n	<meta property="og:title" content="Chromatic - A Colorful Daily Puzzle Game" />\n    <meta property="og:description" content="Sort colors, create gradients, find your daily calm.">\n	' + head + '\n	<link rel="preconnect" href="https://fonts.googleapis.com">\n	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">\n\n</head>\n\n<body data-sveltekit-preload-data="hover">\n	<div style="display: contents">' + body + `</div>
 
 	<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3GL80BHS1R"><\/script>
@@ -1421,7 +1403,8 @@ const options = {
 <\/script>
 </body>
 
-</html>`,
+</html>
+`,
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -1493,12 +1476,13 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1xz7dg"
+  version_hash: "1tzuaa"
 };
 async function get_hooks() {
   let handle;
   let handleFetch;
   let handleError;
+  let handleValidationError;
   let init;
   let reroute;
   let transport;
@@ -1506,27 +1490,19 @@ async function get_hooks() {
     handle,
     handleFetch,
     handleError,
+    handleValidationError,
     init,
     reroute,
     transport
   };
 }
 export {
-  BROWSER as B,
-  assets as a,
-  base as b,
-  app_dir as c,
-  read_implementation as d,
-  options as e,
-  set_private_env as f,
+  set_public_env as a,
+  set_read_implementation as b,
+  set_manifest as c,
   get_hooks as g,
-  set_public_env as h,
-  set_safe_public_env as i,
-  set_read_implementation as j,
-  set_assets as k,
-  set_manifest as l,
-  override as o,
+  options as o,
   public_env as p,
-  reset as r,
-  safe_public_env as s
+  read_implementation as r,
+  set_private_env as s
 };

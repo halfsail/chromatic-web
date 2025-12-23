@@ -4,17 +4,15 @@
     import WeekStreak from "./WeekStreak.svelte";
     import { Toaster, toast } from "svelte-sonner";
     import { random } from "chroma-js";
+    import PillBtn from "../buttons/PillBtn.svelte";
+    import LinkBtn from "../buttons/LinkBtn.svelte";
 
-    let isVisible = $state(document.visibilityState === "visible");
-    const handleVisibilityChange = () => {
-        isVisible = document.visibilityState === "visible";
-    };
 
     function shareResults() {
         const date = formatDate(gameData.puzzle.date);
         let resultText = "";
 
-        if (gameData.puzzle.date !== "Random") {
+        if (gameData.puzzle.date == "Random") {
             resultText = "Check out Chromatic"
         } else {
             resultText = `Chromatic puzzle for ${date} in ${gameData.puzzle.moves} moves`;
@@ -22,7 +20,7 @@
                 resultText += ` using ${gameData.puzzle.hints} hints`;
             }
         }
-        
+
         resultText += "!\n\nhttps://feyder.co/projects/chromatic";
 
         // Copy to clipboard
@@ -60,36 +58,6 @@
         return listOfWinMessages[index];
     }
 
-    function checkForPastDays() {
-        // check the day of the current week. ex if today is wednesday it is day 3
-        // then check to see if the user has completed the previous days
-        const today = new Date();
-        const dayOfWeek = today.getDay(); // 0 (Sun) to 6 (Sat)
-        console.log("Day of week:", dayOfWeek);
-        console.log(
-            "Completed Dates:",
-            gameData.stats.completedDates.length,
-        );
-        // If today is Sunday (0), there are no past days to check
-        if (gameData.stats.completedDates.length < dayOfWeek) {
-            return true;
-        }
-
-    }
-
-    // Run a side effect when the component is created.
-    $effect(() => {
-        // Add the event listener.
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        // This is the cleanup function that removes the listener when the effect ends.
-        return () => {
-            document.removeEventListener(
-                "visibilitychange",
-                handleVisibilityChange,
-            );
-        };
-    });
 </script>
 
 <section class="column">
@@ -103,14 +71,18 @@
             {/if}
         </p>
     </div>
-    <div class="hideMobile">
+    <div class="hideMobile extraSidePadding">
         <WeekStreak />
     </div>
-    
-    <button class="gradientBtn" onclick={randomPlayLevel}>
-        <div>Play Random Level</div>
-    </button>
-    <button class="text-button" onclick={shareResults}>Share Results</button>
+
+    <PillBtn label="play Random Level" onclick={randomPlayLevel} />
+    <div class="row">
+      <div class="hideWideScreen">
+        <LinkBtn label="See Weekly Streak" onclick={() => openMenu('sidebar')} />
+      </div>
+      <LinkBtn label="Share Game" onclick={shareResults} />
+    </div>
+
     <!-- toast.success('Event has been created') -->
      <Toaster
      theme="dark"
@@ -125,19 +97,36 @@
 </section>
 
 <style>
+
+  .extraSidePadding {
+    padding: 0 1.5rem;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .row {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin: .25rem 0;
+    padding: 0 1rem;
+  }
+  .hideWideScreen {
+    display: block;
+  }
     .hideMobile {
         display: none;
+        width: inherit;
     }
-
-
-
-
     .column {
         grid-column: 1/-1;
     }
     section {
         text-align: center;
-        /* padding: 1rem 1rem 2rem 1rem; */
         width: 100%;
         max-width: 400px;
         margin: auto;
@@ -152,7 +141,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.5lh;
-        margin-bottom: 1rem;
+        margin: 1rem 0;
         p,
         h2 {
             margin: 0;
@@ -171,7 +160,8 @@
         .hideMobile {
             display: block;
         }
+        .hideWideScreen {
+          display: none;
+        }
     }
 </style>
-
-

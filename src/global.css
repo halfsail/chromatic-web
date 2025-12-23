@@ -1,0 +1,194 @@
+/* src/global.css */
+:root {
+  /* font sizes */
+  --font-xs: 0.75rem; /* 12px */
+  --font-sm: 0.875rem; /* 14px */
+  --font-md: 1rem; /* 16px */
+  --font-lg: 1.125rem; /* 18px */
+  --font-xl: 1.25rem; /* 20px */
+  --font-2xl: 1.5rem; /* 24px */
+
+  /* color tokens new */
+
+  --grey-0: white;
+  --grey-10: black;
+
+  --grey-1: oklch(0.98 0.001 240);
+  --grey-2: oklch(0.94 0.002 240);
+  --grey-3: oklch(0.9 0.003 240);
+  --grey-4: oklch(0.85 0.004 240);
+  --grey-5: oklch(0.75 0.005 240);
+  --grey-6: oklch(0.54 0.006 240);
+  --grey-7: oklch(0.4 0.005 240);
+  --grey-8: oklch(0.3 0.004 240);
+  --grey-9: oklch(0.2 0.003 240);
+
+  /* radii */
+  --rad-sm: 0.5rem;
+  --rad-md: 1rem;
+  --rad-lg: 1.5rem;
+  --rad-xl: 2rem;
+  --rad-xxl: 3rem;
+  --rad-round: 50%;
+
+  /* text */
+
+  --text-color-primary: light-dark(var(--grey-9), var(--grey-1));
+  --text-color-secondary: light-dark(var(--grey-6), var(--grey-5));
+  --text-color-third: light-dark(var(--grey-6), var(--grey-5));
+
+  /* easeing */
+  --gentle: 750ms;
+  --slow: 550ms;
+  --fast: 150ms;
+
+  /* global padding */
+  --topBottomPadding: 1rem;
+  --sidePadding: 1rem;
+  --boardGaps: 1rem;
+
+  /* gradient */
+  --levelGradient:
+    linear-gradient(135deg, var(--color0), transparent 75.71%),
+    linear-gradient(210deg, var(--color1), transparent 75.71%),
+    linear-gradient(-45deg, var(--color2), transparent 75.71%),
+    linear-gradient(45deg, var(--color3), transparent 75.71%);
+
+  /* curves */
+  --spring-glide: linear(
+    0,
+    0.012 0.9%,
+    0.049 2%,
+    0.409 9.3%,
+    0.513 11.9%,
+    0.606 14.7%,
+    0.691 17.9%,
+    0.762 21.3%,
+    0.82 25%,
+    0.868 29.1%,
+    0.907 33.6%,
+    0.937 38.7%,
+    0.976 51.3%,
+    0.994 68.8%,
+    1
+  );
+  --shoot-ease: linear(
+    0,
+    -0.004 4.9%,
+    -0.02 9.4%,
+    -0.124 26.4%,
+    -0.126 30.5%,
+    -0.104 34.1%,
+    -0.027 38.8%,
+    0.108 43.1%,
+    0.299 47%,
+    0.817 55.2%,
+    0.97 59.1%,
+    1.071 63.4%,
+    1.118 67.7%,
+    1.127 72.6%,
+    1.108 77.2%,
+    1.019 90.7%,
+    1.004 95.2%,
+    1
+  );
+
+  /* evevation */
+  --swatchThickness: inset 0 -2px 0px 0 rgba(0, 0, 0, 0.25);
+  --elevation-1: 0px 2px 4px -2px rgba(0, 0, 0, 0.2);
+
+  --elevation-4: 0px 16px 20px -8px rgba(0, 0, 0, 0.28);
+  --elevation-5: 0px 20px 24px 0 rgba(0, 0, 0, 0.32);
+
+  /* tokens */
+  --surface-raised: light-dark(white, var(--grey-9));
+  --surface-default: light-dark(rgb(255 255 255 / 0.9), rgb(0 0 0 / 0.8));
+  --surface-inset: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.1));
+  --surface-inset-hover: light-dark(rgb(0 0 0 / 0.15), rgb(255 255 255 / 0.15));
+  --surface-edge: light-dark(rgb(0 0 0 / 0.2), rgb(255 255 255 / 0.2));
+
+  color-scheme: light-dark;
+  color-scheme: light dark;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+.bricolage-grotesque {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-style: normal;
+
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
+}
+
+html,
+body {
+  overflow: hidden;
+  height: 100dvh;
+  line-height: 1.5;
+  color: var(--text-color-secondary);
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html * {
+  box-sizing: border-box;
+  user-select: none;
+  text-rendering: optimizeLegibility;
+  transition-behavior: allow-discrete;
+  text-box-trim: trim-both;
+}
+body {
+  box-sizing: border-box;
+  margin: 0;
+  background: light-dark(var(--grey-0), var(--grey-9));
+  user-select: none;
+  font-family: "system-ui", "Inter", sans-serif; /* Set a global font */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color-primary);
+  letter-spacing: 0.02em;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 450;
+}
+h1 {
+  font-size: 2em;
+}
+p {
+  line-height: 1.5;
+  margin: 0;
+  color: var(--text-color-secondary);
+  font-size: var(--font-md);
+}
+.finePrint,
+.btn_label {
+  color: var(--text-color-third);
+  font-size: var(--font-xs);
+}
+
+/* keyframe animation */
+@keyframes fadeOnLoad {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (height <= 375px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+}

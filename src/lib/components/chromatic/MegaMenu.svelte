@@ -63,7 +63,7 @@
                 <div class="settings">
                     <SettingsContainer />
                 </div>
-                
+
             </div>
 
         <div class="tabBar">
@@ -79,9 +79,9 @@
     .tabBar {
         position: relative;
         height: 44px;
-        background-color: var(--ink-100);
+        background-color: var(--surface-inset);
         border-radius: var(--rad-lg);
-        border: 2px solid var(--ink-100);
+        outline: 2px solid var(--surface-inset);
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -93,7 +93,7 @@
             border: none;
             font-size: var(--font-md);
             font-weight: 500;
-            color: var(--ink-700);
+            color: light-dark(var(--grey-7), var(--grey-0));
             cursor: pointer;
             z-index: 1;
             text-align: center;
@@ -105,7 +105,7 @@
             position: absolute;
             width: 50%;
             height: 100%;
-            background-color: var(--ink-0);
+            background-color: light-dark(white, rgb(255 255 255 / .4));
             border-radius: var(--rad-lg);
             transition: transform 0.3s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
@@ -123,6 +123,11 @@
     }
 
     dialog {
+      --surface-raised: light-dark(white, var(--grey-9));
+      --surface-default: light-dark(rgb(255 255 255 / .9), rgb(0 0 0 / .8));
+      --surface-inset: light-dark(rgb(0 0 0 / .1), rgb(255 255 255 / .1));
+      --surface-inset-hover: light-dark(rgb(0 0 0 / .15), rgb(255 255 255 / .15));
+      --surface-edge: light-dark(rgb(0 0 0 / .2), rgb(255 255 255 / .2));
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -137,6 +142,7 @@
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
         overflow: hidden;
+        outline: none;
         --duration_in: 250ms;
 
         transition:
@@ -185,6 +191,7 @@
     }
 
     .dialog_container {
+        interpolate-size: allow-keywords;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -193,12 +200,15 @@
         padding: 1rem;
         width: 100%;
         max-width: 325px;
-        background: var(--ink-25);
+        height: calc-size(min-content, size);
+        background: var(--surface-default);
         border-radius: var(--rad-lg);
-        border: 1px solid var(--ink-100);
+        border: 1px solid light-dark(rgb(0 0 0 / .1), rgb(255 255 255 / .4));
         transition-behavior: allow-discrete;
         transform-origin: bottom center;
         --duration: 250ms;
+
+
 
         transition:
             translate var(--duration) var(--shoot-ease),
@@ -206,6 +216,12 @@
             filter var(--duration) var(--spring-glide),
             opacity var(--duration) ease,
             display var(--duration) ease allow-discrete;
+    }
+    @supports (corner-shape: squircle) {
+      .dialog_container {
+        corner-shape: squircle;
+        border-radius: var(--rad-xxl);
+      }
     }
 
     .fixedWidth {
@@ -216,7 +232,7 @@
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(80px) saturate(1.5);
         -webkit-backdrop-filter: blur(80px) saturate(1.5);
-        
+
     }
     @keyframes zoom {
         from {

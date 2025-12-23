@@ -28,23 +28,7 @@
     onMount(() => {
         gsap.registerPlugin(Draggable);
         // hoverSounds();
-        document.documentElement.style.setProperty("--hue", hueRotate + "deg");
-        document.documentElement.style.setProperty(
-            "--color0",
-            gameData.puzzle.hues[0],
-        );
-        document.documentElement.style.setProperty(
-            "--color1",
-            gameData.puzzle.hues[1],
-        );
-        document.documentElement.style.setProperty(
-            "--color2",
-            gameData.puzzle.hues[2],
-        );
-        document.documentElement.style.setProperty(
-            "--color3",
-            gameData.puzzle.hues[3],
-        );
+        setLevelColors();
 
         // Small delay to ensure DOM is fully rendered
         setTimeout(initializeDraggables, 50);
@@ -52,6 +36,16 @@
             cleanupDraggables();
         };
     });
+
+    function setLevelColors() {
+      document.documentElement.style.setProperty("--hue", hueRotate + "deg");
+      document.documentElement.style.setProperty("--color0", gameData.puzzle.hues[0]);
+      document.documentElement.style.setProperty("--color1", gameData.puzzle.hues[1]);
+      document.documentElement.style.setProperty("--color2", gameData.puzzle.hues[2]);
+      document.documentElement.style.setProperty("--color3", gameData.puzzle.hues[3]);
+      document.documentElement.style.setProperty("--accent", chroma.average(gameData.puzzle.hues))
+      document.documentElement.style.setProperty("--onAccent", setContrast(chroma.average(gameData.puzzle.hues).saturate(2)))
+    }
 
     function initializeDraggables() {
         cleanupDraggables(); // Clean up any existing instances
@@ -73,6 +67,16 @@
                 onClick: function () {
                     // Prevent click events from triggering on drag
                     if (this.isDragging) return;
+                    
+                    // If clicking the same element, deselect it
+                    if (selectedElements.length > 0 && selectedElements[0] === this.target) {
+                        gsap.set(this.target, {
+                            clearProps: "transform,scale,zIndex,rotate",
+                        });
+                        selectedElements = [];
+                        return;
+                    }
+                    
                     gsap.set(this.target, {
                         scale: 1.1,
                         zIndex: 100,
@@ -280,7 +284,7 @@
                 }
 
                 increaseMove(1); // Increment the move count
-                
+
                 didWin(
                     gameData.puzzle.palette,
                     newHistory,
@@ -289,8 +293,8 @@
                     gameData.puzzle.columns,
                 );
 
-                
-                
+
+
             },
         });
 
@@ -339,24 +343,7 @@
                 initializeDraggables();
             });
         }
-        document.documentElement.style.setProperty("--hue", hueRotate + "deg");
-
-        document.documentElement.style.setProperty(
-            "--color0",
-            gameData.puzzle.hues[0],
-        );
-        document.documentElement.style.setProperty(
-            "--color1",
-            gameData.puzzle.hues[1],
-        );
-        document.documentElement.style.setProperty(
-            "--color2",
-            gameData.puzzle.hues[2],
-        );
-        document.documentElement.style.setProperty(
-            "--color3",
-            gameData.puzzle.hues[3],
-        );
+        setLevelColors()
     });
 
     function didWin(correctColors, currentColors, keyColors, row, column) {
@@ -384,7 +371,7 @@
                 correct = true;
                 playFeedback("win");
                 completePuzzle();
-                
+
                 break;
             }
         }
@@ -431,7 +418,7 @@
             [...indexOrder],
         );
         // filter out correct positions
-        
+
 
         // Return if no more hints available
         if (hintCells.length === 0) return;
@@ -475,7 +462,7 @@
             // push to locks (avoid duplicates)
             if (!gameData.puzzle.locks.includes(index)) {
                 gameData.puzzle.locks = [...gameData.puzzle.locks, parseInt(index)];
-                
+
             }
             // ensure any drag-over visual state is removed from the DOM element
             try {
@@ -490,11 +477,6 @@
         }
     }
 
-    // debugging
-    $inspect(() => {
-        console.log("history updated:", gameData.puzzle.history);
-        console.log("Locks updated:", gameData.puzzle.locks);
-    });
 </script>
 
 <section
@@ -555,38 +537,32 @@
         --cornerRadius: 32px;
         position: relative;
         width: 100%;
-        max-width: 340px;
         height: 100%;
-        max-height: 600px;
         display: grid;
         flex-grow: 2;
         border-radius: var(--cornerRadius);
         margin: 0 auto;
-        /* overflow: hidden; */
         will-change: transform;
         filter: hue-rotate(var(--hueRotate));
     }
     .boardContainer.complete {
-        background: linear-gradient(90deg, var(--color0), var(--color1));
-        box-shadow: 0 0 0 0 var(--ink-100);
+        background: linear-gradient(135deg, var(--color0), transparent 75.71%),
+                    linear-gradient(210deg, var(--color1), transparent 75.71%),
+                    linear-gradient(-45deg, var(--color2), transparent 75.71%),
+                    linear-gradient(45deg, var(--color3), transparent 75.71%);
+
+        box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1);
+        overflow: hidden;
         .board {
-            filter: blur(25px) saturate(1.1);
-            opacity: 0;
+            filter: blur(40px) saturate(1.1);
+            opacity: .45;
             overflow: hidden;
             pointer-events: none;
         }
-    }
-    .boardContainer.complete::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        mask-image: linear-gradient(to bottom, transparent, black);
-        background: linear-gradient(90deg, var(--color2), var(--color3));
-        border-bottom-left-radius: var(--cornerRadius);
-        border-bottom-right-radius: var(--cornerRadius);
+
+        svg {
+          display: none;
+        }
     }
     .board {
         display: grid;
@@ -595,11 +571,10 @@
         grid-column: 1/-1;
         grid-row: 1/-1;
         border-radius: var(--cornerRadius);
-        /* box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08); */
-        background-color: var(--ink-100);
+        background-color: light-dark(var(--grey-2), --grey-9);
         transform: scaleY(1);
         filter: grayscale(0%);
-        outline: 2px solid var(--ink-100);
+        outline: 1px solid light-dark(var(--grey-4), --grey-10);
         transition: filter 350ms ease-out;
         transition: opacity 350ms ease-in-out;
 
@@ -682,7 +657,6 @@
     }
 
     .swatch:active {
-        /* cursor: grabbing; */
         z-index: 10;
     }
 
@@ -704,8 +678,6 @@
         .boardContainer {
             grid-column: 2/3;
             grid-row: 2/3;
-            max-width: initial;
-            max-height: 650px;
         }
     }
 

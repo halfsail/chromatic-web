@@ -1,139 +1,74 @@
 <script>
     import { gameData, nextLevel } from "$lib/state/Store.svelte";
     import { openMenu } from "$lib/state/InterfaceState.svelte";
+    import RoundBtn from "../buttons/RoundBtn.svelte";
     let { getHint, shiftColors } = $props();
 </script>
 
 <section class="controlContainer">
-    <div class="btn_col landscape_btn">
-        <button
-            class="round"
-            aria-label="menu"
-            onclick={() => openMenu("sidebar")}
-        >
-            <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M20.75 7C20.75 7.41421 20.4142 7.75 20 7.75L4 7.75C3.58579 7.75 3.25 7.41421 3.25 7C3.25 6.58579 3.58579 6.25 4 6.25L20 6.25C20.4142 6.25 20.75 6.58579 20.75 7Z"
-                    fill="var(--icon-color)"
-                />
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M20.75 12C20.75 12.4142 20.4142 12.75 20 12.75L4 12.75C3.58579 12.75 3.25 12.4142 3.25 12C3.25 11.5858 3.58579 11.25 4 11.25L20 11.25C20.4142 11.25 20.75 11.5858 20.75 12Z"
-                    fill="var(--icon-color)"
-                />
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M20.75 17C20.75 17.4142 20.4142 17.75 20 17.75L4 17.75C3.58579 17.75 3.25 17.4142 3.25 17C3.25 16.5858 3.58579 16.25 4 16.25L20 16.25C20.4142 16.25 20.75 16.5858 20.75 17Z"
-                    fill="var(--icon-color)"
-                />
-            </svg>
-        </button>
-        <p class="btn_label">Menu</p>
-    </div>
-    <div class="btn_col landscape_btn">
-        <button
-            class="round"
-            aria-label="rules"
-            onclick={() => openMenu("help")}
-        >
-            <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="var(--icon-color)"
-                    stroke-width="1.5"
-                />
-                <path
-                    d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
-                    stroke="var(--icon-color)"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                />
-                <circle cx="12" cy="16" r="1" fill="var(--icon-color)" />
-            </svg>
-        </button>
-        <p class="btn_label">Rules</p>
-    </div>
-    <!-- svelte-ignore a11y_consider_explicit_label -->
-    <div class="btn_col">
-        <button
-            class="round"
-            disabled={gameData.puzzle.isAnimating}
-            onclick={getHint}
-        >
-            <svg
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="var(--icon-color)"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M9.5 18.7089C9.5 18.2894 9.83579 17.9494 10.25 17.9494H14.25C14.6642 17.9494 15 18.2894 15 18.7089C15 19.1283 14.6642 19.4684 14.25 19.4684H10.25C9.83579 19.4684 9.5 19.1283 9.5 18.7089ZM10.1667 21.2405C10.1667 20.821 10.5025 20.481 10.9167 20.481H13.5833C13.9975 20.481 14.3333 20.821 14.3333 21.2405C14.3333 21.66 13.9975 22 13.5833 22H10.9167C10.5025 22 10.1667 21.66 10.1667 21.2405Z"
-                />
-                <path
-                    d="M7.66058 13.8283L8.76463 14.8807C9.07437 15.1759 9.25 15.5875 9.25 16.0182C9.25 16.6653 9.768 17.1899 10.407 17.1899H14.093C14.732 17.1899 15.25 16.6653 15.25 16.0182C15.25 15.5875 15.4256 15.1759 15.7354 14.8807L16.8394 13.8283C18.3806 12.3481 19.2412 10.4034 19.2499 8.3817L19.25 8.29678C19.25 4.84243 16.116 2 12.25 2C8.38401 2 5.25 4.84243 5.25 8.29678L5.25007 8.3817C5.25875 10.4034 6.11939 12.3481 7.66058 13.8283Z"
-                />
-            </svg>
-        </button>
-        <p class="btn_label">Hint</p>
-    </div>
+    <div class="wideScreen">
+    <RoundBtn 
+        label="Menu"
+        type="secondary"
+        onclick={() => openMenu("sidebar")}
+    >
+    {#snippet icon()}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 5L20 5" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 12L20 12" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 19L20 19" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    {/snippet}
+    </RoundBtn>
 
-    <!-- svelte-ignore a11y_consider_explicit_label -->
-    <div class="btn_col">
-        <button class="round" onclick={shiftColors}>
-            <svg
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="var(--icon-color)"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M22.4229 6.5C22.4229 3.87665 20.2962 1.75 17.6729 1.75C15.0495 1.75 12.9229 3.87665 12.9229 6.5C12.9229 9.12335 15.0495 11.25 17.6729 11.25C20.2962 11.25 22.4229 9.12335 22.4229 6.5Z"
-                />
-                <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M11.4229 17.5C11.4229 14.8766 9.2962 12.75 6.67285 12.75C4.0495 12.75 1.92285 14.8766 1.92285 17.5C1.92285 20.1234 4.0495 22.25 6.67285 22.25C9.2962 22.25 11.4229 20.1234 11.4229 17.5Z"
-                />
-                <g opacity="0.5">
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.92285 6.5C1.92285 3.87665 4.0495 1.75 6.67285 1.75C9.2962 1.75 11.4229 3.87665 11.4229 6.5C11.4229 9.12335 9.2962 11.25 6.67285 11.25C4.0495 11.25 1.92285 9.12335 1.92285 6.5Z"
-                    />
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M12.9229 17.5C12.9229 14.8766 15.0495 12.75 17.6729 12.75C20.2962 12.75 22.4229 14.8766 22.4229 17.5C22.4229 20.1234 20.2962 22.25 17.6729 22.25C15.0495 22.25 12.9229 20.1234 12.9229 17.5Z"
-                    />
-                </g>
-            </svg>
-        </button>
-        <p class="btn_label">Rotate Hues</p>
+    <RoundBtn 
+        label="Rules"
+        type="secondary"
+        onclick={() => openMenu("help")}
+    >
+    {#snippet icon()}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="var(--icon-color)" stroke-width="1.5"/>
+            <path d="M10 9C10 7.89543 10.8954 7 12 7C13.1046 7 14 7.89543 14 9C14 9.39815 13.8837 9.76913 13.6831 10.0808C13.0854 11.0097 12 11.8954 12 13V13.5" stroke="var(--icon-color)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M11.992 17H12.001" stroke="var(--icon-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+    {/snippet}
+    </RoundBtn>
     </div>
+    <RoundBtn 
+        label="Hint"
+        type="secondary"
+        disabled={gameData.puzzle.isAnimating}
+        onclick={getHint}
+    >
+    {#snippet icon()}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.97 16.9699C17.2629 16.6771 17.7377 16.6771 18.0306 16.9699L22.0306 20.9699C22.3232 21.2629 22.3234 21.7377 22.0306 22.0305C21.7378 22.3233 21.263 22.3231 20.97 22.0305L16.97 18.0305C16.6771 17.7376 16.6771 17.2628 16.97 16.9699Z" fill="var(--icon-color)"/>
+            <path d="M12.7923 2.40842C13.6522 1.79586 14.6509 1.52496 15.5071 1.96702C16.362 2.40888 16.7226 3.37947 16.7239 4.4387L16.7366 7.57834C16.7372 7.68553 16.7803 7.85915 16.8851 8.04709C16.9881 8.23169 17.1126 8.3623 17.2073 8.42405L19.6058 9.92795C20.6075 10.5572 21.3899 11.449 21.2308 12.4924C21.0808 13.4743 20.1777 14.0723 19.1234 14.3821L18.9105 14.4406L15.9007 15.2004C15.792 15.2278 15.6304 15.3164 15.4739 15.4729C15.318 15.6289 15.2259 15.794 15.1956 15.9104L15.1946 15.9094L14.4368 18.9143C14.1492 20.0584 13.5368 21.0709 12.4896 21.2307C11.4465 21.3896 10.5532 20.6119 9.92512 19.6096L8.42414 17.2151C8.36345 17.1198 8.23147 16.9934 8.04426 16.8889C7.85665 16.7842 7.68359 16.7411 7.57649 16.7405L4.43684 16.7278C3.38058 16.7233 2.41164 16.3626 1.96906 15.51C1.52522 14.6545 1.79365 13.6569 2.40656 12.7961L4.08039 10.4475C4.13169 10.3737 4.19523 10.2233 4.22395 10.0246C4.25283 9.8245 4.23462 9.66027 4.20442 9.57248L4.20246 9.56663L3.07453 6.21995L3.07356 6.21799C2.73191 5.19662 2.7481 4.13635 3.44074 3.44358C4.1339 2.75054 5.1922 2.73742 6.21028 3.08225L9.55793 4.21018L9.56379 4.21213C9.65127 4.24223 9.81513 4.26003 10.015 4.23069C10.2144 4.20132 10.3676 4.13699 10.4446 4.08225L12.7923 2.40842Z" fill="var(--icon-color)"/>
+        </svg>
+
+    {/snippet}
+    </RoundBtn>
+
+    <RoundBtn 
+        label="Rotate Hues"
+        type="secondary"
+        onclick={shiftColors}
+    >
+    {#snippet icon()}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.5 12.9999C8.98528 12.9999 11 15.0146 11 17.4999C11 19.9852 8.98528 21.9999 6.5 21.9999C4.01472 21.9999 2 19.9852 2 17.4999C2 15.0146 4.01472 12.9999 6.5 12.9999Z" fill="var(--icon-color)"/>
+            <path d="M17.5 1.99988C19.9852 1.99988 22 4.0146 22 6.49988C22 8.98516 19.9852 10.9999 17.5 10.9999C15.0147 10.9999 13 8.98516 13 6.49988C13 4.0146 15.0147 1.99988 17.5 1.99988Z" fill="var(--icon-color)"/>
+            <g opacity="0.5">
+            <path d="M17.4999 12.9999C19.9851 12.9999 21.9999 15.0146 21.9999 17.4999C21.9999 19.9852 19.9851 21.9999 17.4999 21.9999C15.0146 21.9999 12.9999 19.9852 12.9999 17.4999C12.9999 15.0146 15.0146 12.9999 17.4999 12.9999Z" fill="var(--icon-color)"/>
+            <path d="M6.49988 1.99988C8.98516 1.99988 10.9999 4.0146 10.9999 6.49988C10.9999 8.98516 8.98516 10.9999 6.49988 10.9999C4.0146 10.9999 1.99988 8.98516 1.99988 6.49988C1.99988 4.0146 4.0146 1.99988 6.49988 1.99988Z" fill="var(--icon-color)"/>
+            </g>
+        </svg>
+
+
+    {/snippet}
+    </RoundBtn>
 </section>
 
 <style>
@@ -142,88 +77,30 @@
         width: 100%;
         max-width: 375px;
         margin: 0 auto;
-        /* padding: 0 var(--sidePadding) var(--topBottomPadding) ; */
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
         justify-content: space-evenly;
         gap: 2rem;
-        --icon-color: var(--ink-700);
-        --btn-background: var(--ink-100);
-
-        button {
-            display: grid;
-            place-items: center;
-            border-radius: var(--rad-round);
-            height: 56px;
-            aspect-ratio: 1;
-            transform: scale(1);
-            margin: auto;
-
-            &:hover {
-                border-radius: var(--rad-md);
-            }
-            &:active {
-                transform: scale(0.9);
-            }
-            @starting-style {
-                transform: scale(0);
-            }
-        }
     }
-
-    .btn_col {
-        flex: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        .btn_label {
-            letter-spacing: 1px;
-            opacity: 1;
-            transition-delay: 500ms;
-
-            @starting-style {
-                opacity: 0;
-            }
-        }
-        button.round {
-            background: var(--btn-background);
-        }
-    }
-    .landscape_btn {
+    .wideScreen {
         display: none;
     }
 
-    /*@media (prefers-color-scheme: dark) {
-        .controlContainer {
-            --icon-color: var(--ink-50);
-            --btn-background: var(--ink-800);
-        }
-    }*/
-
     @media (min-width: 730px) {
         .controlContainer {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
+            grid-auto-flow: row;
             margin: 0;
             grid-row: 2/3;
             grid-column: 3/-1;
             width: fit-content;
-            padding: 0.5rem;
-            max-height: 600px;
-
-            --icon-color: var(--ink-700);
-            --btn-background: var(--ink-100);
+            gap: 1rem;
+            padding: 0 0.5rem;
         }
-        .btn_col {
-            margin: 0;
-            width: fit-content;
-            flex: none;
-        }
-        .landscape_btn {
-            display: flex;
+        .wideScreen {
+            display: grid;
+            grid-row: span 2;
+            grid-template-rows: subgrid;
+            grid-template-columns: subgrid;
         }
     }
 </style>

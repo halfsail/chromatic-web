@@ -37,6 +37,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/" | "/dev" | "/dev/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): "/.DS_Store" | "/audio/.DS_Store" | "/audio/correct_spot.mp3" | "/audio/correct_spot.opus" | "/audio/kirakira.mp3" | "/audio/lock.mp3" | "/audio/lock.ogg" | "/audio/lock_48k.mp3" | "/audio/lock_48k.ogg" | "/audio/pop_down.mp3" | "/favicon.png" | "/favicon_32.png" | "/global.css" | "/icons/.DS_Store" | "/icons/chromatic_app_128.png" | "/icons/chromatic_app_144.png" | "/icons/chromatic_app_152.png" | "/icons/chromatic_app_192.png" | "/icons/chromatic_app_512.png" | "/icons/chromatic_app_72.png" | "/icons/chromatic_app_96.png" | "/icons/favicon_16.png" | "/icons/favicon_32.png" | "/icons/ogImage.png" | "/manifest.json" | "/tutorialWide.webm" | string & {};
+		Asset(): "/.DS_Store" | "/audio/.DS_Store" | "/audio/correct_spot.mp3" | "/audio/correct_spot.opus" | "/audio/kirakira.mp3" | "/audio/lock.mp3" | "/audio/lock.ogg" | "/audio/lock_48k.mp3" | "/audio/lock_48k.ogg" | "/audio/pop_down.mp3" | "/favicon.png" | "/favicon_32.png" | "/icons/.DS_Store" | "/icons/chromatic_app_128.png" | "/icons/chromatic_app_144.png" | "/icons/chromatic_app_152.png" | "/icons/chromatic_app_192.png" | "/icons/chromatic_app_512.png" | "/icons/chromatic_app_72.png" | "/icons/chromatic_app_96.png" | "/icons/favicon_16.png" | "/icons/favicon_32.png" | "/icons/ogImage.png" | "/manifest.json" | string & {};
 	}
 }

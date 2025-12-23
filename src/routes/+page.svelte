@@ -5,7 +5,6 @@
     import Header from "$lib/components/chromatic/Header.svelte";
     import Board from "$lib/components/chromatic/Board.svelte";
     // modals and menus
-    import HamburgerMenu from "$lib/components/chromatic/HamburgerMenu.svelte";
     import HelpModal from "$lib/components/chromatic/HelpModal.svelte";
     import MegaMenu from "$lib/components/chromatic/MegaMenu.svelte";
 
@@ -19,24 +18,20 @@
 </main>
 
 <HelpModal bind:showModal={uiState.modals.help} />
-<!-- <HamburgerMenu
-    bind:showModal={uiState.modals.sidebar}
-    bind:showHelp={uiState.modals.help}
-/> -->
 <MegaMenu bind:showModal={uiState.modals.sidebar} />
 
 <style>
     main {
         /* display: flex; */
         display: grid;
-        grid-template-rows: auto 1fr auto;
+        grid-template-rows: auto minmax(auto, 1000px) auto;
         grid-template-columns: 1fr;
         flex-direction: column;
         align-items: center;
         padding: 1rem var(--sidePadding);
         gap: var(--boardGaps);
         height: 100dvh;
-        max-height: 900px;
+        /*max-height: 900px;*/
         color: var(--text-color);
         filter: hue-rotate(var(--hueRotate, 0deg));
     }
@@ -44,8 +39,9 @@
     @media (min-width: 730px) {
         /* Add your CSS rules here */
         main {
-            grid-template-rows: auto 8fr 1fr;
-            grid-template-columns: minmax(1rem, auto) minmax(auto, 350px) auto;
+            grid-template-rows: 1fr minmax(auto, 900px) 1fr;
+            grid-template-columns: minmax(1rem, auto) minmax(auto, 412px) minmax(1rem, auto);
+            gap: 2dvw;
             align-items: center;
             padding: 1rem var(--sidePadding);
         }
