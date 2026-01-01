@@ -94,8 +94,6 @@
     export const gameData = $state(initialState);
 
     if (browser) {
-        // Check and reset weekly stats on app load
-        checkAndResetWeeklyStats();
         // Initialize sounds so they are ready to use
         initializeSounds(gameData.settings.soundEnabled);
     }
@@ -131,20 +129,7 @@
         return new Date(d.setDate(diff)).toISOString().split("T")[0];
     }
 
-    export function checkAndResetWeeklyStats() {
-        // const today = getTodayDate();
-        const currentWeekStart = getWeekStartDate();
-
-        // console.log("Today:", today);
-        console.log("Game Week Start:", gameData.stats.weekStartDate);
-        console.log("Current Week Start:", currentWeekStart);
-
-        // If the week has changed, reset completedDates
-        if (gameData.stats.weekStartDate !== currentWeekStart) {
-            gameData.stats.completedDates = [];
-            gameData.stats.weekStartDate = currentWeekStart;
-        }
-    }
+    // Weekly reset is handled during migration in migrateStats()
 
     export function increaseMove(moves) {
         gameData.puzzle.moves = gameData.puzzle.moves + moves;
@@ -152,19 +137,17 @@
     export function increaseHints() {
         gameData.puzzle.hints += 1;
     }
-    export function completePuzzle() {
-        gameData.puzzle.completed = true;
-        gameData.puzzle.completedAt = new Date().toISOString();
-        gameData.state = "completed";
+    // export function completePuzzle() {
+    //     gameData.puzzle.completed = true;
+    //     gameData.puzzle.completedAt = new Date().toISOString();
+    //     gameData.state = "completed";
         
-        // Add today's date to completedDates if not already there
-        // const today = getTodayDate();
-        if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
-            gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
-        }
+    //     if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
+    //         gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
+    //     }
         
-        updateStats();
-    }
+    //     updateStats();
+    // }
 
     // settings functions
     export function toggleSound() {
@@ -287,42 +270,99 @@
     return differenceInHours;
     }
 
-    export function updateStats() {
-        // proceed to update stats that dont need time to be checked
-        gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
+    // export function updateStats() {
+    //     // proceed to update stats that dont need time to be checked
+    //     gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
 
-        // setup time vars for later checks
-        const today = new Date();
-        const lastPlayedDate = gameData.puzzle?.completedAt ? new Date(gameData.puzzle.completedAt) : new Date();
-        // todo fix date check problem
+    //     // setup time vars for later checks
+    //     const today = new Date();
+    //     const lastPlayedDate = gameData.puzzle?.completedAt ? new Date(gameData.puzzle.completedAt) : new Date();
+    //     // todo fix date check problem
 
-        console.log("today:", today.getDate());
-        console.log("last played date:", new Date(lastPlayedDate).getDate());
+    //     console.log("today:", today.getDate());
+    //     console.log("last played date:", new Date(lastPlayedDate).getDate());
 
 
-        // check to see if you are within 24hours of lastPlayedDate
-        if (Math.abs( today.getDate() - lastPlayedDate.getDate() ) <= 1) {
-          gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
-        } else {
-          gameData.stats.currentStreak = 0
-        }
-        // check to see if current streak is greater than best streak. if it is than set best streak to current streak
-        if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
-          gameData.stats.bestStreak = gameData.stats.currentStreak
-        }
+    //     // check to see if you are within 24hours of lastPlayedDate
+    //     if (Math.abs( today.getDate() - lastPlayedDate.getDate() ) <= 1) {
+    //       gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
+    //     } else {
+    //       gameData.stats.currentStreak = 0
+    //     }
+    //     // check to see if current streak is greater than best streak. if it is than set best streak to current streak
+    //     if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
+    //       gameData.stats.bestStreak = gameData.stats.currentStreak
+    //     }
 
-        if (gameData.stats.averageMoves === 0 || gameData.averageMoves === null) {
-          // set average to current game average
-          gameData.stats.averageMoves = gameData.puzzle.moves
-        } else {
-          // update average moves
-          const totalPreviousMoves = gameData.stats.averageMoves * gameData.stats.totalCompleted;
-          const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
-          const newGamesPlayed = gameData.stats.totalCompleted + 1;
-          const newAverage = newTotalMoves / newGamesPlayed;
-          gameData.stats.averageMoves = newAverage
-        }
+    //     if (gameData.stats.averageMoves === 0 || gameData.averageMoves === null) {
+    //       // set average to current game average
+    //       gameData.stats.averageMoves = gameData.puzzle.moves
+    //     } else {
+    //       // update average moves
+    //       const totalPreviousMoves = gameData.stats.averageMoves * gameData.stats.totalCompleted;
+    //       const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
+    //       const newGamesPlayed = gameData.stats.totalCompleted + 1;
+    //       const newAverage = newTotalMoves / newGamesPlayed;
+    //       gameData.stats.averageMoves = newAverage
+    //     }
+    // }
+
+    export function completePuzzle() {
+    const previousCompletedAt = gameData.puzzle.completedAt; // Save before updating
+    gameData.puzzle.completed = true;
+    gameData.puzzle.completedAt = new Date().toISOString();
+    gameData.state = "completed";
+
+    if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
+        gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
     }
+
+    updateStats(previousCompletedAt); // Pass it to updateStats
+}
+
+export function updateStats(previousCompletedAt) {
+    gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
+
+    // If there was a previous completion, check streak
+    if (previousCompletedAt) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize to start of day
+        
+        const lastPlayed = new Date(previousCompletedAt);
+        lastPlayed.setHours(0, 0, 0, 0); // Normalize to start of day
+        
+        // Calculate difference in days
+        const daysDifference = Math.floor((today - lastPlayed) / (1000 * 60 * 60 * 24));
+        
+        console.log("Days since last completion:", daysDifference);
+        
+        if (daysDifference === 1) {
+            // Consecutive day - increment streak
+            gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
+        } else if (daysDifference > 1) {
+            // Streak broken - reset to 1
+            gameData.stats.currentStreak = 1;
+        }
+        // If daysDifference === 0 (same day), don't change streak
+    } else {
+        // First time playing - start streak at 1
+        gameData.stats.currentStreak = 1;
+    }
+
+    // Update best streak if needed
+    if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
+        gameData.stats.bestStreak = gameData.stats.currentStreak;
+    }
+
+    // Update average moves
+    if (gameData.stats.averageMoves === 0 || gameData.stats.averageMoves === null) {
+        gameData.stats.averageMoves = gameData.puzzle.moves;
+    } else {
+        const totalPreviousMoves = gameData.stats.averageMoves * (gameData.stats.totalCompleted - 1);
+        const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
+        gameData.stats.averageMoves = newTotalMoves / gameData.stats.totalCompleted;
+    }
+}
 </script>
 
 

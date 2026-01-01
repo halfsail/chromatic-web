@@ -29,7 +29,16 @@ function migrateStats(oldStats, defaultStats, getWeekStartDateFn) {
     }
     
     // Ensure weekStartDate is set
-    migratedStats.weekStartDate = oldStats?.weekStartDate ?? getWeekStartDateFn();
+    // Determine current week start and reset if week changed
+    const currentWeekStart = typeof getWeekStartDateFn === 'function' ? getWeekStartDateFn() : null;
+    migratedStats.weekStartDate = oldStats?.weekStartDate ?? currentWeekStart;
+    if (currentWeekStart && oldStats?.weekStartDate && oldStats.weekStartDate !== currentWeekStart) {
+        console.log("Week changed from", oldStats.weekStartDate, "to", currentWeekStart, "- resetting completedDates");
+        migratedStats.completedDates = [];
+        migratedStats.weekStartDate = currentWeekStart;
+    }
+    console.log("weekStartDate set to:", migratedStats.weekStartDate);
+    console.log("completedDates:", migratedStats.completedDates);
     
     return migratedStats;
 }

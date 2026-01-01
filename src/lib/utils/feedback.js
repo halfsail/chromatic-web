@@ -100,7 +100,7 @@ export function playFeedback(type) {
     // Initialize sounds if not already done
     if (!audioContextInitialized) {
         initializeSounds();
-        console.log(type)
+        // console.log(type)
     }
 
     // Play sound if available
@@ -132,7 +132,7 @@ export function playFeedback(type) {
             }
 
             // Log the vibration attempt
-            console.log(`Attempting to vibrate with pattern:`, pattern);
+            // console.log(`Attempting to vibrate with pattern:`, pattern);
 
             // Try to vibrate
             const success = navigator.vibrate(pattern);

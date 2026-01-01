@@ -87,7 +87,6 @@ const haptics = {
 function playFeedback(type) {
   if (!audioContextInitialized) {
     initializeSounds();
-    console.log(type);
   }
   if (sounds[type] && gameData.settings.soundEnabled === true && audioContext) {
     try {
@@ -110,7 +109,6 @@ function playFeedback(type) {
         console.warn(`No haptic pattern defined for type: ${type}`);
         return;
       }
-      console.log(`Attempting to vibrate with pattern:`, pattern);
       const success = navigator.vibrate(pattern);
       if (!success) {
         console.warn("Vibration was rejected by the device");

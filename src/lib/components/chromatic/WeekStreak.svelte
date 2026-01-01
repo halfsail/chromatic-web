@@ -83,6 +83,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
               </svg>
             </span>
+            {:else}
+            <span class="day-number">{day.getDate()}</span>
         {/if}
       </div>
     </button>
@@ -161,6 +163,10 @@
     .today span {
         font-weight: 600;
         color: var(--text-color-primary);
+    }
+
+    .today .day-number {
+        display: none;
     }
 
     .today .indicator {

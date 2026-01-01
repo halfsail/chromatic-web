@@ -599,18 +599,6 @@ function increaseMove(moves) {
 function increaseHints() {
   gameData.puzzle.hints += 1;
 }
-function completePuzzle() {
-  gameData.puzzle.completed = true;
-  gameData.puzzle.completedAt = (/* @__PURE__ */ new Date()).toISOString();
-  gameData.state = "completed";
-  if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
-    gameData.stats.completedDates = [
-      ...gameData.stats.completedDates,
-      gameData.puzzle.date
-    ];
-  }
-  updateStats();
-}
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
@@ -643,28 +631,45 @@ function generationLevel(difficulty, date) {
   testPuzzle.history = shuffleColors(testPuzzle.palette, testPuzzle.locks);
   return testPuzzle;
 }
-function updateStats() {
+function completePuzzle() {
+  const previousCompletedAt = gameData.puzzle.completedAt;
+  gameData.puzzle.completed = true;
+  gameData.puzzle.completedAt = (/* @__PURE__ */ new Date()).toISOString();
+  gameData.state = "completed";
+  if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
+    gameData.stats.completedDates = [
+      ...gameData.stats.completedDates,
+      gameData.puzzle.date
+    ];
+  }
+  updateStats(previousCompletedAt);
+}
+function updateStats(previousCompletedAt) {
   gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
-  const today = /* @__PURE__ */ new Date();
-  const lastPlayedDate = gameData.puzzle?.completedAt ? new Date(gameData.puzzle.completedAt) : /* @__PURE__ */ new Date();
-  console.log("today:", today.getDate());
-  console.log("last played date:", new Date(lastPlayedDate).getDate());
-  if (Math.abs(today.getDate() - lastPlayedDate.getDate()) <= 1) {
-    gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
+  if (previousCompletedAt) {
+    const today = /* @__PURE__ */ new Date();
+    today.setHours(0, 0, 0, 0);
+    const lastPlayed = new Date(previousCompletedAt);
+    lastPlayed.setHours(0, 0, 0, 0);
+    const daysDifference = Math.floor((today - lastPlayed) / (1e3 * 60 * 60 * 24));
+    console.log("Days since last completion:", daysDifference);
+    if (daysDifference === 1) {
+      gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
+    } else if (daysDifference > 1) {
+      gameData.stats.currentStreak = 1;
+    }
   } else {
-    gameData.stats.currentStreak = 0;
+    gameData.stats.currentStreak = 1;
   }
   if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
     gameData.stats.bestStreak = gameData.stats.currentStreak;
   }
-  if (gameData.stats.averageMoves === 0 || gameData.averageMoves === null) {
+  if (gameData.stats.averageMoves === 0 || gameData.stats.averageMoves === null) {
     gameData.stats.averageMoves = gameData.puzzle.moves;
   } else {
-    const totalPreviousMoves = gameData.stats.averageMoves * gameData.stats.totalCompleted;
+    const totalPreviousMoves = gameData.stats.averageMoves * (gameData.stats.totalCompleted - 1);
     const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
-    const newGamesPlayed = gameData.stats.totalCompleted + 1;
-    const newAverage = newTotalMoves / newGamesPlayed;
-    gameData.stats.averageMoves = newAverage;
+    gameData.stats.averageMoves = newTotalMoves / gameData.stats.totalCompleted;
   }
 }
 function WeekStreak($$payload, $$props) {
@@ -698,20 +703,21 @@ function WeekStreak($$payload, $$props) {
     return isPastDate(date) && !isCompleted(date, completedDates);
   }
   const each_array = ensure_array_like(weekDays);
-  $$payload.out += `<div class="week-view svelte-ba9nxr"><!--[-->`;
+  $$payload.out += `<div class="week-view svelte-13j3dmt"><!--[-->`;
   for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
     let day = each_array[$$index];
-    $$payload.out += `<button${attr("class", `day svelte-ba9nxr ${stringify([
+    $$payload.out += `<button${attr("class", `day svelte-13j3dmt ${stringify([
       isMissed(day, gameData.stats.completedDates) ? "missed" : "",
       isToday(day) ? "today" : "",
       isFutureDate(day) ? "future" : "",
       isCompleted(day, gameData.stats.completedDates) ? "completed" : ""
-    ].filter(Boolean).join(" "))}`)}${attr("disabled", isFutureDate(day), true)}><span class="svelte-ba9nxr">${escape_html(day.toLocaleDateString("en", { weekday: "narrow" }))}</span> <div class="indicator svelte-ba9nxr">`;
+    ].filter(Boolean).join(" "))}`)}${attr("disabled", isFutureDate(day), true)}><span class="svelte-13j3dmt">${escape_html(day.toLocaleDateString("en", { weekday: "narrow" }))}</span> <div class="indicator svelte-13j3dmt">`;
     if (gameData.stats.completedDates.includes(day.toISOString().split("T")[0])) {
       $$payload.out += "<!--[-->";
-      $$payload.out += `<span class="checkmark svelte-ba9nxr"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--onAccent)" class="size-6 svelte-ba9nxr"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path></svg></span>`;
+      $$payload.out += `<span class="checkmark svelte-13j3dmt"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--onAccent)" class="size-6 svelte-13j3dmt"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path></svg></span>`;
     } else {
       $$payload.out += "<!--[!-->";
+      $$payload.out += `<span class="day-number svelte-13j3dmt">${escape_html(day.getDate())}</span>`;
     }
     $$payload.out += `<!--]--></div></button>`;
   }
