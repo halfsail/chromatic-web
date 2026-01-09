@@ -40,7 +40,7 @@
         /* Add your CSS rules here */
         main {
             grid-template-rows: 1fr minmax(auto, 900px) 1fr;
-            grid-template-columns: minmax(1rem, auto) minmax(auto, 412px) minmax(1rem, auto);
+            grid-template-columns: minmax(1rem, auto) minmax(auto, 450px) minmax(1rem, auto);
             gap: 2dvw;
             align-items: center;
             padding: 1rem var(--sidePadding);

@@ -1504,7 +1504,7 @@ function _page($$payload, $$props) {
   let $$settled = true;
   let $$inner_payload;
   function $$render_inner($$payload2) {
-    $$payload2.out += `<main${attr("class", `svelte-1la3h4p ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
+    $$payload2.out += `<main${attr("class", `svelte-1lsybcb ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
     Header($$payload2, { toggleMenu: openMenu });
     $$payload2.out += `<!----> `;
     Board($$payload2);
