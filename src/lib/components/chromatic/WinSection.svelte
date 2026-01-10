@@ -1,5 +1,5 @@
 <script>
-    import { gameData, nextLevel, randomPlayLevel } from "$lib/state/Store.svelte";
+    import { puzzle, nextLevel, randomPlayLevel } from "$lib/state/Store.svelte";
     import { openMenu } from "$lib/state/InterfaceState.svelte";
     import WeekStreak from "./WeekStreak.svelte";
     import { Toaster, toast } from "svelte-sonner";
@@ -9,15 +9,15 @@
 
 
     function shareResults() {
-        const date = formatDate(gameData.puzzle.date);
+        const date = formatDate(puzzle.date);
         let resultText = "";
 
-        if (gameData.puzzle.date == "Random") {
+        if (puzzle.date == "Random") {
             resultText = "Check out Chromatic"
         } else {
-            resultText = `Chromatic puzzle for ${date} in ${gameData.puzzle.moves} moves`;
-            if (gameData.puzzle.hints) {
-                resultText += ` using ${gameData.puzzle.hints} hints`;
+            resultText = `Chromatic puzzle for ${date} in ${puzzle.moves} moves`;
+            if (puzzle.hints) {
+                resultText += ` using ${puzzle.hints} hints`;
             }
         }
 
@@ -65,9 +65,9 @@
     <div class="textColumn">
         <h2>{getRandomWinMessage()}</h2>
         <p class="formatPretty">
-            You completed today's puzzle in {gameData.puzzle.moves} moves
-            {#if gameData.puzzle.hints}
-                and using {gameData.puzzle.hints} hints
+            You completed today's puzzle in {puzzle.moves} moves
+            {#if puzzle.hints}
+                and using {puzzle.hints} hints
             {/if}
         </p>
     </div>

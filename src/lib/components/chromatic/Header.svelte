@@ -1,5 +1,5 @@
 <script>
-    import { gameData, nextLevel, getTodayDate } from "$lib/state/Store.svelte";
+    import { puzzle, nextLevel, getTodayDate } from "$lib/state/Store.svelte";
     import { onMount } from "svelte";
     import RoundBtn from "../buttons/RoundBtn.svelte";
     const { toggleMenu } = $props();
@@ -17,11 +17,11 @@
         return date.toLocaleDateString(undefined, options);
     }
     onMount(() => {
-      longDate = formatDate(gameData.puzzle.date)
+      longDate = formatDate(puzzle.date)
     })
     $effect(() => {
-        // This effect runs whenever gameData.puzzle.date changes
-        longDate = formatDate(gameData.puzzle.date)
+        // This effect runs whenever puzzle.date changes
+        longDate = formatDate(puzzle.date)
     })
 </script>
 
@@ -60,10 +60,10 @@
     </RoundBtn>
     </div>
 
-    {#if gameData.puzzle.date !== "Random" && !gameData.puzzle.completed}
+    {#if puzzle.date !== "Random" && !puzzle.completed}
     <p class="dateText">
         <span>{longDate}</span>
-        {#if formatDate(gameData.puzzle.date) !== formatDate(new Date())}
+        {#if formatDate(puzzle.date) !== formatDate(new Date())}
             <button onclick={ () => nextLevel()}>Play Today's Game.</button>
         {/if}
     </p>

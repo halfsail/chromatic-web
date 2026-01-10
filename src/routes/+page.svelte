@@ -1,5 +1,5 @@
 <script>
-    import { gameData } from "$lib/state/Store.svelte";
+    import { meta } from "$lib/state/Store.svelte";
     import { uiState, openMenu } from "$lib/state/InterfaceState.svelte";
     // main game components
     import Header from "$lib/components/chromatic/Header.svelte";
@@ -12,7 +12,7 @@
     let hueRotate = $state(0);
 </script>
 
-<main class:paused={gameData.state === "paused"}>
+<main class:paused={meta.state === "paused"}>
     <Header toggleMenu={openMenu} />
     <Board />
 </main>

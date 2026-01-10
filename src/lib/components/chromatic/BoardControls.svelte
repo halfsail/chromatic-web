@@ -1,5 +1,5 @@
 <script>
-    import { gameData, nextLevel } from "$lib/state/Store.svelte";
+    import { puzzle, nextLevel } from "$lib/state/Store.svelte";
     import { openMenu } from "$lib/state/InterfaceState.svelte";
     import RoundBtn from "../buttons/RoundBtn.svelte";
     let { getHint, shiftColors } = $props();
@@ -39,7 +39,7 @@
     <RoundBtn 
         label="Hint"
         type="secondary"
-        disabled={gameData.puzzle.isAnimating}
+        disabled={puzzle.isAnimating}
         onclick={getHint}
     >
     {#snippet icon()}

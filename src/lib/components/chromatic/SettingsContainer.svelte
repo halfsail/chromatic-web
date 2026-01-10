@@ -1,5 +1,5 @@
 <script>
-    import { gameData, toggleHaptic, toggleSound, toggleRelaxedMode, nextLevel } from "$lib/state/Store.svelte";
+    import { puzzle, settings, toggleHaptic, toggleSound, toggleRelaxedMode, nextLevel } from "$lib/state/Store.svelte";
     import { closeMenu } from "$lib/state/InterfaceState.svelte";
     import { onMount } from "svelte";
 
@@ -14,7 +14,7 @@
   });
 
   function toggleDifficulty() {
-    nextLevel(gameData.puzzle.date)
+    nextLevel(puzzle.date)
     // closeMenu('sidebar')
   }
 
@@ -36,7 +36,7 @@
             <p class="label">Puzzle Size</p>
         </div>
         <div class="selectContainer">
-        <select name="size" id="puzzleSize" class="dropDown" bind:value={gameData.settings.difficulty} onchange={ toggleDifficulty() }>
+        <select name="size" id="puzzleSize" class="dropDown" bind:value={settings.difficulty} onchange={ toggleDifficulty() }>
             <option value="easy">Small 4×5</option>
             <option value="normal">Normal 5×6</option>
             <option value="medium">Medium 6×6</option>
@@ -62,7 +62,7 @@
 
          <div class="control">
             <label class="material-toggle-switch" for="relaxedMode">
-                <input id="relaxedMode" type="checkbox" class="material-toggle-input" onclick={toggleRelaxedMode} bind:checked={gameData.settings.relaxedMode}>
+                <input id="relaxedMode" type="checkbox" class="material-toggle-input" onclick={toggleRelaxedMode} bind:checked={settings.relaxedMode}>
                 <span class="material-toggle-slider"></span>
             </label>
          </div>
@@ -87,7 +87,7 @@
 
             <div class="control">
                 <label class="material-toggle-switch" for="soundEnabled">
-                    <input id="soundEnabled" type="checkbox" class="material-toggle-input" onclick={toggleSound} bind:checked={gameData.settings.soundEnabled}>
+                    <input id="soundEnabled" type="checkbox" class="material-toggle-input" onclick={toggleSound} bind:checked={settings.soundEnabled}>
                     <span class="material-toggle-slider"></span>
                 </label>
             </div>
@@ -107,7 +107,7 @@
 
          <div class="control">
             <label class="material-toggle-switch" name="hapticToggle" >
-                <input id="hapticToggle" type="checkbox" class="material-toggle-input" onclick={toggleHaptic} bind:checked={gameData.settings.hapticEnabled}>
+                <input id="hapticToggle" type="checkbox" class="material-toggle-input" onclick={toggleHaptic} bind:checked={settings.hapticEnabled}>
                 <span class="material-toggle-slider"></span>
             </label>
          </div>

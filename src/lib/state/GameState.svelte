@@ -1,5 +1,5 @@
 <script module>
-    import { gameData } from './Store.svelte';
+    import { puzzle, stats, meta } from './Store.svelte';
 
     // Define the possible states
     export const STATE = {
@@ -16,19 +16,19 @@
             return;
         }
 
-        gameData.state = state;
+        meta.state = state;
 
         switch (state) {
             case STATE.COMPLETED:
-                gameData.puzzle.completed = true;
-                gameData.puzzle.completedAt = new Date().toISOString();
-                gameData.stats.totalCompleted += 1;
+                puzzle.completed = true;
+                puzzle.completedAt = new Date().toISOString();
+                stats.totalCompleted += 1;
                 updateStats();
                 break;
             case STATE.START:
                 // Reset necessary puzzle data
-                gameData.puzzle.hints = 0;
-                gameData.puzzle.moves = 0;
+                puzzle.hints = 0;
+                puzzle.moves = 0;
                 break;
         }
     }
@@ -52,6 +52,6 @@
 
     // Get current state
     export function getGameState() {
-        return gameData.state;
+        return meta.state;
     }
 </script>

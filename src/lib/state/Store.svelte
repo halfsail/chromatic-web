@@ -1,370 +1,347 @@
 <script module>
-    import chroma from "chroma-js";
-    import { playGame, completeGame } from "$lib/state/GameState.svelte";
+    import { set, get, del } from "idb-keyval";
     import { getPalette, getLocks } from "$lib/utils/puzzleGenerator.js";
     import { getColors, shuffleColors } from "$lib/utils/colorUtils.js";
     import { initializeSounds } from "$lib/utils/feedback";
-    import { migrateData } from "$lib/utils/migration.js";
     import { version } from "$app/environment";
-    import { levels } from "$lib/utils/levels.js";
     import { browser } from "$app/environment";
+    import chroma from "chroma-js";
 
+    // ===== CONSTANTS =====
     export const CONFIG = {
-        STORAGE_KEY: "chromatic",
+        PUZZLE_KEY: "chromatic_puzzle",
+        STATS_KEY: "chromatic_stats",
+        SETTINGS_KEY: "chromatic_settings",
+        META_KEY: "chromatic_meta",
         VERSION_KEY: version,
-        START_DATE: "2025-01-01", // Example start date for the game
+        START_DATE: "2025-01-01",
     };
 
-    const difficultyLevels = {
-        easy: {rows: 5, cols: 4, locks: 5},
-        normal: {rows: 6, cols: 5, locks: 7},
-        medium: {rows: 6, cols: 6, locks: 9},
-        hard: {rows: 7, cols: 7, locks: 13},
+    const DIFFICULTY_LEVELS = {
+        easy: { rows: 5, cols: 4, locks: 5 },
+        normal: { rows: 6, cols: 5, locks: 7 },
+        medium: { rows: 6, cols: 6, locks: 9 },
+        hard: { rows: 7, cols: 7, locks: 13 },
     };
 
-    const defaultData = {
+    // ===== DEFAULTS =====
+    const createDefaultPuzzle = () => ({
+        completed: false,
+        hints: 0,
+        moves: 0,
+        completedAt: null,
+        col: 5,
+        row: 6,
+        date: getTodayDate(),
+        hues: [],
+        history: [],
+        locks: [],
+        palette: [],
+        accent: 'black',
+    });
+
+    const createDefaultStats = () => ({
+        totalCompleted: 0,
+        currentStreak: 0,
+        bestStreak: 0,
+        averageMoves: 0,
+        completedDates: [],
+        weekStartDate: getWeekStartDate(),
+    });
+
+    const createDefaultSettings = () => ({
+        theme: "dark",
+        soundEnabled: true,
+        hapticEnabled: true,
+        relaxedMode: true,
+        difficulty: "normal",
+    });
+
+    const createDefaultMeta = () => ({
         version: CONFIG.VERSION_KEY,
-        deviceId: null, // Will be set later
+        deviceId: null,
         lastSync: null,
         state: "START",
         isAnimating: false,
-        puzzle: {
-            completed: false,
-            hints: 0,
-            moves: 0,
-            completedAt: null,
-        },
-        stats: {
-            totalCompleted: 0,
-            currentStreak: 0,
-            bestStreak: 0,
-            averageMoves: 0,
-            completedDates: [],
-            weekStartDate: getWeekStartDate(),
-        },
-        settings: {
-            theme: "dark",
-            soundEnabled: true,
-            hapticEnabled: true,
-            relaxedMode: true,
-            difficulty: "normal",
-        },
-    };
+    });
 
-    /**
-     * Reads the initial data from localStorage if available,
-     * otherwise returns the default data structure.
-     */
+    // ===== REACTIVE STATE =====
+    export const meta = $state(createDefaultMeta());
+    export const puzzle = $state(createDefaultPuzzle());
+    export const stats = $state(createDefaultStats());
+    export const settings = $state(createDefaultSettings());
+    export const dataLoaded = $state({ value: false });
 
-    let initialState = { ...defaultData };
-
-    if (browser) {
-        // Try to load existing data from localStorage
-        let storedData = loadFromStorage();
-
-        if (storedData) {
-            // if data exists, parse and migrate if necessary
-            let parsedData = JSON.parse(storedData);
-            initialState = migrateData(parsedData, defaultData, CONFIG.VERSION_KEY, getWeekStartDate);
-            
-
-            const today = getTodayDate();
-            const storedDate = initialState.puzzle.date?.split("T")[0]; // Handle the date comparison correctly
-            const lastKnownDifficulty = initialState.settings.difficulty || "normal";
-
-            if (storedDate !== today && initialState.puzzle.completed) {
-                // if user has completed the puzzle and it's a new day, generate a new puzzle
-                let extraData = generationLevel(lastKnownDifficulty, today);
-                // initialState.puzzle = { ...initialState.puzzle, ...extraData };
-                initialState.puzzle  = { ...extraData };
-                initialState.puzzle.completed = false;
-                initialState.state = "START";
-            } else {
-                console.log("user has not completed today's puzzle or it's the same day");
-            }
-        } else {
-            // no stored data, gernate a new save and new puzzle
-            let extraData = generationLevel();
-            // add puzzle data to initial state
-            initialState.puzzle = { ...initialState.puzzle, ...extraData };
-        }
-        
-    }
-
-    export const gameData = $state(initialState);
-
-    if (browser) {
-        // Initialize sounds so they are ready to use
-        initializeSounds(gameData.settings.soundEnabled);
-    }
-
-
-    // Use an $effect to automatically save data to localStorage whenever it changes.
-
-    if (browser) {
-        $effect.root(() => {
-            $effect(() => {
-                localStorage.setItem(
-                    CONFIG.STORAGE_KEY,
-                    JSON.stringify(gameData),
-                );
-            });
-        });
-    }
-
-    // --- Helper Functions ---
-    // It's good practice to export functions that modify the state.
-    // This keeps your state logic centralized and components cleaner.
-
+    // ===== UTILITY FUNCTIONS =====
     export function getTodayDate() {
-        const todayDate = new Date();
-        return todayDate.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
+        return new Date().toISOString().split("T")[0];
     }
 
     export function getWeekStartDate(date = new Date()) {
-        // Returns the Monday of the current week
         const d = new Date(date);
         const day = d.getDay();
-        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
         return new Date(d.setDate(diff)).toISOString().split("T")[0];
     }
 
-    // Weekly reset is handled during migration in migrateStats()
-
-    export function increaseMove(moves) {
-        gameData.puzzle.moves = gameData.puzzle.moves + moves;
-    }
-    export function increaseHints() {
-        gameData.puzzle.hints += 1;
-    }
-    // export function completePuzzle() {
-    //     gameData.puzzle.completed = true;
-    //     gameData.puzzle.completedAt = new Date().toISOString();
-    //     gameData.state = "completed";
-        
-    //     if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
-    //         gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
-    //     }
-        
-    //     updateStats();
-    // }
-
-    // settings functions
-    export function toggleSound() {
-        console.log("toggling sound");
-        gameData.settings.soundEnabled = !gameData.settings.soundEnabled;
-    }
-    export function toggleHaptic() {
-        gameData.settings.hapticEnabled = !gameData.settings.hapticEnabled;
-    }
-    export function toggleRelaxedMode() {
-        gameData.settings.relaxedMode = !gameData.settings.relaxedMode;
-    }
-    export function setTheme(theme) {
-        gameData.settings.theme = theme;
-    }
-
-    export function nextLevel(date) {
-        const today = date ?? getTodayDate();
-        let extraData = generationLevel(gameData.settings.difficulty, date);
-        gameData.puzzle = { ...gameData.puzzle, ...extraData };
-        gameData.puzzle.completed = false;
-        gameData.puzzle.hints = 0;
-        gameData.puzzle.moves = 0;
-        gameData.state = "start";
-    }
-
-    export function resetGame() {
-        // To reset, we can re-assign the properties from the default object.
-        Object.assign(gameData, defaultData);
-    }
-
     function randomDate(start, end) {
-        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
 
-    export function randomPlayLevel() {
-        const date = randomDate(new Date(2025, 0, 1), new Date()).toISOString().split("T")[0];
-        const difficulty = gameData.settings.difficulty;
-        let testPuzzle = generationLevel(difficulty, date);
-        gameData.puzzle = { ...gameData.puzzle, ...testPuzzle };
-        gameData.puzzle.completed = false;
-        gameData.puzzle.hints = 0;
-        gameData.puzzle.moves = 0;
-        gameData.puzzle.date = "Random";
-        gameData.state = "start";
-    }
-    
+    // ===== PUZZLE GENERATION =====
+    export function generatePuzzle(difficulty = "normal", date = null) {
+        const targetDate = date ?? getTodayDate();
+        const level = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal;
+        
+        const hues = getPalette(targetDate);
+        const locks = getLocks(targetDate, level.rows, level.cols, level.locks);
+        const palette = getColors(hues, level.cols, level.rows);
+        const history = shuffleColors(palette, locks, level.cols, level.rows);
 
-    export function generationLevel(difficulty, date) {
-        // If no date is provided, use today's date
-        const today = date ?? getTodayDate();
-        const difficultyLevel = difficultyLevels[difficulty] || difficultyLevels["normal"];
-        let testPuzzle = {
-            col: difficultyLevel.cols,
-            row: difficultyLevel.rows,
-            date: today,
-            hues: getPalette(today),
-            history: [],
+        return {
+            col: level.cols,
+            row: level.rows,
+            date: targetDate,
+            hues,
+            locks,
+            palette,
+            history,
             moves: 0,
             hints: 0,
+            completed: false,
             completedAt: null,
-        };
-        testPuzzle.locks = getLocks(today, testPuzzle.row, testPuzzle.col, difficultyLevel.locks);
-        testPuzzle.palette = getColors(
-            testPuzzle.hues,
-            testPuzzle.col,
-            testPuzzle.row,
-        );
-        testPuzzle.history = shuffleColors(
-            testPuzzle.palette,
-            testPuzzle.locks,
-            testPuzzle.col,
-            testPuzzle.row,
-        );
-        return testPuzzle;
-    }
-
-    // Simple seeded random number generator
-    function seededRandom(seed) {
-        let state = parseInt(seed);
-        return function () {
-            state = (state * 1103515245 + 12345) & 0x7fffffff;
-            return state / 0x7fffffff;
+            accent: chroma.average(hues).hex(),
         };
     }
 
-    function saveToStorage(data) {
-        try {
-            localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-        } catch (error) {
-            console.error("Failed to save game state:", error);
-            // Could emit an event or show user notification
-        }
-    }
+    // ===== INDEXEDDB OPERATIONS =====
+    async function loadFromIndexedDB() {
+        if (!browser) return null;
 
-    function loadFromStorage() {
         try {
-            const storedData = localStorage.getItem(CONFIG.STORAGE_KEY);
-            return storedData;
+            const [loadedMeta, loadedPuzzle, loadedStats, loadedSettings] = await Promise.all([
+                get(CONFIG.META_KEY),
+                get(CONFIG.PUZZLE_KEY),
+                get(CONFIG.STATS_KEY),
+                get(CONFIG.SETTINGS_KEY),
+            ]);
+
+            return { loadedMeta, loadedPuzzle, loadedStats, loadedSettings };
         } catch (error) {
-            console.error("Failed to load game state:", error);
+            console.error("Failed to load from IndexedDB:", error);
             return null;
         }
     }
 
-
-
-    function getHoursDifference(date1, date2) {
-    // Define the number of milliseconds in one hour (60 minutes * 60 seconds * 1000 milliseconds)
-    const MS_PER_HOUR = 3600000;
-
-    // 1. Get the difference in milliseconds
-    // We use Math.abs() to ensure the result is positive, regardless of the order of dates.
-    const differenceInMilliseconds = Math.abs(date1.getTime() - date2.getTime());
-
-    // 2. Convert the difference from milliseconds to hours
-    const differenceInHours = differenceInMilliseconds / MS_PER_HOUR;
-    console.log("Difference in hours:", differenceInHours);
-
-    return differenceInHours;
+    async function saveToIndexedDB(key, data) {
+        if (!browser) return;
+        
+        try {
+            // Convert reactive state to plain object
+            const plainData = JSON.parse(JSON.stringify(data));
+            await set(key, plainData);
+        } catch (error) {
+            console.error(`Failed to save ${key} to IndexedDB:`, error);
+        }
     }
 
-    // export function updateStats() {
-    //     // proceed to update stats that dont need time to be checked
-    //     gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
+    export async function clearAllData() {
+        if (!browser) return;
 
-    //     // setup time vars for later checks
-    //     const today = new Date();
-    //     const lastPlayedDate = gameData.puzzle?.completedAt ? new Date(gameData.puzzle.completedAt) : new Date();
-    //     // todo fix date check problem
+        try {
+            await Promise.all([
+                del(CONFIG.META_KEY),
+                del(CONFIG.PUZZLE_KEY),
+                del(CONFIG.STATS_KEY),
+                del(CONFIG.SETTINGS_KEY),
+            ]);
+            console.log("All game data cleared from IndexedDB");
+        } catch (error) {
+            console.error("Failed to clear game data:", error);
+        }
+    }
 
-    //     console.log("today:", today.getDate());
-    //     console.log("last played date:", new Date(lastPlayedDate).getDate());
+    // ===== INITIALIZATION =====
+    async function initializeGameData() {
+        if (!browser) return;
 
+        const loaded = await loadFromIndexedDB();
 
-    //     // check to see if you are within 24hours of lastPlayedDate
-    //     if (Math.abs( today.getDate() - lastPlayedDate.getDate() ) <= 1) {
-    //       gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
-    //     } else {
-    //       gameData.stats.currentStreak = 0
-    //     }
-    //     // check to see if current streak is greater than best streak. if it is than set best streak to current streak
-    //     if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
-    //       gameData.stats.bestStreak = gameData.stats.currentStreak
-    //     }
+        if (!loaded) {
+            // First time - generate new puzzle
+            const newPuzzle = generatePuzzle(settings.difficulty);
+            Object.assign(puzzle, newPuzzle);
+            dataLoaded.value = true;
+            return;
+        }
 
-    //     if (gameData.stats.averageMoves === 0 || gameData.averageMoves === null) {
-    //       // set average to current game average
-    //       gameData.stats.averageMoves = gameData.puzzle.moves
-    //     } else {
-    //       // update average moves
-    //       const totalPreviousMoves = gameData.stats.averageMoves * gameData.stats.totalCompleted;
-    //       const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
-    //       const newGamesPlayed = gameData.stats.totalCompleted + 1;
-    //       const newAverage = newTotalMoves / newGamesPlayed;
-    //       gameData.stats.averageMoves = newAverage
-    //     }
-    // }
+        const { loadedMeta, loadedPuzzle, loadedStats, loadedSettings } = loaded;
+
+        // Merge loaded data
+        if (loadedMeta) Object.assign(meta, loadedMeta);
+        if (loadedStats) Object.assign(stats, loadedStats);
+        if (loadedSettings) Object.assign(settings, loadedSettings);
+
+        // Handle puzzle state
+        if (loadedPuzzle) {
+            const today = getTodayDate();
+            const storedDate = loadedPuzzle.date?.split("T")[0];
+            const isNewDay = storedDate !== today && loadedPuzzle.completed;
+
+            if (isNewDay) {
+                // Generate new puzzle for new day
+                const newPuzzle = generatePuzzle(settings.difficulty, today);
+                Object.assign(puzzle, newPuzzle);
+                meta.state = "START";
+            } else {
+                // Continue with existing puzzle
+                Object.assign(puzzle, loadedPuzzle);
+            }
+        } else {
+            // No saved puzzle - generate one
+            const newPuzzle = generatePuzzle(settings.difficulty);
+            Object.assign(puzzle, newPuzzle);
+        }
+
+        dataLoaded.value = true;
+    }
+
+    // ===== STATE MUTATIONS =====
+    export function increaseMove(amount = 1) {
+        puzzle.moves += amount;
+    }
+
+    export function increaseHints() {
+        puzzle.hints += 1;
+    }
+
+    export function toggleSound() {
+        settings.soundEnabled = !settings.soundEnabled;
+    }
+
+    export function toggleHaptic() {
+        settings.hapticEnabled = !settings.hapticEnabled;
+    }
+
+    export function toggleRelaxedMode() {
+        settings.relaxedMode = !settings.relaxedMode;
+    }
+
+    export function setTheme(theme) {
+        settings.theme = theme;
+    }
+
+    export function nextLevel(date = null) {
+        const newPuzzle = generatePuzzle(settings.difficulty, date);
+        Object.assign(puzzle, newPuzzle);
+        meta.state = "start";
+    }
+
+    export function randomPlayLevel() {
+        const date = randomDate(new Date(2025, 0, 1), new Date())
+            .toISOString()
+            .split("T")[0];
+        const newPuzzle = generatePuzzle(settings.difficulty, date);
+        Object.assign(puzzle, { ...newPuzzle, date: "Random" });
+        meta.state = "start";
+    }
+
+    export function resetGame() {
+        Object.assign(meta, createDefaultMeta());
+        Object.assign(puzzle, createDefaultPuzzle());
+        Object.assign(stats, createDefaultStats());
+        Object.assign(settings, createDefaultSettings());
+    }
 
     export function completePuzzle() {
-    const previousCompletedAt = gameData.puzzle.completedAt; // Save before updating
-    gameData.puzzle.completed = true;
-    gameData.puzzle.completedAt = new Date().toISOString();
-    gameData.state = "completed";
-
-    if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
-        gameData.stats.completedDates = [...gameData.stats.completedDates, gameData.puzzle.date];
-    }
-
-    updateStats(previousCompletedAt); // Pass it to updateStats
-}
-
-export function updateStats(previousCompletedAt) {
-    gameData.stats.totalCompleted = gameData.stats.totalCompleted + 1;
-
-    // If there was a previous completion, check streak
-    if (previousCompletedAt) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Normalize to start of day
+        const previousCompletedAt = puzzle.completedAt;
         
-        const lastPlayed = new Date(previousCompletedAt);
-        lastPlayed.setHours(0, 0, 0, 0); // Normalize to start of day
-        
-        // Calculate difference in days
-        const daysDifference = Math.floor((today - lastPlayed) / (1000 * 60 * 60 * 24));
-        
-        console.log("Days since last completion:", daysDifference);
-        
-        if (daysDifference === 1) {
-            // Consecutive day - increment streak
-            gameData.stats.currentStreak = gameData.stats.currentStreak + 1;
-        } else if (daysDifference > 1) {
-            // Streak broken - reset to 1
-            gameData.stats.currentStreak = 1;
+        puzzle.completed = true;
+        puzzle.completedAt = new Date().toISOString();
+        meta.state = "completed";
+
+        if (!stats.completedDates.includes(puzzle.date)) {
+            stats.completedDates = [...stats.completedDates, puzzle.date];
         }
-        // If daysDifference === 0 (same day), don't change streak
-    } else {
-        // First time playing - start streak at 1
-        gameData.stats.currentStreak = 1;
+
+        updateStats(previousCompletedAt);
     }
 
-    // Update best streak if needed
-    if (gameData.stats.currentStreak > gameData.stats.bestStreak) {
-        gameData.stats.bestStreak = gameData.stats.currentStreak;
+    export function updateStats(previousCompletedAt) {
+        stats.totalCompleted += 1;
+
+        // Handle streak calculation
+        if (previousCompletedAt) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const lastPlayed = new Date(previousCompletedAt);
+            lastPlayed.setHours(0, 0, 0, 0);
+            
+            const daysDifference = Math.floor((today - lastPlayed) / (1000 * 60 * 60 * 24));
+            
+            if (daysDifference === 1) {
+                stats.currentStreak += 1;
+            } else if (daysDifference > 1) {
+                stats.currentStreak = 1;
+            }
+        } else {
+            stats.currentStreak = 1;
+        }
+
+        // Update best streak
+        if (stats.currentStreak > stats.bestStreak) {
+            stats.bestStreak = stats.currentStreak;
+        }
+
+        // Update average moves
+        if (stats.averageMoves === 0 || stats.averageMoves === null) {
+            stats.averageMoves = puzzle.moves;
+        } else {
+            const totalPreviousMoves = stats.averageMoves * (stats.totalCompleted - 1);
+            stats.averageMoves = (totalPreviousMoves + puzzle.moves) / stats.totalCompleted;
+        }
     }
 
-    // Update average moves
-    if (gameData.stats.averageMoves === 0 || gameData.stats.averageMoves === null) {
-        gameData.stats.averageMoves = gameData.puzzle.moves;
-    } else {
-        const totalPreviousMoves = gameData.stats.averageMoves * (gameData.stats.totalCompleted - 1);
-        const newTotalMoves = totalPreviousMoves + gameData.puzzle.moves;
-        gameData.stats.averageMoves = newTotalMoves / gameData.stats.totalCompleted;
+    // ===== INITIALIZATION & EFFECTS =====
+    if (browser) {
+        // Initialize sounds
+        initializeSounds(settings.soundEnabled);
+
+        // Initialize game data
+        initializeGameData();
+
+        // Auto-save effects
+        $effect.root(() => {
+            $effect(() => {
+                if (dataLoaded.value) {
+                    saveToIndexedDB(CONFIG.META_KEY, {
+                        version: meta.version,
+                        deviceId: meta.deviceId,
+                        lastSync: meta.lastSync,
+                        state: meta.state,
+                        isAnimating: meta.isAnimating,
+                    });
+                }
+            });
+
+            $effect(() => {
+                if (dataLoaded.value) {
+                    saveToIndexedDB(CONFIG.PUZZLE_KEY, puzzle);
+                }
+            });
+
+            $effect(() => {
+                if (dataLoaded.value) {
+                    saveToIndexedDB(CONFIG.STATS_KEY, stats);
+                }
+            });
+
+            $effect(() => {
+                if (dataLoaded.value) {
+                    saveToIndexedDB(CONFIG.SETTINGS_KEY, settings);
+                }
+            });
+        });
     }
-}
 </script>
-
-
-
-

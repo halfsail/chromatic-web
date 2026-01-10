@@ -552,36 +552,40 @@ const difficultyLevels = {
   medium: { rows: 6, cols: 6, locks: 9 },
   hard: { rows: 7, cols: 7, locks: 13 }
 };
-const defaultData = {
+const defaultPuzzle = {
+  completed: false,
+  hints: 0,
+  moves: 0,
+  completedAt: null
+};
+const defaultStats = {
+  totalCompleted: 0,
+  currentStreak: 0,
+  bestStreak: 0,
+  averageMoves: 0,
+  completedDates: [],
+  weekStartDate: getWeekStartDate()
+};
+const defaultSettings = {
+  theme: "dark",
+  soundEnabled: true,
+  hapticEnabled: true,
+  relaxedMode: true,
+  difficulty: "normal"
+};
+const defaultMeta = {
   version: CONFIG.VERSION_KEY,
   deviceId: null,
-  // Will be set later
   lastSync: null,
   state: "START",
-  isAnimating: false,
-  puzzle: {
-    completed: false,
-    hints: 0,
-    moves: 0,
-    completedAt: null
-  },
-  stats: {
-    totalCompleted: 0,
-    currentStreak: 0,
-    bestStreak: 0,
-    averageMoves: 0,
-    completedDates: [],
-    weekStartDate: getWeekStartDate()
-  },
-  settings: {
-    theme: "dark",
-    soundEnabled: true,
-    hapticEnabled: true,
-    relaxedMode: true,
-    difficulty: "normal"
-  }
+  isAnimating: false
 };
-let initialState = { ...defaultData };
+let initialState = {
+  meta: { ...defaultMeta },
+  puzzle: { ...defaultPuzzle },
+  stats: { ...defaultStats },
+  settings: { ...defaultSettings }
+};
 const gameData = initialState;
 function getTodayDate() {
   const todayDate = /* @__PURE__ */ new Date();
@@ -611,7 +615,7 @@ function randomPlayLevel() {
   gameData.puzzle.hints = 0;
   gameData.puzzle.moves = 0;
   gameData.puzzle.date = "Random";
-  gameData.state = "start";
+  gameData.meta.state = "start";
 }
 function generationLevel(difficulty, date) {
   const today = date ?? getTodayDate();
@@ -635,7 +639,7 @@ function completePuzzle() {
   const previousCompletedAt = gameData.puzzle.completedAt;
   gameData.puzzle.completed = true;
   gameData.puzzle.completedAt = (/* @__PURE__ */ new Date()).toISOString();
-  gameData.state = "completed";
+  gameData.meta.state = "completed";
   if (!gameData.stats.completedDates.includes(gameData.puzzle.date)) {
     gameData.stats.completedDates = [
       ...gameData.stats.completedDates,

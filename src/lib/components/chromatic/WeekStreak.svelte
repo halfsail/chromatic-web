@@ -1,5 +1,5 @@
 <script>
-  import {gameData, nextLevel} from '../../state/Store.svelte';
+  import {stats, nextLevel} from '../../state/Store.svelte';
   import { closeMenu } from '$lib/state/InterfaceState.svelte';
   import {onMount} from 'svelte';
 
@@ -64,10 +64,10 @@
   {#each weekDays as day}
     <button
       class="day"
-      class:missed={isMissed(day, gameData.stats.completedDates)}
+      class:missed={isMissed(day, stats.completedDates)}
       class:today={isToday(day)}
       class:future={isFutureDate(day)}
-      class:completed={isCompleted(day, gameData.stats.completedDates)}
+      class:completed={isCompleted(day, stats.completedDates)}
       disabled={isFutureDate(day)}
       onclick={() => {
         if (!isFutureDate(day)) {
@@ -77,7 +77,7 @@
       >
       <span>{day.toLocaleDateString('en', { weekday: 'narrow' })}</span>
       <div class="indicator">
-        {#if gameData.stats.completedDates.includes(day.toISOString().split('T')[0])}
+        {#if stats.completedDates.includes(day.toISOString().split('T')[0])}
             <span class="checkmark">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--onAccent)" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
