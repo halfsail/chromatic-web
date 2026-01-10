@@ -4,7 +4,7 @@
     import chroma from "chroma-js";
     import { onMount } from "svelte";
     import {
-        gameData,
+        puzzle, stats, settings, meta,
         increaseMove,
         increaseHints,
         completePuzzle,
@@ -39,12 +39,12 @@
 
     function setLevelColors() {
       document.documentElement.style.setProperty("--hue", hueRotate + "deg");
-      document.documentElement.style.setProperty("--color0", gameData.puzzle.hues[0]);
-      document.documentElement.style.setProperty("--color1", gameData.puzzle.hues[1]);
-      document.documentElement.style.setProperty("--color2", gameData.puzzle.hues[2]);
-      document.documentElement.style.setProperty("--color3", gameData.puzzle.hues[3]);
-      document.documentElement.style.setProperty("--accent", chroma.average(gameData.puzzle.hues))
-      document.documentElement.style.setProperty("--onAccent", setContrast(chroma.average(gameData.puzzle.hues).saturate(2)))
+      document.documentElement.style.setProperty("--color0", puzzle.hues[0]);
+      document.documentElement.style.setProperty("--color1", puzzle.hues[1]);
+      document.documentElement.style.setProperty("--color2", puzzle.hues[2]);
+      document.documentElement.style.setProperty("--color3", puzzle.hues[3]);
+      document.documentElement.style.setProperty("--accent", puzzle.accent)
+      document.documentElement.style.setProperty("--onAccent", setContrast(chroma(puzzle.accent).saturate(2)))
     }
 
     function initializeDraggables() {
@@ -228,11 +228,11 @@
         const deltaY2 = rect1.top - rect2.top;
 
         // Get the current colors from the elements
-        const color1 = gameData.puzzle.history[index1];
-        const color2 = gameData.puzzle.history[index2];
+        const color1 = puzzle.history[index1];
+        const color2 = puzzle.history[index2];
 
         // Update the state first
-        const newHistory = [...gameData.puzzle.history];
+        const newHistory = [...puzzle.history];
         [newHistory[index1], newHistory[index2]] = [
             newHistory[index2],
             newHistory[index1],
@@ -272,25 +272,25 @@
                     element2.classList && element2.classList.remove("swapping");
                 } catch (e) {}
                 // Update the state after animation is complete
-                gameData.puzzle.history = newHistory;
+                puzzle.history = newHistory;
 
-                if (gameData.settings.relaxedMode === true) {
+                if (settings.relaxedMode === true) {
                     // Check and lock correct positions if in relaxed mode
                     [index1, index2].forEach((idx) => {
-                    isCorrectPosition(idx, gameData.puzzle.history);
+                    isCorrectPosition(idx, puzzle.history);
                     });
                     // Force reactivity update by reassigning locks array
-                    gameData.puzzle.locks = [...gameData.puzzle.locks];
+                    puzzle.locks = [...puzzle.locks];
                 }
 
                 increaseMove(1); // Increment the move count
 
                 didWin(
-                    gameData.puzzle.palette,
+                    puzzle.palette,
                     newHistory,
-                    gameData.puzzle.hues,
-                    gameData.puzzle.rows,
-                    gameData.puzzle.columns,
+                    puzzle.hues,
+                    puzzle.rows,
+                    puzzle.columns,
                 );
 
 
@@ -336,8 +336,8 @@
 
     // Reactive statement to reinitialize draggables when history changes
     $effect(() => {
-        // This runs when gameData.puzzle.history changes
-        if (gameData.puzzle.history.length > 0 && itemElements.length > 0) {
+        // This runs when puzzle.history changes
+        if (puzzle.history.length > 0 && itemElements.length > 0) {
             // Wait for DOM update
             requestAnimationFrame(() => {
                 initializeDraggables();
@@ -391,26 +391,26 @@
         if (cellIndex === 0) {
             return "tl_corner";
         }
-        if (cellIndex === gameData.puzzle.col - 1) {
+        if (cellIndex === puzzle.col - 1) {
             return "tr_corner";
         }
         if (
             cellIndex ===
-            gameData.puzzle.palette.length - gameData.puzzle.col
+            puzzle.palette.length - puzzle.col
         ) {
             return "bl_corner";
         }
-        if (cellIndex === gameData.puzzle.palette.length - 1) {
+        if (cellIndex === puzzle.palette.length - 1) {
             return "br_corner";
         }
     }
     async function getHint() {
         // Return early if animation is in progress
-        if (gameData.puzzle.isAnimating) return;
+        if (puzzle.isAnimating) return;
 
-        const nonInteractive = [...gameData.puzzle.locks];
+        const nonInteractive = [...puzzle.locks];
         const indexOrder = [
-            ...Array(gameData.puzzle.col * gameData.puzzle.row).keys(),
+            ...Array(puzzle.col * puzzle.row).keys(),
         ];
         // filter out locked cells
         let hintCells = nonInteractive.reduce(
@@ -424,17 +424,17 @@
         if (hintCells.length === 0) return;
 
         // Set animation flag
-        gameData.puzzle.isAnimating = true;
+        puzzle.isAnimating = true;
 
         try {
             // pick random color and its index
             const hintIndex =
                 hintCells[Math.floor(Math.random() * hintCells.length)];
-            const randomColor = gameData.puzzle.palette[hintIndex];
+            const randomColor = puzzle.palette[hintIndex];
 
             // push hintIndex to game locks
-            gameData.puzzle.locks = [...gameData.puzzle.locks, hintIndex];
-            const oldIndex = gameData.puzzle.history.indexOf(randomColor);
+            puzzle.locks = [...puzzle.locks, hintIndex];
+            const oldIndex = puzzle.history.indexOf(randomColor);
             increaseHints(1);
 
             // swap the two wrong cells
@@ -445,7 +445,7 @@
             });
         } finally {
             // Reset animation flag
-            gameData.puzzle.isAnimating = false;
+            puzzle.isAnimating = false;
         }
     }
     function shiftColors() {
@@ -458,10 +458,10 @@
     function isCorrectPosition(index, history) {
         // check if color at index matches the palette
         //if yes then push to locks to give lock effect
-        if (history[index] === gameData.puzzle.palette[index]) {
+        if (history[index] === puzzle.palette[index]) {
             // push to locks (avoid duplicates)
-            if (!gameData.puzzle.locks.includes(index)) {
-                gameData.puzzle.locks = [...gameData.puzzle.locks, parseInt(index)];
+            if (!puzzle.locks.includes(index)) {
+                puzzle.locks = [...puzzle.locks, parseInt(index)];
 
             }
             // ensure any drag-over visual state is removed from the DOM element
@@ -480,30 +480,30 @@
 </script>
 
 <section
-    class:complete={gameData.puzzle.completed === true}
+    class:complete={puzzle.completed === true}
     class="boardContainer"
     style="--hueRotate: {hueRotate}deg;"
 >
     <section
         class="board"
-        style="--colSize: {gameData.puzzle.col}; --rowSize: {gameData.puzzle
+        style="--colSize: {puzzle.col}; --rowSize: {puzzle
             .row};"
         bind:this={boardElement}
     >
-        <!-- {#each gameData.puzzle.history as color, i (i)} -->
-         <!-- {#key gameData.puzzle.history} -->
-         {#each gameData.puzzle.history as color, i (color + '-' + i)}
+        <!-- {#each puzzle.history as color, i (i)} -->
+         <!-- {#key puzzle.history} -->
+         {#each puzzle.history as color, i (color + '-' + i)}
             <div
                 class="swatch {isCorner(i)}"
                 class:selected={selectedElements.includes(itemElements[i])}
-                class:locked={gameData.puzzle.locks.includes(i)}
+                class:locked={puzzle.locks.includes(i)}
                 style="--background: {color}; --color: {setContrast(color)};"
                 bind:this={itemElements[i]}
                 data-index={i}
                 data-color={color}
             >
 
-                {#if gameData.puzzle.locks.includes(i)}
+                {#if puzzle.locks.includes(i)}
                     <svg
                         width="24"
                         height="24"
@@ -526,7 +526,7 @@
     </section>
 </section>
 
-{#if gameData.state === "start" || gameData.puzzle.completed === false}
+{#if meta.state === "start" || puzzle.completed === false}
     <BoardControls {getHint} {shiftColors} />
 {:else}
     <WinSection />

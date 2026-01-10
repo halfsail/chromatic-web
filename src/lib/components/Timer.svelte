@@ -17,7 +17,7 @@ let secs = $derived( String(gameData.puzzle.time % 60).padStart(2, '0') );
 
 $effect(() => {
   const interval = setInterval(() => {
-    if (!timerState.paused && gameData.state === 'playing') {
+    if (!timerState.paused && gameData.meta.state === 'playing') {
       increaseTime(1); // Increment the time by 1 second
     }
   }, 1000);

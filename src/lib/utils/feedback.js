@@ -1,4 +1,4 @@
-import { gameData } from '../state/Store.svelte';
+import { settings } from '../state/Store.svelte';
 
 // Sound effects
 let audioContext = null;
@@ -104,7 +104,7 @@ export function playFeedback(type) {
     }
 
     // Play sound if available
-    if (sounds[type] && gameData.settings.soundEnabled === true && audioContext) {
+    if (sounds[type] && settings.soundEnabled === true && audioContext) {
         try {
             const source = audioContext.createBufferSource();
             source.buffer = sounds[type];
@@ -116,7 +116,7 @@ export function playFeedback(type) {
     }
 
     // Play haptic feedback if available
-    if (gameData.settings.hapticEnabled === true) {
+    if (settings.hapticEnabled === true) {
         try {
             // Check if vibration is supported
             if (!navigator.vibrate) {

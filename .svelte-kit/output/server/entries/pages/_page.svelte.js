@@ -1442,7 +1442,7 @@ function Board($$payload, $$props) {
     $$payload.out += `<!--]--></div>`;
   }
   $$payload.out += `<!--]--></section></section> `;
-  if (gameData.state === "start" || gameData.puzzle.completed === false) {
+  if (gameData.meta.state === "start" || gameData.puzzle.completed === false) {
     $$payload.out += "<!--[-->";
     BoardControls($$payload, { getHint, shiftColors });
   } else {
@@ -1504,7 +1504,9 @@ function _page($$payload, $$props) {
   let $$settled = true;
   let $$inner_payload;
   function $$render_inner($$payload2) {
-    $$payload2.out += `<main${attr("class", `svelte-1lsybcb ${stringify([gameData.state === "paused" ? "paused" : ""].filter(Boolean).join(" "))}`)}>`;
+    $$payload2.out += `<main${attr("class", `svelte-1lsybcb ${stringify([
+      gameData.meta.state === "paused" ? "paused" : ""
+    ].filter(Boolean).join(" "))}`)}>`;
     Header($$payload2, { toggleMenu: openMenu });
     $$payload2.out += `<!----> `;
     Board($$payload2);

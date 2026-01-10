@@ -27,6 +27,8 @@
  */
 declare module '$env/static/private' {
 	export const _VOLTA_TOOL_RECURSION: string;
+	export const MANPATH: string;
+	export const GHOSTTY_RESOURCES_DIR: string;
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -39,10 +41,10 @@ declare module '$env/static/private' {
 	export const TERM_PROGRAM_VERSION: string;
 	export const VOLTA_HOME: string;
 	export const COLOR: string;
-	export const TERM_SESSION_ID: string;
 	export const npm_config_noproxy: string;
 	export const npm_config_local_prefix: string;
 	export const USER: string;
+	export const COMMAND_MODE: string;
 	export const npm_config_globalconfig: string;
 	export const SSH_AUTH_SOCK: string;
 	export const __CF_USER_TEXT_ENCODING: string;
@@ -50,6 +52,7 @@ declare module '$env/static/private' {
 	export const PATH: string;
 	export const npm_package_json: string;
 	export const _: string;
+	export const GHOSTTY_SHELL_FEATURES: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
 	export const __CFBundleIdentifier: string;
@@ -67,12 +70,15 @@ declare module '$env/static/private' {
 	export const XPC_SERVICE_NAME: string;
 	export const SHLVL: string;
 	export const HOME: string;
+	export const TERMINFO: string;
 	export const HOMEBREW_PREFIX: string;
 	export const GEM_ROOT: string;
 	export const npm_config_cache: string;
 	export const LOGNAME: string;
 	export const npm_lifecycle_script: string;
+	export const XDG_DATA_DIRS: string;
 	export const GEM_PATH: string;
+	export const GHOSTTY_BIN_DIR: string;
 	export const RUBY_ROOT: string;
 	export const npm_config_user_agent: string;
 	export const INFOPATH: string;
@@ -115,6 +121,8 @@ declare module '$env/static/public' {
 declare module '$env/dynamic/private' {
 	export const env: {
 		_VOLTA_TOOL_RECURSION: string;
+		MANPATH: string;
+		GHOSTTY_RESOURCES_DIR: string;
 		TERM_PROGRAM: string;
 		NODE: string;
 		INIT_CWD: string;
@@ -127,10 +135,10 @@ declare module '$env/dynamic/private' {
 		TERM_PROGRAM_VERSION: string;
 		VOLTA_HOME: string;
 		COLOR: string;
-		TERM_SESSION_ID: string;
 		npm_config_noproxy: string;
 		npm_config_local_prefix: string;
 		USER: string;
+		COMMAND_MODE: string;
 		npm_config_globalconfig: string;
 		SSH_AUTH_SOCK: string;
 		__CF_USER_TEXT_ENCODING: string;
@@ -138,6 +146,7 @@ declare module '$env/dynamic/private' {
 		PATH: string;
 		npm_package_json: string;
 		_: string;
+		GHOSTTY_SHELL_FEATURES: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
 		__CFBundleIdentifier: string;
@@ -155,12 +164,15 @@ declare module '$env/dynamic/private' {
 		XPC_SERVICE_NAME: string;
 		SHLVL: string;
 		HOME: string;
+		TERMINFO: string;
 		HOMEBREW_PREFIX: string;
 		GEM_ROOT: string;
 		npm_config_cache: string;
 		LOGNAME: string;
 		npm_lifecycle_script: string;
+		XDG_DATA_DIRS: string;
 		GEM_PATH: string;
+		GHOSTTY_BIN_DIR: string;
 		RUBY_ROOT: string;
 		npm_config_user_agent: string;
 		INFOPATH: string;
