@@ -39,6 +39,7 @@ declare module '$env/static/private' {
 	export const HOMEBREW_REPOSITORY: string;
 	export const npm_config_global_prefix: string;
 	export const TERM_PROGRAM_VERSION: string;
+	export const FPATH: string;
 	export const VOLTA_HOME: string;
 	export const COLOR: string;
 	export const npm_config_noproxy: string;
@@ -52,6 +53,7 @@ declare module '$env/static/private' {
 	export const PATH: string;
 	export const npm_package_json: string;
 	export const _: string;
+	export const LaunchInstanceID: string;
 	export const GHOSTTY_SHELL_FEATURES: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
@@ -86,6 +88,7 @@ declare module '$env/static/private' {
 	export const DISPLAY: string;
 	export const RUBYOPT: string;
 	export const OSLogRateLimit: string;
+	export const SECURITYSESSIONID: string;
 	export const RUBY_VERSION: string;
 	export const npm_node_execpath: string;
 	export const npm_config_prefix: string;
@@ -133,6 +136,7 @@ declare module '$env/dynamic/private' {
 		HOMEBREW_REPOSITORY: string;
 		npm_config_global_prefix: string;
 		TERM_PROGRAM_VERSION: string;
+		FPATH: string;
 		VOLTA_HOME: string;
 		COLOR: string;
 		npm_config_noproxy: string;
@@ -146,6 +150,7 @@ declare module '$env/dynamic/private' {
 		PATH: string;
 		npm_package_json: string;
 		_: string;
+		LaunchInstanceID: string;
 		GHOSTTY_SHELL_FEATURES: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
@@ -180,6 +185,7 @@ declare module '$env/dynamic/private' {
 		DISPLAY: string;
 		RUBYOPT: string;
 		OSLogRateLimit: string;
+		SECURITYSESSIONID: string;
 		RUBY_VERSION: string;
 		npm_node_execpath: string;
 		npm_config_prefix: string;
