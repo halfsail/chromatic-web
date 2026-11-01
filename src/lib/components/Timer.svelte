@@ -1,57 +1,34 @@
 <script>
-  import {gameData, increaseTime} from '../state/Store.svelte';
-  import NumberFlow from '@number-flow/svelte';
+  import { gameStore } from "$lib/state/GameStore.svelte";
+  import NumberFlow from "@number-flow/svelte";
 
+  // Re-read the store's elapsed time on a tick while running; the store
+  // itself owns start/pause, this component only displays.
+  let elapsedMs = $state(gameStore.elapsedMs);
 
+  $effect(() => {
+    elapsedMs = gameStore.elapsedMs; // sync on start/pause/puzzle change
+    if (!gameStore.timerRunning) return;
+    const interval = setInterval(() => (elapsedMs = gameStore.elapsedMs), 250);
+    return () => clearInterval(interval);
+  });
 
-let timerState = $state({
-    paused: false,
-    show: true
-});
-
-
-
-let hrs = $derived( String(Math.floor(gameData.puzzle.time / 3600)).padStart(2, '0') );
-let mins = $derived( String(Math.floor((gameData.puzzle.time % 3600) / 60)).padStart(2, '0') );
-let secs = $derived( String(gameData.puzzle.time % 60).padStart(2, '0') );
-
-$effect(() => {
-  const interval = setInterval(() => {
-    if (!timerState.paused && gameData.meta.state === 'playing') {
-      increaseTime(1); // Increment the time by 1 second
-    }
-  }, 1000);
-  return () => clearInterval(interval);
-});
-
-  function pause() {
-    timerState.paused = !timerState.paused;
-  }
-  function toggleShow() {
-    timerState.show = !timerState.show;
-  }
+  const totalSecs = $derived(Math.floor(elapsedMs / 1000));
+  const hrs = $derived(Math.floor(totalSecs / 3600));
+  const mins = $derived(Math.floor((totalSecs % 3600) / 60));
+  const secs = $derived(totalSecs % 60);
+  const pad = { minimumIntegerDigits: 2 };
 </script>
 
-
-
-{#if timerState.show}
-<span>
-    {#if hrs === '00'}
-    {:else}
-    <NumberFlow value={hrs} format={(num) => String(num).padStart(2, '0')} />
-:
-    {/if}
-
-<NumberFlow value={mins} format={(num) => String(num).padStart(2, '0')} />
-:
-<NumberFlow value={secs} />
+<span class="timer">
+  {#if hrs > 0}
+    <NumberFlow value={hrs} format={pad} />:
+  {/if}
+  <NumberFlow value={mins} format={pad} />:<NumberFlow value={secs} format={pad} />
 </span>
-  
-{/if}
-
-<!-- <button onclick={pause}>{timerState.paused ? 'Resume' : 'Pause'}</button>
-<button onclick={toggleShow}>{timerState.show ? 'Hide Timer' : 'Show Timer'}</button> -->
 
 <style>
-/* Add your styles here if needed */
+  .timer {
+    font-variant-numeric: tabular-nums;
+  }
 </style>

@@ -27,6 +27,7 @@ export function getColors(keyColors, colSize, rowSize) {
             .colors(colSize);
         matrix.push(...tempRow);
     }
+    console.log("matrix generated")
     return matrix;
 }
 

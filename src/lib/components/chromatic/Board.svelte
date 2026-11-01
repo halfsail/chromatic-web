@@ -17,6 +17,7 @@
     import WinSection from "./WinSection.svelte";
     import BoardControls from "./BoardControls.svelte";
     import { playFeedback } from "$lib/utils/feedback.js";
+    import { gameStore } from "$lib/state/GameStore.svelte";
 
     // Use Map to properly track elements by their actual DOM position
     let itemElements = $state([]);
@@ -408,9 +409,9 @@
         // Return early if animation is in progress
         if (puzzle.isAnimating) return;
 
-        const nonInteractive = [...puzzle.locks];
+        const nonInteractive = [...gameStore.puzzle.locks];
         const indexOrder = [
-            ...Array(puzzle.col * puzzle.row).keys(),
+            ...Array(gameStore.puzzle.cols * gameStore.puzzle.rows).keys(),
         ];
         // filter out locked cells
         let hintCells = nonInteractive.reduce(
@@ -430,11 +431,11 @@
             // pick random color and its index
             const hintIndex =
                 hintCells[Math.floor(Math.random() * hintCells.length)];
-            const randomColor = puzzle.palette[hintIndex];
+            const randomColor = gameStore.puzzle.palette[hintIndex];
 
             // push hintIndex to game locks
-            puzzle.locks = [...puzzle.locks, hintIndex];
-            const oldIndex = puzzle.history.indexOf(randomColor);
+            gameStore.puzzle.locks = [...gameStore.puzzle.locks, hintIndex];
+            const oldIndex = gameStore.puzzle.history.indexOf(randomColor);
             increaseHints(1);
 
             // swap the two wrong cells
@@ -478,7 +479,7 @@
     }
 
 </script>
-
+    
 <section
     class:complete={puzzle.completed === true}
     class="boardContainer"
@@ -486,24 +487,24 @@
 >
     <section
         class="board"
-        style="--colSize: {puzzle.col}; --rowSize: {puzzle
-            .row};"
+        style="--colSize: {gameStore.puzzle.cols}; --rowSize: {gameStore.puzzle
+            .rows};"
         bind:this={boardElement}
     >
         <!-- {#each puzzle.history as color, i (i)} -->
          <!-- {#key puzzle.history} -->
-         {#each puzzle.history as color, i (color + '-' + i)}
+         {#each gameStore.puzzle.history as color, i (color + '-' + i)}
             <div
                 class="swatch {isCorner(i)}"
                 class:selected={selectedElements.includes(itemElements[i])}
-                class:locked={puzzle.locks.includes(i)}
+                class:locked={gameStore.puzzle.locks.includes(i)}
                 style="--background: {color}; --color: {setContrast(color)};"
                 bind:this={itemElements[i]}
                 data-index={i}
                 data-color={color}
             >
 
-                {#if puzzle.locks.includes(i)}
+                {#if gameStore.puzzle.locks.includes(i)}
                     <svg
                         width="24"
                         height="24"

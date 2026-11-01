@@ -23,11 +23,13 @@
     "@number-flow/svelte": "^0.3.9",
     "canvas-confetti": "^1.9.3",
     "chroma-js": "^3.1.2",
+    "dexie": "^4.4.6",
     "gsap": "^3.13.0",
     "idb-keyval": "^6.2.2",
     "number-flow": "^0.5.8",
     "svelte-sonner": "^1.0.7",
     "svelte-sound": "^0.6.0",
+    "swapy": "^1.0.5",
     "workbox-precaching": "^7.3.0"
   }
 }
